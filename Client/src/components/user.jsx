@@ -7,7 +7,7 @@ import { Toast } from "primereact/toast";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import 'primeflex/primeflex.css';
+import "primeflex/primeflex.css";
 function User() {
     const [dataTableValues, setDataTableValues] = useState([
         {
@@ -64,7 +64,7 @@ function User() {
             address: "123 Street, City",
             action: "hdsfsd",
         },
-         {
+        {
             id: 1,
             name: "hi",
             email: "hi@example.com",
@@ -80,19 +80,17 @@ function User() {
     const [selectedRows, setSelectedRows] = useState([]);
     const toast = React.createRef();
 
-    useEffect(() => {
-        // Initialize DataTable in useEffect
-    }, []);
+    useEffect(() => {}, []);
 
     const header = (
         <div className="table-header">
-            <h5 className="p-m-0">Manage Users</h5>
+            {/* <h5 className="p-m-0">Manage Users</h5> */}
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText
                     type="search"
                     onInput={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="Global Search"
+                    placeholder="Search User"
                 />
             </span>
         </div>
@@ -102,37 +100,20 @@ function User() {
         <div className="text-center">
             <Button
                 icon="pi pi-trash"
-                className="p-button-rounded p-button-danger p-mr-2"
+                className="p-button-rounded btn btn-danger"
                 onClick={() => deleteRow(rowData)}
             />
             <Button
                 icon="pi pi-pencil"
-                className="p-button-rounded p-button-success"
+                className="p-button-rounded btn btn-primary"
                 onClick={() => editRow(rowData)}
             />
         </div>
     );
 
-    // const deleteRow = (rowData) => {
-    //     const updatedData = dataTableValues.filter(
-    //         (row) => row.id !== rowData.id
-    //     );
-    //     setDataTableValues(updatedData);
-    //     toast.current.show({
-    //         severity: "success",
-    //         summary: "Success",
-    //         detail: "Row deleted successfully",
-    //     });
-    // };
-
-    // const editRow = (rowData) => {
-    //     // Implement your edit logic here
-    //     toast.current.show({
-    //         severity: "info",
-    //         summary: "Info",
-    //         detail: "Edit functionality to be implemented",
-    //     });
-    // };
+    const customFilter = (value, filter) => {
+        return value.toLowerCase().includes(filter.toLowerCase());
+    };
 
     return (
         <>
@@ -142,16 +123,11 @@ function User() {
                         <div className="row g-2 align-items-center">
                             <div className="col">
                                 <div className="page-pretitle">Overview</div>
-                                <h2 className="page-title">Dashboard</h2>
+                                <h2 className="page-title">Users</h2>
                             </div>
 
                             <div className="col-auto ms-auto d-print-none">
                                 <div className="btn-list">
-                                    <span className="d-none d-sm-inline">
-                                        <a href="#" className="btn">
-                                            New view
-                                        </a>
-                                    </span>
                                     <a
                                         href="#"
                                         className="btn btn-primary d-none d-sm-inline-block"
@@ -178,7 +154,7 @@ function User() {
                                             <path d="M12 5l0 14" />
                                             <path d="M5 12l14 0" />
                                         </svg>
-                                        Create new report
+                                        Create new User
                                     </a>
                                     <a
                                         href="#"
@@ -215,88 +191,167 @@ function User() {
                 </div>
 
                 <div className="col-12">
-      <Toast ref={toast} />
-      <div className="page-body">
-        <div className="container-xl">
-          <div className="row row-deck row-cards">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="card">
-                  <div className="card-body">
-                    <DataTable
-                      value={dataTableValues}
-                      className="p-datatable-striped"
-                      paginator
-                      rows={5}
-                      rowsPerPageOptions={[5, 10, 20]}
-                      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                      globalFilter={globalFilter}
-                      header={header}
-                      selectionMode="multiple"
-                      selection={selectedRows}
-                      onSelectionChange={(e) => setSelectedRows(e.value)}
-                    >
-                      <Column
-                        style={{ display: "none" }}
-                        hidden
-                        field="id"
-                        header="#"
-                      />
-                      <Column
-                        field="name"
-                        header="Organizer Name"
-                        body={(rowData) => (
-                          <div className="text-center">{rowData.name}</div>
-                        )}
-                        sortable
-                      />
-                      <Column
-                        field="email"
-                        header="Organization Email"
-                        body={(rowData) => (
-                          <div className="text-center">{rowData.email}</div>
-                        )}
-                        sortable
-                      />
-                      <Column
-                        field="number"
-                        header="Organization Number"
-                        body={(rowData) => (
-                          <div className="text-center">{rowData.number}</div>
-                        )}
-                        sortable
-                      />
-                      <Column
-                        field="packageName"
-                        header="Package Name"
-                        body={(rowData) => (
-                          <div className="text-center">{rowData.packageName}</div>
-                        )}
-                        sortable
-                      />
-                      <Column
-                        field="address"
-                        header="Organization Address"
-                        body={(rowData) => (
-                          <div className="text-center">{rowData.address}</div>
-                        )}
-                        sortable
-                      />
-                      <Column
-                        body={actionTemplate}
-                        header="Action"
-                        style={{ textAlign: "center", width: "8em" }}
-                      />
-                    </DataTable>
-                  </div>
+                    <Toast ref={toast} />
+                    <div className="page-body">
+                        <div className="container-xl">
+                            <div className="row row-deck row-cards">
+                                <div className="container-fluid">
+                                    <div className="row">
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <DataTable
+                                                    value={dataTableValues}
+                                                    className="p-datatable-striped"
+                                                    paginator
+                                                    rows={5}
+                                                    rowsPerPageOptions={[
+                                                        5, 10, 20,
+                                                    ]}
+                                                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                                    globalFilter={globalFilter}
+                                                    header={header}
+                                                    selectionMode="multiple"
+                                                    selection={selectedRows}
+                                                    onSelectionChange={(e) =>
+                                                        setSelectedRows(e.value)
+                                                    }
+                                                    style={{ fontSize: "1em" }}
+                                                >
+                                                    <Column
+                                                        style={{
+                                                            display: "none",
+                                                        }}
+                                                        hidden
+                                                        field="id"
+                                                        header="#"
+                                                    />
+                                                    <Column
+                                                        field="name"
+                                                        header="Organizer Name"
+                                                        body={(rowData) => (
+                                                            <div className="text-center">
+                                                                {rowData.name}
+                                                            </div>
+                                                        )}
+                                                        sortable
+                                                        filter
+                                                        filterMatchMode="custom"
+                                                        filterFunction={(
+                                                            value,
+                                                            filter
+                                                        ) =>
+                                                            customFilter(
+                                                                value,
+                                                                filter
+                                                            )
+                                                        }
+                                                    />
+                                                    <Column
+                                                        field="email"
+                                                        header="Organization Email"
+                                                        body={(rowData) => (
+                                                            <div className="text-center">
+                                                                {rowData.email}
+                                                            </div>
+                                                        )}
+                                                        sortable
+                                                        filter
+                                                        filterMatchMode="custom"
+                                                        filterFunction={(
+                                                            value,
+                                                            filter
+                                                        ) =>
+                                                            customFilter(
+                                                                value,
+                                                                filter
+                                                            )
+                                                        }
+                                                    />
+                                                    <Column
+                                                        field="number"
+                                                        header="Organization Number"
+                                                        body={(rowData) => (
+                                                            <div className="text-center">
+                                                                {rowData.number}
+                                                            </div>
+                                                        )}
+                                                        sortable
+                                                        filter
+                                                        filterMatchMode="custom"
+                                                        filterFunction={(
+                                                            value,
+                                                            filter
+                                                        ) =>
+                                                            customFilter(
+                                                                value,
+                                                                filter
+                                                            )
+                                                        }
+                                                    />
+                                                    <Column
+                                                        field="packageName"
+                                                        header="Package Name"
+                                                        body={(rowData) => (
+                                                            <div className="text-center">
+                                                                {
+                                                                    rowData.packageName
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        sortable
+                                                        filter
+                                                        filterMatchMode="custom"
+                                                        filterFunction={(
+                                                            value,
+                                                            filter
+                                                        ) =>
+                                                            customFilter(
+                                                                value,
+                                                                filter
+                                                            )
+                                                        }
+                                                    />
+                                                    <Column
+                                                        field="address"
+                                                        header="Organization Address"
+                                                        body={(rowData) => (
+                                                            <div className="text-center">
+                                                                {
+                                                                    rowData.address
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        sortable
+                                                        filter
+                                                        filterMatchMode="custom"
+                                                        filterFunction={(
+                                                            value,
+                                                            filter
+                                                        ) =>
+                                                            customFilter(
+                                                                value,
+                                                                filter
+                                                            )
+                                                        }
+                                                    />
+                                                    <Column
+                                                        body={actionTemplate}
+                                                        header="Action"
+                                                        style={{
+                                                            textAlign: "center",
+                                                            width: "8em",
+                                                        }}
+                                                    />
+                                                </DataTable>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
             </div>
             <div
                 className="modal modal-blur fade"
@@ -308,7 +363,7 @@ function User() {
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New report</h5>
+                            <h5 className="modal-title">New User</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -317,14 +372,29 @@ function User() {
                             ></button>
                         </div>
                         <div className="modal-body">
-                            <div className="mb-3">
-                                <label className="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="example-text-input"
-                                    placeholder="Your report name"
-                                />
+                            <div className="form-selectgroup-boxes row mb-3">
+                                <div className="col-lg-6">
+                                    <label className="form-label">
+                                        First Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="example-text-input"
+                                        placeholder="User name"
+                                    />
+                                </div>
+                                <div className="col-lg-6">
+                                    <label className="form-label">
+                                        Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="example-text-input"
+                                        placeholder="User name"
+                                    />
+                                </div>
                             </div>
                             <label className="form-label">Report type</label>
                             <div className="form-selectgroup-boxes row mb-3">
@@ -333,9 +403,9 @@ function User() {
                                         <input
                                             type="radio"
                                             name="report-type"
-                                            defaultValue="1"
+                                            value="1"
                                             className="form-selectgroup-input"
-                                            defaultChecked={true}
+                                            defaultChecked="true"
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
                                             <span className="me-3">
@@ -343,11 +413,10 @@ function User() {
                                             </span>
                                             <span className="form-selectgroup-label-content">
                                                 <span className="form-selectgroup-title strong mb-1">
-                                                    Simple
+                                                    Thaali User
                                                 </span>
                                                 <span className="d-block text-secondary">
-                                                    Provide only basic data
-                                                    needed for the report
+                                                    Paid and wants Thaali
                                                 </span>
                                             </span>
                                         </span>
@@ -358,7 +427,7 @@ function User() {
                                         <input
                                             type="radio"
                                             name="report-type"
-                                            defaultValue="1"
+                                            value="1"
                                             className="form-selectgroup-input"
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -367,12 +436,10 @@ function User() {
                                             </span>
                                             <span className="form-selectgroup-label-content">
                                                 <span className="form-selectgroup-title strong mb-1">
-                                                    Advanced
+                                                    Non Thaali User
                                                 </span>
                                                 <span className="d-block text-secondary">
-                                                    Insert charts and additional
-                                                    advanced analyses to be
-                                                    inserted in the report
+                                                    Don't want Thaali
                                                 </span>
                                             </span>
                                         </span>
@@ -383,16 +450,17 @@ function User() {
                                 <div className="col-lg-8">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Report url
+                                            Email Id
                                         </label>
                                         <div className="input-group input-group-flat">
                                             <span className="input-group-text">
-                                                https://tabler.io/reports/
+                                                {/* Email Id */}
                                             </span>
                                             <input
                                                 type="text"
                                                 className="form-control ps-0"
-                                                defaultValue="report-01"
+                                                // defaultValue="report-01"
+                                                placeholder="Email Id"
                                                 autoComplete="off"
                                             />
                                         </div>
@@ -401,15 +469,17 @@ function User() {
                                 <div className="col-lg-4">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Visibility
+                                            Region
                                         </label>
-                                        <select
-                                            className="form-select"
-                                            defaultValue="1"
-                                        >
-                                            <option value="1">Private</option>
-                                            <option value="2">Public</option>
-                                            <option value="3">Hidden</option>
+                                        <select className="form-select">
+                                            <option
+                                                value="1"
+                                                defaultValue="true"
+                                            >
+                                                Upleta
+                                            </option>
+                                            <option value="2">Rajkot</option>
+                                            <option value="3">Jamnagar</option>
                                         </select>
                                     </div>
                                 </div>
@@ -420,7 +490,7 @@ function User() {
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Client name
+                                            Phone No.
                                         </label>
                                         <input
                                             type="text"
@@ -431,7 +501,7 @@ function User() {
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Reporting period
+                                            Plan Valid till
                                         </label>
                                         <input
                                             type="date"
@@ -457,9 +527,7 @@ function User() {
                                 href="#"
                                 className="btn btn-link link-secondary"
                                 data-bs-dismiss="modal"
-                            >
-                                Cancel
-                            </a>
+                            ></a>
                             <a
                                 href="#"
                                 className="btn btn-primary ms-auto"
@@ -485,7 +553,7 @@ function User() {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new report
+                                Create new User
                             </a>
                         </div>
                     </div>

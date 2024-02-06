@@ -1,7 +1,10 @@
 import React from "react";
 import logo from "../assets/static/logo.svg";
+import { NavLink, useLocation } from 'react-router-dom';
 
 function Sidebar() {
+    const location = useLocation();
+    const path = location.pathname;
     return (
         <>
             <header className="navbar navbar-expand-md d-print-none">
@@ -31,49 +34,49 @@ function Sidebar() {
                     <div className="navbar-nav flex-row order-md-last">
                         <div className="nav-item d-none d-md-flex me-3">
                             <div className="btn-list">
-                            <div className="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-                                <form
-                                    action="./"
-                                    method="get"
-                                    autoComplete="off"
-                                    noValidate
-                                >
-                                    <div className="input-icon">
-                                        <span className="input-icon-addon">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="icon"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="2"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
+                                <div className="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
+                                    <form
+                                        action="./"
+                                        method="get"
+                                        autoComplete="off"
+                                        noValidate
+                                    >
+                                        <div className="input-icon">
+                                            <span className="input-icon-addon">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="icon"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth="2"
+                                                    stroke="currentColor"
                                                     fill="none"
-                                                />
-                                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                                <path d="M21 21l-6 -6" />
-                                            </svg>
-                                        </span>
-                                        <input
-                                            type="text"
-                                            defaultValue=""
-                                            className="form-control"
-                                            placeholder="Search…"
-                                            aria-label="Search in website"
-                                        />
-                                    </div>
-                                </form>
-                            </div>
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path
+                                                        stroke="none"
+                                                        d="M0 0h24v24H0z"
+                                                        fill="none"
+                                                    />
+                                                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                                    <path d="M21 21l-6 -6" />
+                                                </svg>
+                                            </span>
+                                            <input
+                                                type="text"
+                                                defaultValue=""
+                                                className="form-control"
+                                                placeholder="Search…"
+                                                aria-label="Search in website"
+                                            />
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        <div className="d-none d-md-flex">
+                        {/* <div className="d-none d-md-flex">
                             <a
                                 href="?theme=dark"
                                 className="nav-link px-0 hide-theme-dark"
@@ -357,7 +360,7 @@ function Sidebar() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="nav-item dropdown">
                             <a
                                 href="#"
@@ -416,8 +419,8 @@ function Sidebar() {
                     <div className="navbar">
                         <div className="container-xl">
                             <ul className="navbar-nav">
-                                <li className="nav-item active">
-                                    <a className="nav-link" href="./">
+                            <li className={`nav-item ${path === '/' ? 'active' : ''}`}>
+                                 <a className="nav-link" href="./">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -446,12 +449,12 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li className="nav-item ">
+                                <li className={`nav-item ${path.startsWith('/user') ? 'active' : ''}`}>
                                     <a className="nav-link" href="/user">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                className="icon"
+                                                className="icon icon-tabler icon-tabler-user-square-rounded"
                                                 width="24"
                                                 height="24"
                                                 viewBox="0 0 24 24"
@@ -466,9 +469,9 @@ function Sidebar() {
                                                     d="M0 0h24v24H0z"
                                                     fill="none"
                                                 />
-                                                <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                                                <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z" />
+                                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                                <path d="M6 20.05v-.05a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v.05" />
                                             </svg>
                                         </span>
                                         <span className="nav-link-title">
@@ -1433,7 +1436,6 @@ function Sidebar() {
                                     </div>
                                 </li>
                             </ul>
-                           
                         </div>
                     </div>
                 </div>
