@@ -2106,7 +2106,7 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
-                <footer className="footer footer-transparent d-print-none">
+                {/* <footer className="footer footer-transparent d-print-none">
                     <div className="container-xl">
                         <div className="row text-center align-items-center flex-row-reverse">
                             <div className="col-lg-auto ms-lg-auto">
@@ -2192,7 +2192,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                </footer>
+                </footer> */}
             </div>
             <div
                 className="modal modal-blur fade"
