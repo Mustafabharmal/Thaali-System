@@ -8,6 +8,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
+import axios from 'axios';
 function User() {
     const [dataTableValues, setDataTableValues] = useState([
         {
@@ -75,7 +76,31 @@ function User() {
         },
         // Add more data as needed
     ]);
-
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/users', {
+                    withCredentials: true,
+                });
+    
+                const transformedData = response.data.map(item => ({
+                    id: item.user.id,
+                    name: `${item.user.FirstName} ${item.user.LastName}`,
+                    email: item.user.Emailid,
+                    number: item.user.PhoneNo,
+                    packageName: item.user.Role === 1 ? 'Basic' : 'Other',
+                    address: `${item.user.FirstName} ${item.user.LastName}'s address`,
+                    action: 'hdsfsd',
+                }));
+    
+                setDataTableValues(transformedData); // Set the state directly without using prevData
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const toast = React.createRef();
