@@ -3,14 +3,14 @@ function addUser()
 {
         const [formData, setFormData] = useState({
             name: '',
-            community: '0',
-            userType: '1',
+            communityid: '0',
+            thaaliuser: '1',
             email: '',
             role: '0',
             password: '',
-            headCount: '',
-            units: '',
-            phone: '',
+            headcount: '',
+            unit: '',
+            phoneno: '',
             planValidTill: '',
             address: '',
         });
@@ -85,9 +85,9 @@ function addUser()
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Community
+                                            communityid
                                         </label>
-                                        <select className="form-select"  name='community'  value={formData.community}
+                                        <select className="form-select"  name='communityid'  value={formData.communityid}
                       onChange={handleChange}>
                                         <option
                                                 value="0"
@@ -113,10 +113,10 @@ function addUser()
                   <label className="form-selectgroup-item">
                     <input
                      type="radio"
-                     name="userType"
+                     name="thaaliuser"
                      value="1" 
                      className="form-selectgroup-input"
-                     defaultChecked={formData.userType === '1'}  
+                     defaultChecked={formData.thaaliuser === '1'}  
                      onChange={handleChange}
                     />
                     <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -134,15 +134,15 @@ function addUser()
                   <label className="form-selectgroup-item">
                     <input
                       type="radio"
-                    //   name="userType"
+                    //   name="thaaliuser"
                     //   value="2"
                     //   className="form-selectgroup-input"
-                    //   checked={formData.userType === '1'}
+                    //   checked={formData.thaaliuser === '1'}
                     //   onChange={handleChange}
-                      name="userType"
+                      name="thaaliuser"
                       value="2" 
                       className="form-selectgroup-input"
-                      defaultChecked={formData.userType === '2'}  
+                      defaultChecked={formData.thaaliuser === '2'}  
                       onChange={handleChange}
                     />
                     <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -226,8 +226,8 @@ function addUser()
                                             type="text"
                                             className="form-control"
                                             placeholder="Head Count"
-                                            name='headCount'
-                                            value={formData.headCount}
+                                            name='headcount'
+                                            value={formData.headcount}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -235,14 +235,14 @@ function addUser()
                                 <div className="col-lg-4">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Units
+                                            unit
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            placeholder="Units"
-                                            name='units'
-                                            value={formData.units}
+                                            placeholder="unit"
+                                            name='unit'
+                                            value={formData.unit}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -252,14 +252,14 @@ function addUser()
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                            Phone No.
+                                            phoneno No.
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            placeholder="Phone No."
-                                            name='phone'
-                                            value={formData.phone}
+                                            placeholder="phoneno No."
+                                            name='phoneno'
+                                            value={formData.phoneno}
                                             onChange={handleChange}
                                         />
                                     </div>

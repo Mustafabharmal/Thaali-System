@@ -25,6 +25,7 @@ function User() {
                     const unitsInfo = item.user && item.user.units
                     ? item.user.units.map(unit => (
                         `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                        // ""
                     ))
                     : [];
 
