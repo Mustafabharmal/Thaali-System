@@ -20,17 +20,17 @@ function Sidebar() {
                     >
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+                    {/* <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"> */}
                         <a href=".">
                             <img
                                 src={logo}
-                                width="110"
-                                height="32"
+                                width="160"
+                                height="50"
                                 alt="Tabler"
-                                className="navbar-brand-image"
+                                // className="navbar-brand-image"
                             />
                         </a>
-                    </h1>
+                    {/* </h1> */}
                     <div className="navbar-nav flex-row order-md-last">
                         <div className="nav-item d-none d-md-flex me-3">
                             <div className="btn-list">
@@ -373,13 +373,13 @@ function Sidebar() {
                                     className="avatar avatar-sm"
                                     style={{
                                         backgroundImage:
-                                            "url('./src/assets/static/avatars/000m.jpg')",
+                                            "url('./src/assets/static/avatars/me.jpg')",
                                     }}
                                 ></span>
                                 <div className="d-none d-xl-block ps-2">
-                                    <div>Paweł Kuna</div>
+                                    <div>Mustafa Bharmal</div>
                                     <div className="mt-1 small text-secondary">
-                                        UI Designer
+                                        Admin
                                     </div>
                                 </div>
                             </a>
