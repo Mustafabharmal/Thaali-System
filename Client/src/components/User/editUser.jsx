@@ -13,7 +13,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
             aria-hidden="false"
         >
             <form onSubmit={handleUpdate}>
-            <input type="hidden" name="_id" value={formData.id} />
+            <input type="hidden" name="_id" value={formData._id} />
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -72,7 +72,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             name="thaaliuser"
                                             value="0"
                                             className="form-selectgroup-input"
-                                            checked={formData.thaaliuser === 0}
+                                            checked={formData.thaaliuser === 0 || formData.thaaliuser==="0"}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -97,7 +97,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             name="thaaliuser"
                                             value="1"
                                             className="form-selectgroup-input"
-                                            checked={formData.thaaliuser === 1}
+                                            checked={formData.thaaliuser === 1|| formData.thaaliuser==="1"}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -152,8 +152,8 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             <option value="0" defaultValue={true}>
                                                 Admin
                                             </option>
-                                            <option value="2">Manager</option>
-                                            <option value="3">User</option>
+                                            <option value="1">Manager</option>
+                                            <option value="2">User</option>
                                         </select>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-2">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             Head Count
@@ -206,8 +206,8 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             />
                                         </div>
                                     </div> */}
-                            </div>
-                            <div className="row">
+                            {/* </div>
+                            <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
@@ -218,7 +218,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             className="form-control"
                                             placeholder="phoneno No."
                                             name="phoneno"
-                                            value={formData.number}
+                                            value={formData.phoneno}
                                             onChange={handleChange}
                                         />
                                     </div>

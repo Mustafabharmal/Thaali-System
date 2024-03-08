@@ -8,10 +8,11 @@ function addUser() {
         email: "",
         role: "0",
         password: "",
-        headcount: "",
+        headcount: "1",
         // unit: '',
         phoneno: "",
-        planValidTill: "",
+        // planValidTill: "",
+        status:1,
         address: "",
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -28,9 +29,9 @@ function addUser() {
             // Convert strings to integers for specific fields
             const intValue = [
                 "communityid",
-                "thaaliuser",
+                // "thaaliuser",
                 "role",
-                "headcount",
+              
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -237,8 +238,8 @@ function addUser() {
                                             >
                                                 Admin
                                             </option>
-                                            <option value="2">Manager</option>
-                                            <option value="3">User</option>
+                                            <option value="1">Manager</option>
+                                            <option value="2">User</option>
                                         </select>
                                     </div>
                                 </div>
@@ -261,7 +262,7 @@ function addUser() {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-2">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             Head Count
@@ -291,8 +292,8 @@ function addUser() {
                                         />
                                     </div>
                                 </div> */}
-                            </div>
-                            <div className="row">
+                            {/* </div>
+                            <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">

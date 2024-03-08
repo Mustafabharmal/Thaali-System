@@ -12,73 +12,88 @@ import "primeflex/primeflex.css";
 import axios from 'axios';
 import EditUser from "./editUser";
 function User() {
-    
     const [dataTableValues, setDataTableValues] = useState([]);
-   
     const [loading, setLoading] = useState(true); 
     const [formData, setFormData] = useState({
-        id: "",
+        _id: "",
         name: "",
         communityid: "0",
         thaaliuser: "1",
         email: "",
         role: "0",
         password: "",
-        headcount: "",
-        // unit: '',
+        headcount: "1",
         phoneno: "",
-        planValidTill: "",
+        status:1,
         address: "",
         createdat: Date.now(),
         updatedat: Date.now(),
     });
     const handleUpdate = async (e) => {
         e.preventDefault();
-    
         try {
-          const response = await fetch(`http://localhost:3000/update/user/${formData.id}`, {
+          const response = await fetch(`http://localhost:3000/update/user/${formData._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-            },
+            },  
             body: JSON.stringify({
               ...formData,
-              updatedat: new Date().toISOString(),
+              updatedat: Date.now(),
             }),
           });
-    
           if (response.ok) {
             console.log("User updated successfully");
             window.location.reload(); 
-            // Optionally, you can handle success (e.g., show a success message)
           } else {
             console.error("Failed to update user");
-            // Optionally, you can handle failure (e.g., show an error message)
           }
         } catch (error) {
           console.error("Error:", error);
         }
       };
-    
+      const deleteRow =async (rowData) => {
+        console.log('Delete row:', rowData);
+        setFormData(rowData);
+        $('#modal-small').modal('show');
+        
+      };
+      const handleConfirmDelete = async () => { 
+        $('#modal-small').modal('hide');
+
+        try {
+            
+          const response = await fetch(`http://localhost:3000/users/delete/${formData._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status: 0,
+            }),
+          });
+          if (response.ok) {
+            console.log("User deleted successfully");
+            window.location.reload(); 
+          } else {
+            console.error("Failed to delete user");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
     const handleChange = (e) => {
-        // const { name, value } = e.target;
-        // setFormData((prevData) => ({
-        // ...prevData,
-        // [name]: value,
-        // }));
         const { name, value } = e.target;
         setFormData((prevData) => {
-            // Convert strings to integers for specific fields
             const intValue = [
                 "communityid",
-                "thaaliuser",
+                // "thaaliuser",
                 "role",
-                "headcount",
+              
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
-
-            // Format date fields
             const formattedValue = name.endsWith("at")
                 ? new Date(value).toISOString()
                 : intValue;
@@ -103,13 +118,11 @@ function User() {
                 // ))
                 // : [];
                 return {
-                    id: item._id,
+                    _id: item._id,
                     name: item.name,
                     email: item.email,
-                    number: item.phoneno,
-                    // packageName: unitsInfo.join("\n"), // Display all units
+                    phoneno: item.phoneno,
                     address: `${item.address}`,
-                    action: 'hdsfsd',
                     role: item.role,
                     status: item.status,
                     communityid: item.communityid,
@@ -120,9 +133,7 @@ function User() {
                     thaaliuser: item.thaaliuser,
                 };
             });
-            console.log(transformedData)
             setLoading(false); 
-
             setDataTableValues(transformedData); // Set the state directly without using prevData
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -133,19 +144,14 @@ function User() {
         setLoading(false); 
     };
     useEffect(() => {
-        
-    
         fetchData();
     }, []);
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const toast = React.createRef();
-
     useEffect(() => {}, []);
-
     const header = (
         <div className="table-header">
-            {/* <h5 className="p-m-0">Manage Users</h5> */}
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText
@@ -160,7 +166,6 @@ function User() {
         <li className="list-group-item">
             <div className="row align-items-center">
                 <div className="col-auto">
-                    {/* <div className="avatar avatar-rounded placeholder"></div> */}
                 </div>
                 <div className="col-7">
                     <div className="placeholder placeholder-xs col-9"></div>
@@ -173,39 +178,38 @@ function User() {
             </div>
         </li>
     );
-   
-      const deleteRow = (rowData) => {
-        // Implement your logic for deleting the row
-      
-        console.log('Delete row:', rowData);
-      };
-    
     const actionTemplate = (rowData) => (
         <div className="text-center">
             <Button
                 icon="pi pi-trash"
                 className="p-button-rounded btn btn-danger"
                 onClick={() => deleteRow(rowData)}
+                
             />
             <Button
                 icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
                 onClick={() => {
-                    console.log(rowData)
                     setFormData(rowData)}}
-                    // href="#"
-                    // className="btn btn-primary d-none d-sm-inline-block"
-        
                 data-bs-toggle="modal"
                 data-bs-target="#modal-edit"
             />
         </div>
     );
-
+    const getRoleName = (role) => {
+        if (role === 0) {
+          return 'Admin';
+        } else if (role === 1) {
+          return 'Manager';
+        } else if (role === 2) {
+          return 'User';
+        } else {
+          return 'Unknown role';
+        }
+      };
     const customFilter = (value, filter) => {
-        return value.toLowerCase().includes(filter.toLowerCase());
+        return String(value).toLowerCase().includes(String(filter).toLowerCase());
     };
-
     return (
         <>
             <div className="page-wrapper">
@@ -313,7 +317,7 @@ function User() {
                                             onSelectionChange={(e) => setSelectedRows(e.value)}
                                             style={{ fontSize: "1em" }}
                                         >
-                                            <Column style={{ display: "none" }} hidden field="id" header="#" />
+                                            <Column style={{ display: "none" }} hidden field="_id" header="#" />
                                             <Column
                                                 field="name"
                                                 header="Name"
@@ -340,24 +344,13 @@ function User() {
                                                 field="number"
                                                 header="Phone Number"
                                                 body={(rowData) => (
-                                                    <div className="text-center">{rowData.number}</div>
+                                                    <div className="text-center">{rowData.phoneno}</div>
                                                 )}
                                                 sortable
                                                 filter
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) => customFilter(value, filter)}
                                             />
-                                            {/* <Column
-                                                field="units"
-                                                header="Unit Count"
-                                                body={(rowData) => (
-                                                    <div className="text-center">{rowData.packageName}</div>
-                                                )}
-                                                sortable
-                                                filter
-                                                filterMatchMode="custom"
-                                                filterFunction={(value, filter) => customFilter(value, filter)}
-                                            /> */}
                                             <Column
                                                 field="address"
                                                 header="Address"
@@ -373,7 +366,9 @@ function User() {
                                                 field="role"
                                                 header="Role"
                                                 body={(rowData) => (
-                                                    <div className="text-center">{rowData.role}</div>
+                                                    <div className="text-center">
+                                                    {getRoleName(rowData.role)}
+                                                  </div>
                                                 )}
                                                 sortable
                                                 filter
@@ -406,7 +401,10 @@ function User() {
                                                 field="thaaliuser"
                                                 header="Thaali User"
                                                 body={(rowData) => (
-                                                    <div className="text-center">{rowData.thaaliuser}</div>
+                                                    // <div className="text-center">{rowData.thaaliuser}</div>
+                                                    <div className="text-center">
+  {rowData.thaaliuser === '1' ? 'Non Thaali User' : 'Thaali User'}
+</div>  
                                                 )}
                                                 sortable
                                                 filter
@@ -431,8 +429,24 @@ function User() {
             </div>
             <AddUser/>
             <EditUser formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate}/>
-            
-            
+            <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
+                <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div className="modal-content">
+                    <div className="modal-body">
+                    <div className="modal-title">Are you sure?</div>
+                    <div>If you proceed, the user will be deleted.</div>
+                    </div>
+                    <div className="modal-footer">
+                    <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
+                        Yes, delete user
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </div>
         </>
     );
 }

@@ -25,7 +25,7 @@ app.get('/users', async (req, res) => {
         await client.connect();
         const collection = client.db("ThaliSystem").collection("users");
         
-        const documents = await collection.find({}).toArray();
+        const documents = await collection.find({ status: 1 }).toArray();
 
         res.status(200).json(documents);
     } catch (err) {
@@ -66,7 +66,9 @@ app.post('/add/user', async (req, res) => {
         const collection = database.collection('users'); // Replace 'users' with your actual collection name
     
         // Insert the form data directly into the MongoDB collection
-        const result = await collection.insertOne(formData);
+        const formDataWithoutId = { ...formData };
+delete formDataWithoutId._id;
+        const result = await collection.insertOne(formDataWithoutId);
         if (result) {
             res.status(201).json({ message: 'User created successfully' });
         } else {
@@ -79,7 +81,7 @@ app.post('/add/user', async (req, res) => {
 });
 // Assuming you have a route like this in your Express app
 app.put("/update/user/:id", async (req, res) => {
-    console.log('update user')
+    // console.log('update user')
     const userId = req.params.id;
     const updatedUser = req.body;
   
@@ -88,8 +90,11 @@ app.put("/update/user/:id", async (req, res) => {
       const database = client.db("ThaliSystem");
       const collection = database.collection("users");
   
-      const result = await collection.updateOne({ _id: new ObjectId(userId) }, { $set: updatedUser });
-  
+      const updatedUserWithoutId = { ...updatedUser };
+      delete updatedUserWithoutId._id; // Remove the _id field if it exists
+      
+      const result = await collection.updateOne({ _id: new ObjectId(userId) }, { $set: updatedUserWithoutId });
+      
       if (result.modifiedCount === 1) {
         res.status(200).json({ message: "User updated successfully" });
       } else {
@@ -100,7 +105,31 @@ app.put("/update/user/:id", async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+  app.put('/users/delete/:id', async (req, res) => {
+    const userId = req.params.id;
+    const newStatus = req.body.status;
   
+    try {
+      await client.connect();
+      const database = client.db('ThaliSystem');
+      const collection = database.collection('users');
+  
+      const result = await collection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { status: newStatus } }
+      );
+  
+      if (result.matchedCount > 0) {
+        res.status(200).json({ message: 'User status updated successfully' });
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
