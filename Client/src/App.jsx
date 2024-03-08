@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/sidebar";
 import Dashboard from "./components/dashboard";
 import User from "./components/User/user";
+import Community from "./components/Community/community";
+import Unit from "./components/Units/units";
 
 function App() {
     return (
@@ -13,6 +15,8 @@ function App() {
                     <Routes>
                         <Route exact path="/" element={<Dashboard />} />
                         <Route path="/user" element={<User />} />
+                        <Route path="/community" element={<Community />} />
+                        <Route path="/unit" element={<Unit />} />
                     </Routes>
                 </div>
             </BrowserRouter>

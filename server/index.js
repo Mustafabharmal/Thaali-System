@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
+const { ObjectId } = require("bson");
 const User = require('./user');
 const connectionString = "mongodb+srv://mustafabharmal178:mustafa@thaalisystem.jqmnlib.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(connectionString, { 
@@ -13,7 +14,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
   }));
-  app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.get('/users', async (req, res) => {
     // const client = new MongoClient(uri, {
     //     // useNewUrlParser: true,
@@ -30,16 +31,17 @@ app.get('/users', async (req, res) => {
     } catch (err) {
         console.error('Error:', err);
         res.status(500).send('Internal Server Error');
-    } finally {
-        await client.close();
-    }
+    } 
+    // finally {
+    //     await client.close();
+    // }
 });
 app.post('/add/user', async (req, res) => {
     try {
         // Map form data to the User model
         const formData = req.body; // Access 'user' property from the request body
         console.log(formData);
-    
+        
         // const newUser = new User({
         //   name: formData.name,
         //   address: formData.address,
@@ -75,6 +77,31 @@ app.post('/add/user', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// Assuming you have a route like this in your Express app
+app.put("/update/user/:id", async (req, res) => {
+    console.log('update user')
+    const userId = req.params.id;
+    const updatedUser = req.body;
+  
+    try {
+      await client.connect();
+      const database = client.db("ThaliSystem");
+      const collection = database.collection("users");
+  
+      const result = await collection.updateOne({ _id: new ObjectId(userId) }, { $set: updatedUser });
+  
+      if (result.modifiedCount === 1) {
+        res.status(200).json({ message: "User updated successfully" });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

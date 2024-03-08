@@ -89,7 +89,7 @@ function Dashboard() {
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
                                             <div className="subheader">
-                                                Sales
+                                                Users
                                             </div>
                                             <div className="ms-auto lh-1">
                                                 <div className="dropdown">
@@ -154,7 +154,7 @@ function Dashboard() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="progress progress-sm">
+                                        {/* <div className="progress progress-sm">
                                             <div
                                                 className="progress-bar bg-primary"
                                                 style={{ width: "75%" }}
@@ -168,7 +168,7 @@ function Dashboard() {
                                                     75% Complete
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>

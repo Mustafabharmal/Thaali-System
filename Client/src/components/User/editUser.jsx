@@ -1,95 +1,23 @@
-import React, { useState } from "react";
-import User from "./user";
-function addUser() {
-    const [formData, setFormData] = useState({
-        name: "",
-        communityid: "0",
-        thaaliuser: "1",
-        email: "",
-        role: "0",
-        password: "",
-        headcount: "",
-        // unit: '',
-        phoneno: "",
-        planValidTill: "",
-        address: "",
-        createdat: Date.now(),
-        updatedat: Date.now(),
-    });
-
-    const handleChange = (e) => {
-        // const { name, value } = e.target;
-        // setFormData((prevData) => ({
-        // ...prevData,
-        // [name]: value,
-        // }));
-        const { name, value } = e.target;
-        setFormData((prevData) => {
-            // Convert strings to integers for specific fields
-            const intValue = [
-                "communityid",
-                "thaaliuser",
-                "role",
-                "headcount",
-            ].includes(name)
-                ? parseInt(value, 10)
-                : value;
-
-            // Format date fields
-            const formattedValue = name.endsWith("at")
-                ? new Date(value).toISOString()
-                : intValue;
-
-            return {
-                ...prevData,
-                [name]: formattedValue,
-            };
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(formData);
-        try {
-            setFormData((prevData) => ({
-                ...prevData,
-                createdat: new Date().toISOString(),
-                updatedat: new Date().toISOString(),
-            }));
-            const response = await fetch("http://localhost:3000/add/user", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                console.log("User created successfully");
-                window.location.reload(); 
-                // Optionally, you can reset the form or perform any other actions
-            } else {
-                console.error("Failed to create user");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
+import React from "react";
+function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
+    // console.log("hello from me" + formData.id);
+    // console.log(typeof formData.id);
+    // console.log("hello from me"+formData)
+    // console.log(formData.action)
     return (
         <div
             className="modal modal-blur fade"
-            id="modal-report"
+            id="modal-edit"
             tabIndex="-1"
             role="dialog"
-            aria-hidden="true"
+            aria-hidden="false"
         >
-            <form method="post" onSubmit={handleSubmit}>
+            <form onSubmit={handleUpdate}>
+            <input type="hidden" name="_id" value={formData.id} />
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New User</h5>
+                            <h5 className="modal-title">Update User</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -144,9 +72,7 @@ function addUser() {
                                             name="thaaliuser"
                                             value="0"
                                             className="form-selectgroup-input"
-                                            defaultChecked={
-                                                formData.thaaliuser === "0"
-                                            }
+                                            checked={formData.thaaliuser === 0}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -168,17 +94,10 @@ function addUser() {
                                     <label className="form-selectgroup-item">
                                         <input
                                             type="radio"
-                                            //   name="thaaliuser"
-                                            //   value="2"
-                                            //   className="form-selectgroup-input"
-                                            //   checked={formData.thaaliuser === '1'}
-                                            //   onChange={handleChange}
                                             name="thaaliuser"
                                             value="1"
                                             className="form-selectgroup-input"
-                                            defaultChecked={
-                                                formData.thaaliuser === "1"
-                                            }
+                                            checked={formData.thaaliuser === 1}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -197,6 +116,7 @@ function addUser() {
                                     </label>
                                 </div>
                             </div>
+
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
@@ -222,19 +142,14 @@ function addUser() {
                                 </div>
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
-                                            Role
-                                        </label>
+                                        <label className="form-label">Role</label>
                                         <select
                                             className="form-select"
                                             name="role"
                                             value={formData.role}
                                             onChange={handleChange}
                                         >
-                                            <option
-                                                value="0"
-                                                defaultValue={true}
-                                            >
+                                            <option value="0" defaultValue={true}>
                                                 Admin
                                             </option>
                                             <option value="2">Manager</option>
@@ -277,20 +192,20 @@ function addUser() {
                                     </div>
                                 </div>
                                 {/* <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            unit
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="unit"
-                                            name='unit'
-                                            value={formData.unit}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div> */}
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                unit
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="unit"
+                                                name='unit'
+                                                value={formData.unit}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div> */}
                             </div>
                             <div className="row">
                                 <div className="col-lg-6">
@@ -303,25 +218,25 @@ function addUser() {
                                             className="form-control"
                                             placeholder="phoneno No."
                                             name="phoneno"
-                                            value={formData.phoneno}
+                                            value={formData.number}
                                             onChange={handleChange}
                                         />
                                     </div>
                                 </div>
                                 {/* <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Plan Valid till
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            name='planValidTill'
-                                            value={formData.planValidTill}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div> */}
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                Plan Valid till
+                                            </label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name='planValidTill'
+                                                value={formData.planValidTill}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div> */}
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label">
@@ -370,7 +285,7 @@ function addUser() {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new User
+                                Update User
                             </button>
                         </div>
                     </div>
@@ -379,4 +294,4 @@ function addUser() {
         </div>
     );
 }
-export default addUser;
+export default EditUser;

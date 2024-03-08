@@ -26,7 +26,7 @@ function Sidebar() {
                                 src={logo}
                                 width="160"
                                 height="50"
-                                alt="Tabler"
+                                alt="LOGO"
                                 // className="navbar-brand-image"
                             />
                         </a>
@@ -479,7 +479,39 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li className="nav-item dropdown">
+                                <li className={`nav-item ${path.startsWith('/community') ? 'active' : ''}`}>
+                                    <a className="nav-link" href="/community">
+                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-map-pins" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+  <path d="M8 7l0 .01" />
+  <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+  <path d="M16 15l0 .01" />
+</svg>
+                                        </span>
+                                        <span className="nav-link-title">
+                                        Community
+                                        </span>
+                                    </a>
+                                </li>
+                                <li className={`nav-item ${path.startsWith('/unit') ? 'active' : ''}`}>
+                                    <a className="nav-link" href="/unit">
+                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-map-pins" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+  <path d="M8 7l0 .01" />
+  <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+  <path d="M16 15l0 .01" />
+</svg>
+                                        </span>
+                                        <span className="nav-link-title">
+                                        Unit
+                                        </span>
+                                    </a>
+                                </li>
+                                {/* <li className="nav-item dropdown">
                                     <a
                                         className="nav-link dropdown-toggle"
                                         href="#navbar-base"
@@ -1434,7 +1466,7 @@ function Sidebar() {
                                             Sponsor project!
                                         </a>
                                     </div>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </div>

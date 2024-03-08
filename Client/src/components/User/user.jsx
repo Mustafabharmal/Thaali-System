@@ -10,56 +10,130 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
+import EditUser from "./editUser";
 function User() {
+    
     const [dataTableValues, setDataTableValues] = useState([]);
+   
     const [loading, setLoading] = useState(true); 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/users', {
-                    withCredentials: true,
-                });
-               
+    const [formData, setFormData] = useState({
+        id: "",
+        name: "",
+        communityid: "0",
+        thaaliuser: "1",
+        email: "",
+        role: "0",
+        password: "",
+        headcount: "",
+        // unit: '',
+        phoneno: "",
+        planValidTill: "",
+        address: "",
+        createdat: Date.now(),
+        updatedat: Date.now(),
+    });
+    const handleUpdate = async (e) => {
+        e.preventDefault();
     
-                const transformedData = response.data.map(item => {
-                    const unitsInfo = item.user && item.user.units
-                    ? item.user.units.map(unit => (
-                        `Unit: ${unit.unit}, Validity: ${unit.validity}`
-                        // ""
-                    ))
-                    : [];
+        try {
+          const response = await fetch(`http://localhost:3000/update/user/${formData.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...formData,
+              updatedat: new Date().toISOString(),
+            }),
+          });
+    
+          if (response.ok) {
+            console.log("User updated successfully");
+            window.location.reload(); 
+            // Optionally, you can handle success (e.g., show a success message)
+          } else {
+            console.error("Failed to update user");
+            // Optionally, you can handle failure (e.g., show an error message)
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+    
+    const handleChange = (e) => {
+        // const { name, value } = e.target;
+        // setFormData((prevData) => ({
+        // ...prevData,
+        // [name]: value,
+        // }));
+        const { name, value } = e.target;
+        setFormData((prevData) => {
+            // Convert strings to integers for specific fields
+            const intValue = [
+                "communityid",
+                "thaaliuser",
+                "role",
+                "headcount",
+            ].includes(name)
+                ? parseInt(value, 10)
+                : value;
 
-                
-                    return {
-                        id: item.user.id,
-                        name: item.user.name,
-                        email: item.user.email,
-                        number: item.user.phoneno,
-                        packageName: unitsInfo.join("\n"), // Display all units
-                        address: `${item.user.name}'s ${item.user.address}`,
-                        action: 'hdsfsd',
-                        role: item.user.role,
-                        status: item.user.status,
-                        communityid: item.user.communityid,
-                        password: item.user.password,
-                        headcount: item.user.headcount,
-                        createdat: item.user.createdat,
-                        updatedat: item.user.updatedat,
-                        thaaliuser: item.user.thaaliuser,
-                    };
-                });
-                console.log(transformedData)
-                setLoading(false); 
-    
-                setDataTableValues(transformedData); // Set the state directly without using prevData
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            finally {
-                setLoading(false); // Set loading to false regardless of success or failure
-            }
+            // Format date fields
+            const formattedValue = name.endsWith("at")
+                ? new Date(value).toISOString()
+                : intValue;
+
+            return {
+                ...prevData,
+                [name]: formattedValue,
+            };
+        });
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/users', {
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    id: item._id,
+                    name: item.name,
+                    email: item.email,
+                    number: item.phoneno,
+                    // packageName: unitsInfo.join("\n"), // Display all units
+                    address: `${item.address}`,
+                    action: 'hdsfsd',
+                    role: item.role,
+                    status: item.status,
+                    communityid: item.communityid,
+                    password: item.password,
+                    headcount: item.headcount,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    thaaliuser: item.thaaliuser,
+                };
+            });
+            console.log(transformedData)
             setLoading(false); 
-        };
+
+            setDataTableValues(transformedData); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            setLoading(false); // Set loading to false regardless of success or failure
+        }
+        setLoading(false); 
+    };
+    useEffect(() => {
+        
     
         fetchData();
     }, []);
@@ -86,7 +160,7 @@ function User() {
         <li className="list-group-item">
             <div className="row align-items-center">
                 <div className="col-auto">
-                    <div className="avatar avatar-rounded placeholder"></div>
+                    {/* <div className="avatar avatar-rounded placeholder"></div> */}
                 </div>
                 <div className="col-7">
                     <div className="placeholder placeholder-xs col-9"></div>
@@ -99,6 +173,13 @@ function User() {
             </div>
         </li>
     );
+   
+      const deleteRow = (rowData) => {
+        // Implement your logic for deleting the row
+      
+        console.log('Delete row:', rowData);
+      };
+    
     const actionTemplate = (rowData) => (
         <div className="text-center">
             <Button
@@ -109,7 +190,14 @@ function User() {
             <Button
                 icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
-                onClick={() => editRow(rowData)}
+                onClick={() => {
+                    console.log(rowData)
+                    setFormData(rowData)}}
+                    // href="#"
+                    // className="btn btn-primary d-none d-sm-inline-block"
+        
+                data-bs-toggle="modal"
+                data-bs-target="#modal-edit"
             />
         </div>
     );
@@ -214,8 +302,8 @@ function User() {
                                             value={dataTableValues}
                                             className="p-datatable-striped"
                                             paginator
-                                            rows={5}
-                                            rowsPerPageOptions={[5, 10, 20]}
+                                            rows={10}
+                                            rowsPerPageOptions={[5, 10, 20,40,100]}
                                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                                             globalFilter={globalFilter}
@@ -259,7 +347,7 @@ function User() {
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) => customFilter(value, filter)}
                                             />
-                                            <Column
+                                            {/* <Column
                                                 field="units"
                                                 header="Unit Count"
                                                 body={(rowData) => (
@@ -269,7 +357,7 @@ function User() {
                                                 filter
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) => customFilter(value, filter)}
-                                            />
+                                            /> */}
                                             <Column
                                                 field="address"
                                                 header="Address"
@@ -342,6 +430,9 @@ function User() {
                 </div>
             </div>
             <AddUser/>
+            <EditUser formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate}/>
+            
+            
         </>
     );
 }

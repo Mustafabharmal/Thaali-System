@@ -1,82 +1,22 @@
 import React, { useState } from "react";
-import User from "./user";
-function addUser() {
+function NewCommunity() {
     const [formData, setFormData] = useState({
         name: "",
-        communityid: "0",
-        thaaliuser: "1",
-        email: "",
-        role: "0",
-        password: "",
-        headcount: "",
-        // unit: '',
-        phoneno: "",
-        planValidTill: "",
-        address: "",
-        createdat: Date.now(),
-        updatedat: Date.now(),
+        location: "0",
+      
     });
 
     const handleChange = (e) => {
-        // const { name, value } = e.target;
-        // setFormData((prevData) => ({
-        // ...prevData,
-        // [name]: value,
-        // }));
         const { name, value } = e.target;
-        setFormData((prevData) => {
-            // Convert strings to integers for specific fields
-            const intValue = [
-                "communityid",
-                "thaaliuser",
-                "role",
-                "headcount",
-            ].includes(name)
-                ? parseInt(value, 10)
-                : value;
-
-            // Format date fields
-            const formattedValue = name.endsWith("at")
-                ? new Date(value).toISOString()
-                : intValue;
-
-            return {
-                ...prevData,
-                [name]: formattedValue,
-            };
-        });
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
-        try {
-            setFormData((prevData) => ({
-                ...prevData,
-                createdat: new Date().toISOString(),
-                updatedat: new Date().toISOString(),
-            }));
-            const response = await fetch("http://localhost:3000/add/user", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                console.log("User created successfully");
-                window.location.reload(); 
-                // Optionally, you can reset the form or perform any other actions
-            } else {
-                console.error("Failed to create user");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
     };
-
     return (
         <div
             className="modal modal-blur fade"
@@ -89,7 +29,7 @@ function addUser() {
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New User</h5>
+                            <h5 className="modal-title">New Community</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -99,18 +39,18 @@ function addUser() {
                         </div>
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
-                                <div className="col-lg-6">
-                                    <label className="form-label">Name</label>
+                                <div className="col-lg-12">
+                                    <label className="form-label">Name of Community</label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         name="name"
-                                        placeholder="Name"
+                                        placeholder="Name of Community"
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <div className="col-lg-6">
+                                {/* <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             communityid
@@ -133,19 +73,19 @@ function addUser() {
                                             <option value="3">Jamnagar</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
-                            <label className="form-label">User type</label>
+                            {/* <label className="form-label">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
                                     <label className="form-selectgroup-item">
                                         <input
                                             type="radio"
                                             name="thaaliuser"
-                                            value="0"
+                                            value="1"
                                             className="form-selectgroup-input"
                                             defaultChecked={
-                                                formData.thaaliuser === "0"
+                                                formData.thaaliuser === "1"
                                             }
                                             onChange={handleChange}
                                         />
@@ -174,10 +114,10 @@ function addUser() {
                                             //   checked={formData.thaaliuser === '1'}
                                             //   onChange={handleChange}
                                             name="thaaliuser"
-                                            value="1"
+                                            value="2"
                                             className="form-selectgroup-input"
                                             defaultChecked={
-                                                formData.thaaliuser === "1"
+                                                formData.thaaliuser === "2"
                                             }
                                             onChange={handleChange}
                                         />
@@ -196,56 +136,11 @@ function addUser() {
                                         </span>
                                     </label>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-8">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Email Id
-                                        </label>
-                                        <div className="input-group input-group-flat">
-                                            <span className="input-group-text">
-                                                {/* Email Id */}
-                                            </span>
-                                            <input
-                                                type="text"
-                                                className="form-control ps-0"
-                                                // defaultValue="report-01"
-                                                placeholder="Email Id"
-                                                autoComplete="off"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Role
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="role"
-                                            value={formData.role}
-                                            onChange={handleChange}
-                                        >
-                                            <option
-                                                value="0"
-                                                defaultValue={true}
-                                            >
-                                                Admin
-                                            </option>
-                                            <option value="2">Manager</option>
-                                            <option value="3">User</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            </div> */}
+                          
                             {/* </div> */}
                             {/* <div className="modal-body"> */}
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col-lg-4">
                                     <div className="mb-3">
                                         <label className="form-label">
@@ -276,7 +171,7 @@ function addUser() {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className="col-lg-4">
+                                <div className="col-lg-4">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             unit
@@ -285,15 +180,15 @@ function addUser() {
                                             type="text"
                                             className="form-control"
                                             placeholder="unit"
-                                            name='unit'
+                                            name="unit"
                                             value={formData.unit}
                                             onChange={handleChange}
                                         />
                                     </div>
-                                </div> */}
-                            </div>
+                                </div>
+                            </div> */}
                             <div className="row">
-                                <div className="col-lg-6">
+                                {/* <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             phoneno No.
@@ -308,7 +203,7 @@ function addUser() {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className="col-lg-6">
+                                <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             Plan Valid till
@@ -316,7 +211,7 @@ function addUser() {
                                         <input
                                             type="date"
                                             className="form-control"
-                                            name='planValidTill'
+                                            name="planValidTill"
                                             value={formData.planValidTill}
                                             onChange={handleChange}
                                         />
@@ -370,7 +265,7 @@ function addUser() {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new User
+                                Create new Community
                             </button>
                         </div>
                     </div>
@@ -379,4 +274,4 @@ function addUser() {
         </div>
     );
 }
-export default addUser;
+export default NewCommunity;
