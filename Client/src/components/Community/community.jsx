@@ -168,7 +168,6 @@ function Community() {
                     name: item.name,
                     address: `${item.address}`,
                     status: item.status,
-                   
                     createdat: item.createdat,
                     updatedat: item.updatedat,
                    
@@ -187,10 +186,6 @@ function Community() {
     useEffect(() => {
         fetchData();
     }, []);
-    // const [globalFilter, setGlobalFilter] = useState("");
-    // const [selectedRows, setSelectedRows] = useState([]);
-    // const toast = React.createRef();
-   
     return (
         <>
         <div className="page-wrapper">
@@ -339,7 +334,7 @@ function Community() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>      
             </div>
         </div>
     </div>
