@@ -57,7 +57,7 @@ function addUser() {
                 createdat: new Date().toISOString(),
                 updatedat: new Date().toISOString(),
             }));
-            const response = await fetch("http://localhost:3000/add/user", {
+            const response = await fetch("http://localhost:3000/users/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

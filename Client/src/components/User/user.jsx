@@ -32,7 +32,7 @@ function User() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch(`http://localhost:3000/update/user/${formData._id}`, {
+          const response = await fetch(`http://localhost:3000/users/update/${formData._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

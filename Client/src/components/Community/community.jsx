@@ -11,6 +11,7 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
 import NewCommunity from "./newCommunity"; 
+import EditCommunity from "./editCommunity";
 function Community() {
     const toast = React.createRef();
     const [loading, setLoading] = useState(false); 
@@ -31,11 +32,15 @@ function Community() {
                 icon="pi pi-trash"
                 className="p-button-rounded btn btn-danger"
                 onClick={() => deleteRow(rowData)}
+                
             />
             <Button
                 icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
-                onClick={() => editRow(rowData)}
+                onClick={() => {
+                    setFormData(rowData)}}
+                data-bs-toggle="modal"
+                data-bs-target="#modal-edit"
             />
         </div>
     );
@@ -75,7 +80,7 @@ function Community() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch(`http://localhost:3000/update/community/${formData._id}`, {
+          const response = await fetch(`http://localhost:3000/community/update/${formData._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -297,23 +302,27 @@ function Community() {
                                     <Column style={{ display: "none" }} hidden field="id" header="#" />
                                     <Column
                                         field="name"
-                                        header={<div className="text-center">Community Name</div>}
+                                        header="Community Name"
                                         body={(rowData) => (
                                             <div className="text-center">{rowData.name}</div>
                                         )}
+                                        style={{ textAlign: "center", width: "8em" }}
                                         sortable
                                         filter
                                         filterMatchMode="custom"
                                         filterFunction={(value, filter) => customFilter(value, filter)}
+                                        headerStyle={{ textAlign: "center" }} // Center-align the header
                                     />
                                     <Column
                                         field="location"
-                                        header={<div className="text-center">Community Location</div>}
+                                        header="Community Location"
                                         body={(rowData) => (
-                                            <div className="text-center">{rowData.location}</div>
+                                            <div className="text-center">{rowData.address}</div>
                                         )}
+                                        style={{ textAlign: "center", width: "8em" }}
                                         sortable
                                         filter
+                                        headerStyle={{ textAlign: "center" }} // Center-align the header
                                         filterMatchMode="custom"
                                         filterFunction={(value, filter) => customFilter(value, filter)}
                                     />
@@ -335,6 +344,26 @@ function Community() {
         </div>
     </div>
     <NewCommunity/>
+    <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} />
+    {/* <EditUser /> */}
+            <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
+                <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div className="modal-content">
+                    <div className="modal-body">
+                    <div className="modal-title">Are you sure?</div>
+                    <div>If you proceed, the user will be deleted.</div>
+                    </div>
+                    <div className="modal-footer">
+                    <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
+                        Yes, delete Community
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </div>
     </>
     )
 }

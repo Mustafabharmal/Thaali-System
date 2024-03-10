@@ -1,87 +1,23 @@
-import React, { useState } from "react";
-function NewCommunity() {
-    const [formData, setFormData] = useState({
-        // _id: "",
-        name: "",
-        status: 1,
-        address: "",
-        createdat: Date.now(),
-        updatedat: Date.now(),
-    });
-    const handleChange = (e) => {
-        // const { name, value } = e.target;
-        // setFormData((prevData) => ({
-        // ...prevData,
-        // [name]: value,
-        // }));
-        const { name, value } = e.target;
-        setFormData((prevData) => {
-            // Convert strings to integers for specific fields
-            const intValue = [
-                // "communityid",
-                // "thaaliuser",
-                // "role",
-              
-            ].includes(name)
-                ? parseInt(value, 10)
-                : value;
-
-            // Format date fields
-            const formattedValue = name.endsWith("at")
-                ? new Date(value).toISOString()
-                : intValue;
-
-            return {
-                ...prevData,
-                [name]: formattedValue,
-            };
-        });
-    };
-
-  
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(formData);
-        try {
-            setFormData((prevData) => ({
-                ...prevData,
-                createdat: new Date().toISOString(),
-                updatedat: new Date().toISOString(),
-            }));
-            const response = await fetch("http://localhost:3000/community/add", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                console.log("User created successfully");
-                window.location.reload(); 
-                // Optionally, you can reset the form or perform any other actions
-            } else {
-                console.error("Failed to create user");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
+import React from "react";
+function EditCommunity({ formData, setFormData, handleChange,handleUpdate }) {
+    // console.log("hello from me" + formData.id);
+    // console.log(typeof formData.id);
+    // console.log("hello from me"+formData)
+    // console.log(formData.action)
     return (
         <div
             className="modal modal-blur fade"
-            id="modal-report"
+            id="modal-edit"
             tabIndex="-1"
             role="dialog"
-            aria-hidden="true"
+            aria-hidden="false"
         >
-            <form method="post" onSubmit={handleSubmit}>
+            <form onSubmit={handleUpdate}>
+            <input type="hidden" name="_id" value={formData._id} />
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New Community</h5>
+                            <h5 className="modal-title">Update Community</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -91,29 +27,28 @@ function NewCommunity() {
                         </div>
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
-                                <div className="col-lg-12">
-                                    <label className="form-label">Name of Community</label>
+                                <div className="col-lg-6">
+                                    <label className="form-label">Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         name="name"
-                                        placeholder="Name of Community"
+                                        placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
                                 </div>
                             </div>
-                         
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label">
-                                            Address
+                                            Location
                                         </label>
                                         <textarea
                                             className="form-control"
                                             rows="3"
-                                            placeholder="Address"
+                                            placeholder="Location"
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
@@ -153,7 +88,7 @@ function NewCommunity() {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new Community
+                                Update User
                             </button>
                         </div>
                     </div>
@@ -162,4 +97,4 @@ function NewCommunity() {
         </div>
     );
 }
-export default NewCommunity;
+export default EditCommunity;
