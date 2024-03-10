@@ -14,32 +14,17 @@ import NewCommunity from "./newCommunity";
 function Community() {
     const toast = React.createRef();
     const [loading, setLoading] = useState(false); 
-    const [dataTableValues, setDataTableValues] = useState([
-        {
-            id: "1",
-            name: "upleta",
-            location: "upleta gujarati",
-        },
-        {
-            id: "2",
-            name: "ghjk",
-            location: "hjkl",
-        },
-        {
-            id: "3",
-            name: "ghjkl",
-            location: "fghjki hhuhiui",
-        },
-        {
-            id: "4",
-            name: "hghjjkl",
-            location: "ghgjhkjlk",
-        },
-        
-    ]);
-
+    const [dataTableValues, setDataTableValues] = useState([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
+    const [formData, setFormData] = useState({
+        _id: "",
+        name: "",
+        status: 1,
+        address: "",
+        createdat: Date.now(),
+        updatedat: Date.now(),
+    });
     const actionTemplate = (rowData) => (
         <div className="text-center">
             <Button
@@ -87,6 +72,120 @@ function Community() {
             </span>
         </div>
     );
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        try {
+          const response = await fetch(`http://localhost:3000/update/community/${formData._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },  
+            body: JSON.stringify({
+              ...formData,
+              updatedat: Date.now(),
+            }),
+          });
+          if (response.ok) {
+            console.log("User updated successfully");
+            window.location.reload(); 
+          } else {
+            console.error("Failed to update user");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+      const deleteRow =async (rowData) => {
+        console.log('Delete row:', rowData);
+        setFormData(rowData);
+        $('#modal-small').modal('show');
+        
+      };
+      const handleConfirmDelete = async () => { 
+        $('#modal-small').modal('hide');
+
+        try {
+            
+          const response = await fetch(`http://localhost:3000/community/delete/${formData._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status: 0,
+            }),
+          });
+          if (response.ok) {
+            console.log("User deleted successfully");
+            window.location.reload(); 
+          } else {
+            console.error("Failed to delete user");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => {
+            const intValue = [
+                // "communityid",
+                // "thaaliuser",
+                // "role",
+              
+            ].includes(name)
+                ? parseInt(value, 10)
+                : value;
+            const formattedValue = name.endsWith("at")
+                ? new Date(value).toISOString()
+                : intValue;
+
+            return {
+                ...prevData,
+                [name]: formattedValue,
+            };
+        });
+    };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/community', {
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    name: item.name,
+                    address: `${item.address}`,
+                    status: item.status,
+                   
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                   
+                };
+            });
+            setLoading(false); 
+            setDataTableValues(transformedData); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            setLoading(false); // Set loading to false regardless of success or failure
+        }
+        setLoading(false); 
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
+    // const [globalFilter, setGlobalFilter] = useState("");
+    // const [selectedRows, setSelectedRows] = useState([]);
+    // const toast = React.createRef();
+   
     return (
         <>
         <div className="page-wrapper">
