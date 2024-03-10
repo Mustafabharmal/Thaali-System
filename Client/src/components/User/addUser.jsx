@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import User from "./user";
 function addUser() {
     const [formData, setFormData] = useState({
@@ -17,7 +18,32 @@ function addUser() {
         createdat: Date.now(),
         updatedat: Date.now(),
     });
+    const [ComValues, setComValues] = useState([]);
 
+    useEffect(() => {
+        fetchComData();
+    }, []);
+    
+    const fetchComData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/community', {
+                withCredentials: true,
+            });
+    
+            const transformedData = response.data.map(item => ({
+                _id: item._id,
+                name: item.name,
+                address: `${item.address}`,
+                status: item.status,
+                createdat: item.createdat,
+                updatedat: item.updatedat,
+            }));
+    
+            setComValues(transformedData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     const handleChange = (e) => {
         // const { name, value } = e.target;
         // setFormData((prevData) => ({
@@ -28,7 +54,7 @@ function addUser() {
         setFormData((prevData) => {
             // Convert strings to integers for specific fields
             const intValue = [
-                "communityid",
+                // "communityid",
                 // "thaaliuser",
                 "role",
               
@@ -129,9 +155,14 @@ function addUser() {
                                             >
                                                 select One
                                             </option>
-                                            <option value="1">Upleta</option>
+                                            {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
-                                            <option value="3">Jamnagar</option>
+                                            <option value="3">Jamnagar</option> */}
+                                            {ComValues.map(community => (
+                                                <option key={community._id} value={community._id}>
+                                                    {community.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>

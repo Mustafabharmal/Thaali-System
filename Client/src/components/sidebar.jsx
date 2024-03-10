@@ -495,7 +495,17 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li className={`nav-item ${path.startsWith('/unit') ? 'active' : ''}`}>
+                                <li className={`nav-item ${path.startsWith('/variety') ? 'active' : ''}`}>
+                                    <a className="nav-link" href="/variety">
+                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-components" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12l3 3l3 -3l-3 -3z" /><path d="M15 12l3 3l3 -3l-3 -3z" /><path d="M9 6l3 3l3 -3l-3 -3z" /><path d="M9 18l3 3l3 -3l-3 -3z" /></svg>
+                                        </span>
+                                        <span className="nav-link-title">
+                                        Variety
+                                        </span>
+                                    </a>
+                                </li>
+                                {/* <li className={`nav-item ${path.startsWith('/unit') ? 'active' : ''}`}>
                                     <a className="nav-link" href="/unit">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-map-pins" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -510,7 +520,7 @@ function Sidebar() {
                                         Unit
                                         </span>
                                     </a>
-                                </li>
+                                </li> */}
                                 {/* <li className="nav-item dropdown">
                                     <a
                                         className="nav-link dropdown-toggle"

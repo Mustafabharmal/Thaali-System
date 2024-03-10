@@ -29,6 +29,32 @@ function User() {
         createdat: Date.now(),
         updatedat: Date.now(),
     });
+    const [ComValues, setComValues] = useState([]);
+
+    useEffect(() => {
+        fetchComData();
+    }, []);
+    
+    const fetchComData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/community', {
+                withCredentials: true,
+            });
+    
+            const transformedData = response.data.map(item => ({
+                _id: item._id,
+                name: item.name,
+                address: `${item.address}`,
+                status: item.status,
+                createdat: item.createdat,
+                updatedat: item.updatedat,
+            }));
+    
+            setComValues(transformedData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
@@ -87,7 +113,7 @@ function User() {
         const { name, value } = e.target;
         setFormData((prevData) => {
             const intValue = [
-                "communityid",
+                // "communityid",
                 // "thaaliuser",
                 "role",
               
@@ -207,9 +233,11 @@ function User() {
           return 'Unknown role';
         }
       };
-    const customFilter = (value, filter) => {
+      const customFilter = (value, filter) => {
+        console.log('Filtering:', value, filter);
         return String(value).toLowerCase().includes(String(filter).toLowerCase());
     };
+    
     return (
         <>
             <div className="page-wrapper">
@@ -375,17 +403,26 @@ function User() {
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) => customFilter(value, filter)}
                                             />
-                                            <Column
+                                           <Column
                                                 field="communityid"
-                                                header="Community ID"
+                                                header={<div className="text-center">Community</div>}
                                                 body={(rowData) => (
-                                                    <div className="text-center">{rowData.communityid}</div>
+                                                    <div className="text-center">
+                                                        {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
+                                                    </div>
                                                 )}
+                                                style={{ textAlign: "center", width: "8em" }}
                                                 sortable
                                                 filter
                                                 filterMatchMode="custom"
-                                                filterFunction={(value, filter) => customFilter(value, filter)}
+                                                filterFunction={(value, filter) =>
+                                                    customFilter(
+                                                        ComValues.find(community => community._id === value)?.name || '',
+                                                        filter
+                                                    )
+                                                }
                                             />
+                                                
                                             <Column
                                                 field="headcount"
                                                 header="Head Count"
@@ -409,7 +446,12 @@ function User() {
                                                 sortable
                                                 filter
                                                 filterMatchMode="custom"
-                                                filterFunction={(value, filter) => customFilter(value, filter)}
+                                                filterFunction={(value, filter) =>
+                                                    customFilter(
+                                                        value === '1' ? 'Non Thaali User' : 'Thaali User',
+                                                        filter
+                                                    )
+                                                }
                                             />
                                             <Column
                                                 body={actionTemplate}
@@ -428,7 +470,7 @@ function User() {
                 </div>
             </div>
             <AddUser/>
-            <EditUser formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate}/>
+            <EditUser formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} ComValues ={ComValues} setComValues ={setComValues}/>
             <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
                 <div className="modal-content">

@@ -5,7 +5,7 @@ import Dashboard from "./components/dashboard";
 import User from "./components/User/user";
 import Community from "./components/Community/community";
 import Unit from "./components/Units/units";
-
+import Variety from "./components/Variety/variety";
 function App() {
     return (
         <>
@@ -17,6 +17,7 @@ function App() {
                         <Route path="/user" element={<User />} />
                         <Route path="/community" element={<Community />} />
                         <Route path="/unit" element={<Unit />} />
+                        <Route path="/variety" element={<Variety/> } />
                     </Routes>
                 </div>
             </BrowserRouter>

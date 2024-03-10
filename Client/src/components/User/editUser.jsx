@@ -1,5 +1,5 @@
 import React from "react";
-function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
+function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues, setComValues}) {
     // console.log("hello from me" + formData.id);
     // console.log(typeof formData.id);
     // console.log("hello from me"+formData)
@@ -56,9 +56,14 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate }) {
                                             >
                                                 select One
                                             </option>
-                                            <option value="1">Upleta</option>
+                                            {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
-                                            <option value="3">Jamnagar</option>
+                                            <option value="3">Jamnagar</option> */}
+                                            {ComValues.map(community => (
+                                                <option key={community._id} value={community._id}>
+                                                    {community.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>

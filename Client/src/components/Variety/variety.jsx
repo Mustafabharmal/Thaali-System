@@ -10,9 +10,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
-import NewCommunity from "./newCommunity"; 
-import EditCommunity from "./editCommunity";
-function Community() {
+function Variety() {
     const toast = React.createRef();
     const [loading, setLoading] = useState(false); 
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -72,7 +70,7 @@ function Community() {
                 <InputText
                     type="search"
                     onInput={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="Search Community"
+                    placeholder="Search Variety"
                 />
             </span>
         </div>
@@ -91,10 +89,10 @@ function Community() {
             }),
           });
           if (response.ok) {
-            console.log("Community updated successfully");
+            console.log("Variety updated successfully");
             window.location.reload(); 
           } else {
-            console.error("Failed to update Community");
+            console.error("Failed to update Variety");
           }
         } catch (error) {
           console.error("Error:", error);
@@ -121,10 +119,10 @@ function Community() {
             }),
           });
           if (response.ok) {
-            console.log("Community deleted successfully");
+            console.log("Variety deleted successfully");
             window.location.reload(); 
           } else {
-            console.error("Failed to delete Community");
+            console.error("Failed to delete Variety");
           }
         } catch (error) {
           console.error("Error:", error);
@@ -194,7 +192,7 @@ function Community() {
                 <div className="row g-2 align-items-center">
                     <div className="col">
                         <div className="page-pretitle">Overview</div>
-                        <h2 className="page-title">Community</h2>
+                        <h2 className="page-title">Variety</h2>
                     </div>
 
                     <div className="col-auto ms-auto d-print-none">
@@ -225,7 +223,7 @@ function Community() {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new Community
+                                Create new Variety
                             </a>
                             <a
                                 href="#"
@@ -297,7 +295,7 @@ function Community() {
                                     <Column style={{ display: "none" }} hidden field="id" header="#" />
                                     <Column
                                         field="name"
-                                        header="Community Name"
+                                        header="Variety Name"
                                         body={(rowData) => (
                                             <div className="text-center">{rowData.name}</div>
                                         )}
@@ -338,22 +336,22 @@ function Community() {
             </div>
         </div>
     </div>
-    <NewCommunity/>
-    <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} />
+    {/* <NewCommunity/>
+    <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} /> */}
     {/* <EditUser /> */}
             <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
                 <div className="modal-content">
                     <div className="modal-body">
                     <div className="modal-title">Are you sure?</div>
-                    <div>If you proceed, the Community will be deleted.</div>
+                    <div>If you proceed, the Variety will be deleted.</div>
                     </div>
                     <div className="modal-footer">
                     <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
                         Cancel
                     </button>
                     <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
-                        Yes, delete Community
+                        Yes, delete Variety
                     </button>
                     </div>
                 </div>
@@ -362,4 +360,4 @@ function Community() {
     </>
     )
 }
-export default Community;
+export default Variety
