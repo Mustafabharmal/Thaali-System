@@ -81,7 +81,7 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                                             </span>
                                               <textarea
                                             className="form-control ps-0"
-                                            id="data"
+                                            id="data1"
                                             name="gujaratiName" 
                                             placeholder="Gujarati Name"
                                             autoComplete="off"

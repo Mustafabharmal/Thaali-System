@@ -14,7 +14,7 @@ function addVeriety() {
         updatedat: Date.now(),
     });
     const [ComValues, setComValues] = useState([]);
-    let input3 = formData.gujaratiName;
+    // let input3 = formData.gujaratiName;
     // enableTransliteration(input3, "gu");
 
     // useEffect(() => {

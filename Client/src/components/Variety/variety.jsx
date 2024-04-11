@@ -34,16 +34,16 @@ function Variety() {
 
     useEffect(() => {
         fetchComData();
-        // const input = document.getElementById('data');
-        // enableTransliteration(input, 'gu');
-        // console.log(input.value)
+        const input = document.getElementById('data1');
+        enableTransliteration1(input, 'gu');
+        console.log(input)
         return () => {
           // Clean up the transliteration when the component unmounts
         //   input.transliterator.disable();
         // disableTransliteration(input); 
-        // const input = document.getElementById('data');
+        const input = document.getElementById('data1');
         // if (input) {
-        //     disableTransliteration(input); 
+            disableTransliteration1(input); 
         // }
         };
       }, []);
@@ -89,7 +89,10 @@ function Variety() {
                 icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
                 onClick={() => {
-                    setFormData(rowData)}}
+                    console.log(rowData)
+                    setFormData(rowData)
+                    document.getElementById('data1').value = rowData.gujaratiName;
+                }}
                 data-bs-toggle="modal"
                 data-bs-target="#modal-edit"
             />
@@ -130,6 +133,7 @@ function Variety() {
     );
     const handleUpdate = async (e) => {
         e.preventDefault();
+        
         try {
           const response = await fetch(`http://localhost:3000/variety/update/${formData._id}`, {
             method: "PUT",
@@ -139,6 +143,7 @@ function Variety() {
             body: JSON.stringify({
               ...formData,
               updatedat: Date.now(),
+              gujaratiName: document.getElementById('data1').value,
             }),
           });
           if (response.ok) {
@@ -199,9 +204,10 @@ function Variety() {
             return {
                 ...prevData,
                 [name]: formattedValue,
-                gujaratiName: document.getElementById('data').value,
+                gujaratiName: document.getElementById('data1').value,
             };
         });
+        console.log(formData)
     };
     const fetchData = async () => {
         try {
