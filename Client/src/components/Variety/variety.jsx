@@ -10,20 +10,73 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
+import AddVeriety from "./addVeriety";
+import EditVarity from "./EditVarity";
 function Variety() {
     const toast = React.createRef();
     const [loading, setLoading] = useState(false); 
     const [dataTableValues, setDataTableValues] = useState([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
+    // const [ComValues, setComValues] = useState([]);
     const [formData, setFormData] = useState({
         _id: "",
         name: "",
+        calories: 1,
+        description: "",
+        gujaratiName: "",
+        communityid: "",
         status: 1,
-        address: "",
         createdat: Date.now(),
         updatedat: Date.now(),
     });
+    const [ComValues, setComValues] = useState([]);
+
+    useEffect(() => {
+        fetchComData();
+        // const input = document.getElementById('data');
+        // enableTransliteration(input, 'gu');
+        // console.log(input.value)
+        return () => {
+          // Clean up the transliteration when the component unmounts
+        //   input.transliterator.disable();
+        // disableTransliteration(input); 
+        // const input = document.getElementById('data');
+        // if (input) {
+        //     disableTransliteration(input); 
+        // }
+        };
+      }, []);
+      const handleKeyUp = (e) => {
+        
+        setFormData((prevData) => ({
+            ...prevData,
+            gujaratiName: e.target.value,
+        }));
+        console.log(formData.gujaratiName);
+    };
+    
+    const fetchComData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/community', {
+                withCredentials: true,
+            });
+    
+            const transformedData = response.data.map(item => ({
+                _id: item._id,
+                name: item.name,
+                // communityid: item.communityid,
+                address: `${item.address}`,
+                status: item.status,
+                createdat: item.createdat,
+                updatedat: item.updatedat,
+            }));
+    
+            setComValues(transformedData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     const actionTemplate = (rowData) => (
         <div className="text-center">
             <Button
@@ -78,7 +131,7 @@ function Variety() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch(`http://localhost:3000/community/update/${formData._id}`, {
+          const response = await fetch(`http://localhost:3000/variety/update/${formData._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -109,7 +162,7 @@ function Variety() {
 
         try {
             
-          const response = await fetch(`http://localhost:3000/community/delete/${formData._id}`, {
+          const response = await fetch(`http://localhost:3000/variety/delete/${formData._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -146,12 +199,13 @@ function Variety() {
             return {
                 ...prevData,
                 [name]: formattedValue,
+                gujaratiName: document.getElementById('data').value,
             };
         });
     };
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/community', {
+            const response = await axios.get('http://localhost:3000/variety', {
                 withCredentials: true,
             });
             const transformedData = response.data.map(item => {
@@ -164,10 +218,16 @@ function Variety() {
                 return {
                     _id: item._id,
                     name: item.name,
-                    address: `${item.address}`,
                     status: item.status,
                     createdat: item.createdat,
                     updatedat: item.updatedat,
+                    calories: item.calories,
+                    description: item.description,
+                    gujaratiName: item.gujaratiName,
+                    communityid: item.communityid,
+                    // status: 1,
+                    // createdat: Date.now(),
+                    // updatedat: Date.now(),
                    
                 };
             });
@@ -291,6 +351,7 @@ function Variety() {
                                     selection={selectedRows}
                                     onSelectionChange={(e) => setSelectedRows(e.value)}
                                     style={{ fontSize: "1em" }}
+                                    
                                 >
                                     <Column style={{ display: "none" }} hidden field="id" header="#" />
                                     <Column
@@ -306,11 +367,31 @@ function Variety() {
                                         filterFunction={(value, filter) => customFilter(value, filter)}
                                         headerStyle={{ textAlign: "center" }} // Center-align the header
                                     />
+                                        <Column
+                                                field="communityid"
+                                                header={<div className="text-center">Community</div>}
+                                                body={(rowData) => (
+                                                    <div className="text-center">
+                                                        {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
+                                                        {/* {rowData.communityid} */}
+                                                    </div>
+                                                )}
+                                                style={{ textAlign: "center", width: "8em" }}
+                                                sortable
+                                                filter
+                                                filterMatchMode="custom"
+                                                filterFunction={(value, filter) =>
+                                                    customFilter(
+                                                        ComValues.find(community => community._id === value)?.name || '',
+                                                        filter
+                                                    )
+                                                }
+                                            />
                                     <Column
                                         field="location"
-                                        header="Community Location"
+                                        header="Gujarati Name"
                                         body={(rowData) => (
-                                            <div className="text-center">{rowData.address}</div>
+                                            <div className="text-center">{rowData.gujaratiName}</div>
                                         )}
                                         style={{ textAlign: "center", width: "8em" }}
                                         sortable
@@ -319,7 +400,33 @@ function Variety() {
                                         filterMatchMode="custom"
                                         filterFunction={(value, filter) => customFilter(value, filter)}
                                     />
-                                    
+                                    <Column
+                                        field="location"
+                                        header="Description"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.description
+                                            }</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        filter
+                                        headerStyle={{ textAlign: "center" }} // Center-align the header
+                                        filterMatchMode="custom"
+                                        filterFunction={(value, filter) => customFilter(value, filter)}
+                                    />
+                                     <Column
+                                        field="location"
+                                        header="Calories"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.calories}</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        filter
+                                        headerStyle={{ textAlign: "center" }} // Center-align the header
+                                        filterMatchMode="custom"
+                                        filterFunction={(value, filter) => customFilter(value, filter)}
+                                    />
                                     <Column
                                         body={actionTemplate}
                                         header="Action"
@@ -336,10 +443,11 @@ function Variety() {
             </div>
         </div>
     </div>
-    {/* <NewCommunity/>
-    <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} /> */}
+    <AddVeriety/>
+    {/* <NewCommunity/>*/}
+    <EditVarity formData={formData}  handleChange={handleChange} handleUpdate={handleUpdate} handleKeyUp={handleKeyUp} ComValues={ComValues} /> 
     {/* <EditUser /> */}
-            <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
+            <div className="modal modal-blur fade" id="modal-small" tabIndex="-2" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
                 <div className="modal-content">
                     <div className="modal-body">

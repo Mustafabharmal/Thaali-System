@@ -14,7 +14,6 @@ const userController = {
       res.status(500).send('Internal Server Error');
     }
   },
-
   addUser: async (req, res) => {
     try {
       const formData = req.body;
