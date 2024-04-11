@@ -17,7 +17,7 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New Variety</h5>
+                            <h5 className="modal-title">Edit Variety</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -158,7 +158,7 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new Variety
+                                Edit Variety
                             </button>
                         </div>
                     </div>

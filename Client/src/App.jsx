@@ -6,6 +6,7 @@ import User from "./components/User/user";
 import Community from "./components/Community/community";
 import Unit from "./components/Units/units";
 import Variety from "./components/Variety/variety";
+import Menus from "./components/Menu/Menus";
 function App() {
     return (
         <>
@@ -18,6 +19,7 @@ function App() {
                         <Route path="/community" element={<Community />} />
                         <Route path="/unit" element={<Unit />} />
                         <Route path="/variety" element={<Variety/> } />
+                        <Route path="/menus" element={<Menus/> } />
                     </Routes>
                 </div>
             </BrowserRouter>

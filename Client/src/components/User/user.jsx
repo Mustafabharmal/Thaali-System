@@ -349,6 +349,7 @@ function User() {
                                             <Column
                                                 field="name"
                                                 header="Name"
+                                                frozen
                                                 body={(rowData) => (
                                                     <div className="text-center">{rowData.name}</div>
                                                 )}

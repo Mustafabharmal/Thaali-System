@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../assets/static/logo.svg";
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from "react-router-dom";
 
 function Sidebar() {
     const location = useLocation();
@@ -21,15 +21,15 @@ function Sidebar() {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     {/* <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"> */}
-                        <a href=".">
-                            <img
-                                src={logo}
-                                width="160"
-                                height="50"
-                                alt="LOGO"
-                                // className="navbar-brand-image"
-                            />
-                        </a>
+                    <a href=".">
+                        <img
+                            src={logo}
+                            width="160"
+                            height="50"
+                            alt="LOGO"
+                            // className="navbar-brand-image"
+                        />
+                    </a>
                     {/* </h1> */}
                     <div className="navbar-nav flex-row order-md-last">
                         <div className="nav-item d-none d-md-flex me-3">
@@ -419,8 +419,12 @@ function Sidebar() {
                     <div className="navbar">
                         <div className="container-xl">
                             <ul className="navbar-nav">
-                            <li className={`nav-item ${path === '/' ? 'active' : ''}`}>
-                                 <a className="nav-link" href="./">
+                                <li
+                                    className={`nav-item ${
+                                        path === "/" ? "active" : ""
+                                    }`}
+                                >
+                                    <a className="nav-link" href="./">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -449,7 +453,11 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li className={`nav-item ${path.startsWith('/user') ? 'active' : ''}`}>
+                                <li
+                                    className={`nav-item ${
+                                        path.startsWith("/user") ? "active" : ""
+                                    }`}
+                                >
                                     <a className="nav-link" href="/user">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg
@@ -479,29 +487,113 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li className={`nav-item ${path.startsWith('/community') ? 'active' : ''}`}>
+                                <li
+                                    className={`nav-item ${
+                                        path.startsWith("/community")
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                >
                                     <a className="nav-link" href="/community">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-map-pins" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-  <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
-  <path d="M8 7l0 .01" />
-  <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
-  <path d="M16 15l0 .01" />
-</svg>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="icon icon-tabler icon-tabler-map-pins"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="2"
+                                                stroke="currentColor"
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+                                                <path d="M8 7l0 .01" />
+                                                <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+                                                <path d="M16 15l0 .01" />
+                                            </svg>
                                         </span>
                                         <span className="nav-link-title">
-                                        Community
+                                            Community
                                         </span>
                                     </a>
                                 </li>
-                                <li className={`nav-item ${path.startsWith('/variety') ? 'active' : ''}`}>
+                                <li
+                                    className={`nav-item ${
+                                        path.startsWith("/variety")
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                >
                                     <a className="nav-link" href="/variety">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-components" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12l3 3l3 -3l-3 -3z" /><path d="M15 12l3 3l3 -3l-3 -3z" /><path d="M9 6l3 3l3 -3l-3 -3z" /><path d="M9 18l3 3l3 -3l-3 -3z" /></svg>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="icon icon-tabler icon-tabler-components"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="2"
+                                                stroke="currentColor"
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M3 12l3 3l3 -3l-3 -3z" />
+                                                <path d="M15 12l3 3l3 -3l-3 -3z" />
+                                                <path d="M9 6l3 3l3 -3l-3 -3z" />
+                                                <path d="M9 18l3 3l3 -3l-3 -3z" />
+                                            </svg>
                                         </span>
                                         <span className="nav-link-title">
-                                        Variety
+                                            Variety
+                                        </span>
+                                    </a>
+                                </li>
+                                <li
+                                    className={`nav-item ${
+                                        path.startsWith("/menus")
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                >
+                                    <a className="nav-link" href="/menus">
+                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="icon icon-tabler icons-tabler-outline icon-tabler-file-pencil"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                                <path d="M10 18l5 -5a1.414 1.414 0 0 0 -2 -2l-5 5v2h2z" />
+                                            </svg>
+                                        </span>
+                                        <span className="nav-link-title">
+                                            Menus
                                         </span>
                                     </a>
                                 </li>
