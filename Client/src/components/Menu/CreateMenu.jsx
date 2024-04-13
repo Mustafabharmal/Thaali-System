@@ -2,6 +2,101 @@ import React, { useState, useEffect, useRef } from "react";
 import { Toast } from 'primereact/toast';
 function CreateMenu() {
     const toast = useRef(null);
+    useEffect(() => {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = today.getMonth();
+        const calendarEl = document.getElementById('calendar-main');
+    
+        let calendar = null;
+    
+        if (calendarEl) {
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['interaction', 'dayGrid'],
+                themeSystem: 'standard',
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'prev,next'
+                },
+                selectable: true,
+                selectHelper: true,
+                nowIndicator: true,
+                views: {
+                    dayGridMonth: { buttonText: 'month' },
+                    timeGridWeek: { buttonText: 'week' },
+                    timeGridDay: { buttonText: 'day' }
+                },
+                defaultView: 'dayGridMonth',
+                timeFormat: 'H(:mm)',
+                events: [
+                    {
+                        title: 'All Day Event',
+                        start: new Date(y, m, 1),
+                        className: 'bg-blue-lt'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: new Date(y, m, 7, 6, 0),
+                        allDay: false,
+                        className: 'bg-blue-lt'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: new Date(y, m, 14, 6, 0),
+                        allDay: false,
+                        className: 'bg-lime-lt'
+                    },
+                    {
+                        title: 'Meeting',
+                        start: new Date(y, m, 4, 10, 30),
+                        allDay: false,
+                        className: 'bg-green-lt'
+                    },
+                    {
+                        title: 'Lunch',
+                        start: new Date(y, m, 5, 12, 0),
+                        end: new Date(y, m, 5, 14, 0),
+                        allDay: false,
+                        className: 'bg-red-lt'
+                    },
+                    {
+                        title: 'LBD Launch',
+                        start: new Date(y, m, 19, 12, 0),
+                        allDay: true,
+                        className: 'bg-azure-lt'
+                    },
+                    {
+                        title: 'Birthday Party',
+                        start: new Date(y, m, 16, 19, 0),
+                        end: new Date(y, m, 16, 22, 30),
+                        allDay: false,
+                        className: 'bg-orange-lt'
+                    }
+                ],
+                dateClick: function(info) {
+                    console.log('Clicked on: ' + info.dateStr);
+                    // Here you can open a popup or perform any action when a day is clicked
+                },
+                // Callback function for when an event is clicked
+                eventClick: function(info) {
+                    console.log('Event clicked: ' + info.event.title);
+                    // Here you can open a popup or perform any action when an event is clicked
+                }
+            });
+            calendar.render();
+        }
+    
+        // Return cleanup function
+        return () => {
+            if (calendar) {
+                calendar.destroy();
+            }
+        };
+    }, []);
+    
     return (
         <>
         <div className="page-wrapper">
@@ -44,34 +139,6 @@ function CreateMenu() {
                                     </svg>
                                     Back to All Menu
                                 </a>
-                                {/* <a
-                                    href="#"
-                                    className="btn btn-primary d-sm-none btn-icon"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal-report"
-                                    aria-label="Create new report"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="icon"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path
-                                            stroke="none"
-                                            d="M0 0h24v24H0z"
-                                            fill="none"
-                                        />
-                                        <path d="M12 5l0 14" />
-                                        <path d="M5 12l14 0" />
-                                    </svg>
-                                </a> */}
                             </div>
                         </div>
                     </div>
@@ -90,7 +157,9 @@ function CreateMenu() {
 
 
 
-
+                                        {/* <div class="card-body"> */}
+              <div id="calendar-main" className="card-calendar"/>
+            {/* </div> */}
 
 
 
