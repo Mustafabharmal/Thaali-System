@@ -21,7 +21,7 @@ function App() {
                         <Route path="/unit" element={<Unit />} />
                         <Route path="/variety" element={<Variety/> } />
                         <Route path="/menus" element={<Menus/> } />
-                        <Route path="/CreateMenu" element={<CreateMenu/> } />
+                        {/* <Route path="/CreateMenu" element={<CreateMenu/> } /> */}
                     </Routes>
                 </div>
             </BrowserRouter>

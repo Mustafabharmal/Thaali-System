@@ -1,210 +1,354 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Toast } from 'primereact/toast';
+import React, { useState, useEffect,useRef } from "react";
+import axios from 'axios';
+
+
 function CreateMenu() {
-    const toast = useRef(null);
+    const calendarRef = useRef(null); // Create a reference to Litepicker instance
+
     useEffect(() => {
-        const today = new Date();
-        const y = today.getFullYear();
-        const m = today.getMonth();
-        const calendarEl = document.getElementById('calendar-main');
+      if (window.Litepicker) {
+        const calendar = new Litepicker({
+          element: document.getElementById('datepicker-icon-prepend'),
+          buttonText: {
+            previousMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
+    			nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
     
-        let calendar = null;
-    
-        if (calendarEl) {
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: ['interaction', 'dayGrid'],
-                themeSystem: 'standard',
-                header: {
-                    left: 'title',
-                    center: '',
-                    right: 'prev,next'
-                },
-                selectable: true,
-                selectHelper: true,
-                nowIndicator: true,
-                views: {
-                    dayGridMonth: { buttonText: 'month' },
-                    timeGridWeek: { buttonText: 'week' },
-                    timeGridDay: { buttonText: 'day' }
-                },
-                defaultView: 'dayGridMonth',
-                timeFormat: 'H(:mm)',
-                events: [
-                    {
-                        title: 'All Day Event',
-                        start: new Date(y, m, 1),
-                        className: 'bg-blue-lt'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, 7, 6, 0),
-                        allDay: false,
-                        className: 'bg-blue-lt'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, 14, 6, 0),
-                        allDay: false,
-                        className: 'bg-lime-lt'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: new Date(y, m, 4, 10, 30),
-                        allDay: false,
-                        className: 'bg-green-lt'
-                    },
-                    {
-                        title: 'Lunch',
-                        start: new Date(y, m, 5, 12, 0),
-                        end: new Date(y, m, 5, 14, 0),
-                        allDay: false,
-                        className: 'bg-red-lt'
-                    },
-                    {
-                        title: 'LBD Launch',
-                        start: new Date(y, m, 19, 12, 0),
-                        allDay: true,
-                        className: 'bg-azure-lt'
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: new Date(y, m, 16, 19, 0),
-                        end: new Date(y, m, 16, 22, 30),
-                        allDay: false,
-                        className: 'bg-orange-lt'
-                    }
-                ],
-                dateClick: function(info) {
-                    console.log('Clicked on: ' + info.dateStr);
-                    // Here you can open a popup or perform any action when a day is clicked
-                },
-                // Callback function for when an event is clicked
-                eventClick: function(info) {
-                    console.log('Event clicked: ' + info.event.title);
-                    // Here you can open a popup or perform any action when an event is clicked
-                }
-            });
-            calendar.render();
+          },
+           onSelect: handleDateSelect 
+        });
+  
+        calendarRef.current = calendar; // Assign the Litepicker instance to the ref
+      }
+  
+      // Cleanup function to destroy Litepicker instance when component unmounts
+      return () => {
+        if (calendarRef.current) {
+          calendarRef.current.destroy();
         }
-    
-        // Return cleanup function
-        return () => {
-            if (calendar) {
-                calendar.destroy();
-            }
-        };
+      };
     }, []);
+    const [formData, setFormData] = useState({
+        date: Date.now(),
+        name: "",
+        calories: 1,
+        description: "",
+        gujaratiName: "",
+        communityid: "",
+        status: 1,
+        createdat: Date.now(),
+        updatedat: Date.now(),
+    });
+    const [ComValues, setComValues] = useState([]);
+    // let input3 = formData.gujaratiName;
+    // enableTransliteration(input3, "gu");
+
+    // useEffect(() => {
+    //     fetchComData();
+    //     enableTransliteration(input3, "gu");
+    // }, []);
+    useEffect(() => {
+        fetchComData();
+        const input = document.getElementById('data');
+        enableTransliteration(input, 'gu');
+        // console.log(input.value)
+        return () => {
+          // Clean up the transliteration when the component unmounts
+        //   input.transliterator.disable();
+        disableTransliteration(input); 
+        };
+      }, []);
     
+   
+      const handleKeyUp = (e) => {
+        
+        setFormData((prevData) => ({
+            ...prevData,
+            gujaratiName: e.target.value,
+        }));
+        console.log(formData.gujaratiName);
+    };
+    // const handleKeyUp = (e) => {
+    //     const gujaratiName = transliterateToGujarati(e.target.value); // Assuming you have a function to transliterate
+    //     setFormData((prevData) => ({
+    //         ...prevData,
+    //         gujaratiName: gujaratiName,
+    //     }));
+    //     console.log(gujaratiName);
+    // };
+    
+    const fetchComData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/community', {
+                withCredentials: true,
+            });
+    
+            const transformedData = response.data.map(item => ({
+                _id: item._id,
+                name: item.name,
+                address: `${item.address}`,
+                status: item.status,
+                createdat: item.createdat,
+                updatedat: item.updatedat,
+            }));
+    
+            setComValues(transformedData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    const handleChange = (e) => {
+        // const { name, value } = e.target;
+        // setFormData((prevData) => ({
+        // ...prevData,
+        // [name]: value,
+        // }));
+        // console.log(document.getElementById('data').value);
+        
+        const { name, value } = e.target;
+        setFormData((prevData) => {
+            // Convert strings to integers for specific fields
+            const intValue = [
+                // "communityid",
+                // "thaaliuser",
+                // "role",
+              
+            ].includes(name)
+                ? parseInt(value, 10)
+                : value;
+
+            // Format date fields
+            const formattedValue = name.endsWith("at")
+                ? new Date(value).toISOString()
+                : intValue;
+            console.log(formattedValue);
+            return {
+                ...prevData,
+                gujaratiName: document.getElementById('data').value,
+                [name]: formattedValue,
+            };
+        });
+    };
+    const handleDateSelect = (date) => {
+        setFormData({
+          ...formData,
+          date: date.format('YYYY-MM-DD') // Format the date according to your preference
+        });
+      };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // console.log(formData);
+        try {
+            setFormData((prevData) => ({
+                ...prevData,
+                gujaratiName: document.getElementById('data').value,
+                createdat: new Date().toISOString(),
+                updatedat: new Date().toISOString(),
+            }));
+            // console.log(formData);
+            const response = await fetch("http://localhost:3000/variety/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify(formData),
+            });
+// console.log(formData)
+            if (response.ok) {
+                console.log("User created successfully");
+                window.location.reload(); 
+                // Optionally, you can reset the form or perform any other actions
+            } else {
+                console.error("Failed to create user");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+   
     return (
-        <>
-        <div className="page-wrapper">
-            <div className="page-header d-print-none">
-                <div className="container-xl">
-                    <div className="row g-2 align-items-center">
-                        <div className="col">
-                            <div className="page-pretitle">Overview</div>
-                            <h2 className="page-title">Create Menu</h2>
+        <div
+            className="modal modal-blur fade"
+            id="modal-report"
+            tabIndex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <form method="post" onSubmit={handleSubmit}>
+                <div className="modal-dialog modal-lg" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">New Variety</h5>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
                         </div>
-
-                        <div className="col-auto ms-auto d-print-none">
-                            <div className="btn-list">
-                                <a
-                                    // href="#"
-                                    className="btn btn-primary d-none d-sm-inline-block"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#modal-report"
-                                    href="/Menus"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="icon"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path
-                                            stroke="none"
-                                            d="M0 0h24v24H0z"
-                                            fill="none"
+                        <div className="modal-body">
+                            <div className="form-selectgroup-boxes row mb-3">
+                            <div className="row">
+                                <div className="col-lg-6">
+                                <div className="mb-3">
+                                <label className="form-label">Datepicker</label>
+                            <div className="input-icon">
+                              <span className="input-icon-addon">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
+                              </span>
+                              <input className="form-control" placeholder="Select a date" name="date" id="datepicker-icon-prepend"  value={formData.date}
+                                        onChange={handleChange}
                                         />
-                                        <path d="M12 5l0 14" />
-                                        <path d="M5 12l14 0" />
-                                    </svg>
-                                    Back to All Menu
-                                </a>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="col-12">
-                <Toast ref={toast} />
-                <div className="page-body">
-                    <div className="container-xl">
-                        <div className="row row-deck row-cards">
-                            <div className="container-fluid">
+                            </div>
+                            </div>
+                                </div>
                                 <div className="row">
-                                    <div className="card">
-                                        <div className="card-body">
-
-
-
-                                        {/* <div class="card-body"> */}
-              <div id="calendar-main" className="card-calendar"/>
-            {/* </div> */}
-
-
-
+                                <div className="col-lg-6">
+                                <div className="mb-3">
+                                    <label className="form-label"> Variety Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="name"
+                                        placeholder="Name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                    />
+                                </div></div>
+                                {/* </div>
+                            <div className="row"> */}
+                                <div className="col-lg-6">
+                                    <div className="mb-3">
+                                        <label className="form-label">
+                                            communityid
+                                        </label>
+                                        <select
+                                            className="form-select"
+                                            name="communityid"
+                                            value={formData.communityid}
+                                            onChange={handleChange}
+                                        >
+                                            <option
+                                                value="0"
+                                                defaultValue="true"
+                                                // selected="true"
+                                                // isselected="true"
+                                                disabled={true}
+                                            >
+                                                select One
+                                            </option>
+                                            {/* <option value="1">Upleta</option>
+                                            <option value="2">Rajkot</option>
+                                            <option value="3">Jamnagar</option> */}
+                                            {ComValues.map(community => (
+                                                <option key={community._id} value={community._id}>
+                                                    {community.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div></div>
+                            <div className="row">
+                                <div className="col-lg-8">
+                                    <div className="mb-3">
+                                        <label className="form-label">
+                                           Gujarati Name
+                                        </label>
+                                        <div className="input-group input-group-flat">
+                                            <span className="input-group-text">
+                                            </span>
+                                              <textarea
+                                            className="form-control ps-0"
+                                            id="data"
+                                            name="gujaratiName" 
+                                            placeholder="Gujarati Name"
+                                            autoComplete="off"
+                                            onKeyUp={handleKeyUp}
+                                            value={formData.gujaratiName}
+                                            onChange={handleChange}
+                                        />
                                         </div>
-                                        </div>
+                                    </div>
+                                </div>
+                            {/* </div>
+                            <div className="row"> */}
+                                <div className="col-lg-4">
+                                    <div className="mb-3">
+                                        <label className="form-label">
+                                           calories
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="calories"
+                                            name="calories"
+                                            rows="3"
+                                            value={formData.calories}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-lg-12">
+                                    <div>
+                                        <label className="form-label">
+                                            Description
+                                        </label>
+                                        <textarea
+                                            className="form-control"
+                                            rows="3"
+                                            placeholder="Description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                        ></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div
-                className="modal modal-blur fade"
-                id="modal-small"
-                tabIndex="-1"
-                role="dialog"
-                aria-hidden="true"
-            >
-                <div
-                    className="modal-dialog modal-sm modal-dialog-centered"
-                    role="document"
-                >
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <div className="modal-title">Are you sure?</div>
-                            <div>If you proceed, the Menu will be deleted.</div>
-                        </div>
                         <div className="modal-footer">
+                            <a
+                                href="#"
+                                className="btn btn-link link-secondary"
+                                data-bs-dismiss="modal"
+                            ></a>
                             <button
-                                type="button"
-                                className="btn btn-link link-secondary me-auto"
+                                type="submit"
+                                className="btn btn-primary ms-auto"
                                 data-bs-dismiss="modal"
                             >
-                                Cancel
-                            </button>
-                            <button type="button" className="btn btn-danger">
-                                {/* onClick={deleteMenu} */}
-                                Yes, delete Menu
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="icon"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="2"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                    />
+                                    <path d="M12 5l0 14" />
+                                    <path d="M5 12l14 0" />
+                                </svg>
+                                Create new Variety
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </>
-    )
+            </form>
+            <script type="text/javascript">
+               
+	</script>
+        </div>
+        
+    );
 }
-export default CreateMenu
+export default CreateMenu;
