@@ -68,7 +68,7 @@ function PopupVariety({setFormData, formData}) {
                 onClick={() => {
                     setFormData((formData) => ({
                         ...formData,
-                        _id: rowData._id,
+                        // _id: rowData._id,
                         name: rowData.name,
                         calories: rowData.calories,
                         description: rowData.description,

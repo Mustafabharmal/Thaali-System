@@ -45,6 +45,7 @@ function CreateMenu({ selectedDates }) {
         };
     }, [selectedDates]);
     const [formData, setFormData] = useState({
+        // _id:'',
         date: selectedDates ? new Date(selectedDates).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         name: "",
         calories: 1,
@@ -129,6 +130,7 @@ function CreateMenu({ selectedDates }) {
         try {
             setFormData((prevData) => ({
                 ...prevData,
+                // _id: '',
                 gujaratiName: document.getElementById("data").value,
                 createdat: new Date().toISOString(),
                 updatedat: new Date().toISOString(),
