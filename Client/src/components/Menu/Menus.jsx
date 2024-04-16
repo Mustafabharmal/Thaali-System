@@ -2,13 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { Toast } from 'primereact/toast';
 import CreateMenu from "./CreateMenu";
 import axios from 'axios';
+import EditMenu from "./EditMenu";
 // import { use } from "../../../../server/routes/MenuRoutes";
 function Menu() {
     const toast = useRef(null);
     const [selectedDates, setSelectedDates] = useState('');
     const [dataTableValues, setDataTableValues] = useState([]);
     const [events, setEvents] = useState([]);
-
+    const [formData, setFormData] = useState({  
+        _id: "",
+        date: "",
+        name: "",
+        gujaratiName: "",
+        description: "",
+        calories: "",
+        status: "",
+        communityid: "",
+        createdat: "",
+        updatedat: "",
+    });
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/menu', {
@@ -27,7 +39,7 @@ function Menu() {
                 updatedat: item.updatedat,
             }));
             setDataTableValues(transformedData);
-            console.log('Data fetched:', transformedData);
+            // console.log('Data fetched:', transformedData);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -94,7 +106,54 @@ function Menu() {
                     }
                 },
                 eventClick: function (info) {
-                    console.log('Event clicked: ' + info.event.id);
+                  console.log(info.event)
+                  const event = info.event; // Get the clicked event object
+
+                //   const eventData = event.extendedProps; // Extract the extended properties from the event
+              
+                  // Fetch relevant data from eventData
+                //   const { name, gujaratiName, description, calories, status,communityid } = eventData;
+                const eventId = event.id;
+                // console.log(_id)
+ const matchedEvent = dataTableValues.find(item => item._id === eventId);
+document.getElementById('data1').value = matchedEvent.gujaratiName;
+    if (matchedEvent) {
+        // Update formData with the _id of the matched event
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            _id: matchedEvent._id,
+            // Update other fields of formData as needed
+            date: matchedEvent.date,
+            name: matchedEvent.name,
+            gujaratiName: matchedEvent.gujaratiName,
+            description: matchedEvent.description,
+            calories: matchedEvent.calories,
+            status: matchedEvent.status,
+            communityid: matchedEvent.communityid,
+            createdat: matchedEvent.createdat,
+            updatedat: matchedEvent.updatedat,
+        }));
+    } else {
+        console.log("Event not found in dataTableValues");
+    }
+                  // Log or use the fetched data as needed
+                //   console.log("Name:", name);
+                //   console.log("Gujarati Name:", gujaratiName);
+                //   console.log("Description:", description);
+                //   console.log("Calories:", calories);
+                //   console.log("Status:", status);
+                //     console.log("Community ID:", communityid);
+
+                    ; // Get the date of the event
+                    // console.log(date)
+              
+                    const modal = document.getElementById('modal-edit');
+
+                    if (modal) {
+                        new bootstrap.Modal(modal).show();
+                    } else {
+                        console.error('Modal element with ID "modal-report" not found');
+                    }
                 },
             });
             calendar.render();
@@ -184,38 +243,8 @@ function Menu() {
             </div>
 
             <CreateMenu selectedDates={selectedDates} />
-            <div
-                className="modal modal-blur fade"
-                id="modal-small"
-                tabIndex="-1"
-                role="dialog"
-                aria-hidden="true"
-            >
-                <div
-                    className="modal-dialog modal-sm modal-dialog-centered"
-                    role="document"
-                >
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <div className="modal-title">Are you sure?</div>
-                            <div>If you proceed, the Menu will be deleted.</div>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-link link-secondary me-auto"
-                                data-bs-dismiss="modal"
-                            >
-                                Cancel
-                            </button>
-                            <button type="button" className="btn btn-danger">
-                                {/* onClick={deleteMenu} */}
-                                Yes, delete Menu
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <EditMenu selectedDates={selectedDates} formData={formData} setFormData={setFormData} />
+           
         </>
     )
 }
