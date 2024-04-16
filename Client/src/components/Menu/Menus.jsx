@@ -17,7 +17,7 @@ function Menu() {
         description: "",
         calories: "",
         status: "",
-        communityid: "",
+        communityid: "0",
         createdat: "",
         updatedat: "",
     });

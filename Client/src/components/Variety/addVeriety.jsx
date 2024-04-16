@@ -8,7 +8,7 @@ function addVeriety() {
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "",
+        communityid: "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -183,8 +183,6 @@ function addVeriety() {
                                             <option
                                                 value="0"
                                                 defaultValue="true"
-                                                // selected="true"
-                                                // isselected="true"
                                                 disabled={true}
                                             >
                                                 select One
@@ -192,7 +190,7 @@ function addVeriety() {
                                             {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
                                             <option value="3">Jamnagar</option> */}
-                                            {ComValues.map(community => (
+                                              {ComValues.map(community => (
                                                 <option key={community._id} value={community._id}>
                                                     {community.name}
                                                 </option>

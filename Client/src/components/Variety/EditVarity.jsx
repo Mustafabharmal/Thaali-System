@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import PopupVariety from "../Menu/PopupVariety";
 
 
 function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}) {
@@ -165,8 +166,9 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                 </div>
             </form>
             <script type="text/javascript">
-               
+            
 	</script>
+    <PopupVariety />
         </div>
         
     );

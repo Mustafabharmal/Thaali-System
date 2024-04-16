@@ -25,7 +25,7 @@ function Variety() {
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "",
+        communityid: "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -379,7 +379,6 @@ function Variety() {
                                                 body={(rowData) => (
                                                     <div className="text-center">
                                                         {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
-                                                        {/* {rowData.communityid} */}
                                                     </div>
                                                 )}
                                                 style={{ textAlign: "center", width: "8em" }}
@@ -387,9 +386,7 @@ function Variety() {
                                                 filter
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) =>
-                                                    customFilter(
-                                                        ComValues.find(community => community._id === value)?.name || '',
-                                                        filter
+                                                    customFilter(ComValues.find(community => community._id === value)?.name || '',filter
                                                     )
                                                 }
                                             />

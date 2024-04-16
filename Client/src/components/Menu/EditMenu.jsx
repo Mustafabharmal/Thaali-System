@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import PopupVariety from "./PopupVariety";
+import PopupEditVariety from "./PopupEditVariety";
 import { Button } from "primereact/button";
 function EditMenu({ selectedDates,formData, setFormData}) {
     const calendarRef = useRef(null);
@@ -202,7 +202,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Menu Creation</h5>
+                            <h5 className="modal-title">Menu Edit</h5>
                             <button
                                 type="button"
                                 className="btn-close"
@@ -266,7 +266,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                                                 className="btn btn-primary col-lg-12 col-md-12"
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    $('#modal-verity').modal('show');
+                                                    $('#modal-verity1').modal('show');
                                                 }}
                                             >
                                                 Select Variety
@@ -430,7 +430,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                 </div>
             </form>
             <script type="text/javascript"></script>
-            <PopupVariety setFormData={setFormData} formData={formData} />
+            <PopupEditVariety setFormData={setFormData} formData={formData} />
             <div
                 className="modal modal-blur fade"
                 id="modal-small"

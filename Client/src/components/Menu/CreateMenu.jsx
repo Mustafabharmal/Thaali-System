@@ -51,7 +51,7 @@ function CreateMenu({ selectedDates }) {
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "",
+        communityid: "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
