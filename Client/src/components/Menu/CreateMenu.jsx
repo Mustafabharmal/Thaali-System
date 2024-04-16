@@ -7,6 +7,7 @@ function CreateMenu() {
 
     useEffect(() => {
       if (window.Litepicker) {
+        const today = new Date();
         const calendar = new Litepicker({
           element: document.getElementById('datepicker-icon-prepend'),
           buttonText: {
@@ -14,11 +15,25 @@ function CreateMenu() {
     			nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
     
           },
-           onSelect: handleDateSelect 
+          singleMode: true,
+            autoApply: true,
+            startDate: today,
+            format: 'YYYY-MM-DD',
+        //    onSelect: handleDateSelect 
         });
   
         calendarRef.current = calendar; // Assign the Litepicker instance to the ref
+        calendar.on('selected', (startDate, endDate) => {
+            const formattedDate = startDate.format('YYYY-MM-DD');
+            console.log(formattedDate)
+            setFormData({
+                ...formData,
+                date:formattedDate,
+                // endDate
+            });
+        });
       }
+
   
       // Cleanup function to destroy Litepicker instance when component unmounts
       return () => {
@@ -27,8 +42,11 @@ function CreateMenu() {
         }
       };
     }, []);
+//     const date = new Date(Date.now());
+// const formattedDate = `${date.getUTCFullYear()} ${String(date.getUTCMonth() + 1).padStart(2, '0')} ${String(date.getUTCDate()).padStart(2, '0')}`;
+
     const [formData, setFormData] = useState({
-        date: Date.now(),
+        date: "",
         name: "",
         calories: 1,
         description: "",
@@ -128,12 +146,12 @@ function CreateMenu() {
             };
         });
     };
-    const handleDateSelect = (date) => {
-        setFormData({
-          ...formData,
-          date: date.format('YYYY-MM-DD') // Format the date according to your preference
-        });
-      };
+    // const handleDateSelect = (date) => {
+    //     setFormData({
+    //       ...formData,
+    //       date: date.format('YYYY-MM-DD') // Format the date according to your preference
+    //     });
+    //   };
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log(formData);
@@ -178,7 +196,7 @@ function CreateMenu() {
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">New Variety</h5>
+                            <h5 className="modal-title">Menu Creation</h5>
                             <button
                                 type="button"
                                 className="btn-close"
