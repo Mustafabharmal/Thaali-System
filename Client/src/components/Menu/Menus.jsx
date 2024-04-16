@@ -3,6 +3,7 @@ import { Toast } from 'primereact/toast';
 import CreateMenu from "./CreateMenu";
 function Menu() {
     const toast = useRef(null);
+    const [selectedDates, setselectedDates] = useState();
     useEffect(() => {
         const today = new Date();
         const y = today.getFullYear();
@@ -79,6 +80,7 @@ function Menu() {
                 ],
                 dateClick: function(info) {
                     console.log('Clicked on: ' + info.dateStr);
+                    setselectedDates(info.dateStr);
                     const modal = document.getElementById('modal-report');
   if (modal) {
     const modalInstance = new bootstrap.Modal(modal);
@@ -181,7 +183,7 @@ function Menu() {
                 </div>
             </div>
 
-            <CreateMenu />
+            <CreateMenu selectedDates={selectedDates}/>
             <div
                 className="modal modal-blur fade"
                 id="modal-small"

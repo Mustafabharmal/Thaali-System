@@ -1,52 +1,47 @@
-import React, { useState, useEffect,useRef } from "react";
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import PopupVariety from "./PopupVariety";
 
-
-function CreateMenu() {
-    const calendarRef = useRef(null); // Create a reference to Litepicker instance
-
+function CreateMenu({selectedDates}) {
+    const calendarRef = useRef(null); 
     useEffect(() => {
-      if (window.Litepicker) {
-        const today = new Date();
-        const calendar = new Litepicker({
-          element: document.getElementById('datepicker-icon-prepend'),
-          buttonText: {
-            previousMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
-    			nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
-    
-          },
-          singleMode: true,
-            autoApply: true,
-            startDate: today,
-            format: 'YYYY-MM-DD',
-        //    onSelect: handleDateSelect 
-        });
-  
-        calendarRef.current = calendar; // Assign the Litepicker instance to the ref
-        calendar.on('selected', (startDate, endDate) => {
-            const formattedDate = startDate.format('YYYY-MM-DD');
-            console.log(formattedDate)
+        if (window.Litepicker) {
+            const today = new Date();
+            const formattedSelectedDate = selectedDates ? new Date(selectedDates).toISOString().split('T')[0] : today.toISOString().split('T')[0];
             setFormData({
-                ...formData,
-                date:formattedDate,
-                // endDate
+
+                date: formattedSelectedDate,
+            }); 
+            const calendar = new Litepicker({
+                element: document.getElementById("datepicker-icon-prepend"),
+                buttonText: {
+                    previousMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
+                    nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
+                },
+                singleMode: true,
+                autoApply: true,
+                startDate: formattedSelectedDate,
+                format: "YYYY-MM-DD",
+                onSelect: handleDateSelect
             });
-        });
-      }
-
-  
-      // Cleanup function to destroy Litepicker instance when component unmounts
-      return () => {
-        if (calendarRef.current) {
-          calendarRef.current.destroy();
+            calendarRef.current = calendar;
+            calendar.on("selected", (startDate, endDate) => {
+                const formattedDate = startDate.format("YYYY-MM-DD");
+                setFormData({
+                    ...formData,
+                    date: formattedDate,
+                });
+            });
         }
-      };
-    }, []);
-//     const date = new Date(Date.now());
-// const formattedDate = `${date.getUTCFullYear()} ${String(date.getUTCMonth() + 1).padStart(2, '0')} ${String(date.getUTCDate()).padStart(2, '0')}`;
-
+    
+        return () => {
+            if (calendarRef.current) {
+                calendarRef.current.destroy();
+            }
+        };
+    }, [selectedDates]); 
     const [formData, setFormData] = useState({
-        date: "",
+        date: selectedDates,
         name: "",
         calories: 1,
         description: "",
@@ -57,50 +52,36 @@ function CreateMenu() {
         updatedat: Date.now(),
     });
     const [ComValues, setComValues] = useState([]);
-    // let input3 = formData.gujaratiName;
-    // enableTransliteration(input3, "gu");
-
-    // useEffect(() => {
-    //     fetchComData();
-    //     enableTransliteration(input3, "gu");
-    // }, []);
     useEffect(() => {
         fetchComData();
-        const input = document.getElementById('data');
-        enableTransliteration(input, 'gu');
-        // console.log(input.value)
+        const input = document.getElementById("data");
+        enableTransliteration(input, "gu");
         return () => {
-          // Clean up the transliteration when the component unmounts
-        //   input.transliterator.disable();
-        disableTransliteration(input); 
+            disableTransliteration(input);
         };
-      }, []);
-    
-   
-      const handleKeyUp = (e) => {
-        
+    }, []);
+const handleDateSelect = (date) => {
+        setFormData({
+          ...formData,
+          date: date.format('YYYY-MM-DD') 
+        });
+      };
+    const handleKeyUp = (e) => {
         setFormData((prevData) => ({
             ...prevData,
             gujaratiName: e.target.value,
         }));
         console.log(formData.gujaratiName);
     };
-    // const handleKeyUp = (e) => {
-    //     const gujaratiName = transliterateToGujarati(e.target.value); // Assuming you have a function to transliterate
-    //     setFormData((prevData) => ({
-    //         ...prevData,
-    //         gujaratiName: gujaratiName,
-    //     }));
-    //     console.log(gujaratiName);
-    // };
-    
     const fetchComData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/community', {
-                withCredentials: true,
-            });
-    
-            const transformedData = response.data.map(item => ({
+            const response = await axios.get(
+                "http://localhost:3000/community",
+                {
+                    withCredentials: true,
+                }
+            );
+            const transformedData = response.data.map((item) => ({
                 _id: item._id,
                 name: item.name,
                 address: `${item.address}`,
@@ -108,20 +89,13 @@ function CreateMenu() {
                 createdat: item.createdat,
                 updatedat: item.updatedat,
             }));
-    
+
             setComValues(transformedData);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error("Error fetching data:", error);
         }
     };
     const handleChange = (e) => {
-        // const { name, value } = e.target;
-        // setFormData((prevData) => ({
-        // ...prevData,
-        // [name]: value,
-        // }));
-        // console.log(document.getElementById('data').value);
-        
         const { name, value } = e.target;
         setFormData((prevData) => {
             // Convert strings to integers for specific fields
@@ -129,7 +103,6 @@ function CreateMenu() {
                 // "communityid",
                 // "thaaliuser",
                 // "role",
-              
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -141,24 +114,18 @@ function CreateMenu() {
             console.log(formattedValue);
             return {
                 ...prevData,
-                gujaratiName: document.getElementById('data').value,
+                gujaratiName: document.getElementById("data").value,
                 [name]: formattedValue,
             };
         });
     };
-    // const handleDateSelect = (date) => {
-    //     setFormData({
-    //       ...formData,
-    //       date: date.format('YYYY-MM-DD') // Format the date according to your preference
-    //     });
-    //   };
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log(formData);
         try {
             setFormData((prevData) => ({
                 ...prevData,
-                gujaratiName: document.getElementById('data').value,
+                gujaratiName: document.getElementById("data").value,
                 createdat: new Date().toISOString(),
                 updatedat: new Date().toISOString(),
             }));
@@ -171,11 +138,10 @@ function CreateMenu() {
 
                 body: JSON.stringify(formData),
             });
-// console.log(formData)
+            // console.log(formData)
             if (response.ok) {
                 console.log("User created successfully");
-                window.location.reload(); 
-                // Optionally, you can reset the form or perform any other actions
+                window.location.reload();
             } else {
                 console.error("Failed to create user");
             }
@@ -183,7 +149,7 @@ function CreateMenu() {
             console.error("Error:", error);
         }
     };
-   
+
     return (
         <div
             className="modal modal-blur fade"
@@ -206,96 +172,146 @@ function CreateMenu() {
                         </div>
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
-                            <div className="row">
-                                <div className="col-lg-6">
-                                <div className="mb-3">
-                                <label className="form-label">Datepicker</label>
-                            <div className="input-icon">
-                              <span className="input-icon-addon">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
-                              </span>
-                              <input className="form-control" placeholder="Select a date" name="date" id="datepicker-icon-prepend"  value={formData.date}
-                                        onChange={handleChange}
-                                        />
-                            </div>
-                            </div>
-                            </div>
-                                </div>
                                 <div className="row">
-                                <div className="col-lg-6">
-                                <div className="mb-3">
-                                    <label className="form-label"> Variety Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="name"
-                                        placeholder="Name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                    />
-                                </div></div>
-                                {/* </div>
-                            <div className="row"> */}
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            communityid
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="communityid"
-                                            value={formData.communityid}
-                                            onChange={handleChange}
-                                        >
-                                            <option
-                                                value="0"
-                                                defaultValue="true"
-                                                // selected="true"
-                                                // isselected="true"
-                                                disabled={true}
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                Datepicker
+                                            </label>
+                                            <div className="input-icon">
+                                                <span className="input-icon-addon">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="icon"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        strokeWidth="2"
+                                                        stroke="currentColor"
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    >
+                                                        <path
+                                                            stroke="none"
+                                                            d="M0 0h24v24H0z"
+                                                            fill="none"
+                                                        />
+                                                        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                                                        <path d="M16 3v4" />
+                                                        <path d="M8 3v4" />
+                                                        <path d="M4 11h16" />
+                                                        <path d="M11 15h1" />
+                                                        <path d="M12 15v3" />
+                                                    </svg>
+                                                </span>
+                                                <input
+                                                    className="form-control"
+                                                    placeholder="Select a date"
+                                                    name="date"
+                                                    id="datepicker-icon-prepend"
+                                                    value={formData.date || new Date().toLocaleDateString('en-CA')}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                Fetch Variety
+                                            </label>
+                                            <a
+                                                href="#"
+                                                className="btn btn-primary col-lg-12 col-md-12"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    $('#modal-verity').modal('show');
+                                                }}
                                             >
-                                                select One
-                                            </option>
-                                            {/* <option value="1">Upleta</option>
-                                            <option value="2">Rajkot</option>
-                                            <option value="3">Jamnagar</option> */}
-                                            {ComValues.map(community => (
-                                                <option key={community._id} value={community._id}>
-                                                    {community.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                                Select Variety
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div></div>
+                                <div className="row">
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                {" "}
+                                                Variety Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="name"
+                                                placeholder="Name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                communityid
+                                            </label>
+                                            <select
+                                                className="form-select"
+                                                name="communityid"
+                                                value={formData.communityid}
+                                                onChange={handleChange}
+                                            >
+                                                <option
+                                                    value="0"
+                                                    defaultValue="true"
+                                                    // selected="true"
+                                                    // selected="true"
+                                                    // isselected="true"
+                                                    disabled={true}
+                                                >
+                                                    select One
+                                                </option>
+                                                {ComValues.map((community) => (
+                                                    <option
+                                                        key={community._id}
+                                                        value={community._id}
+                                                    >
+                                                        {community.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           Gujarati Name
+                                            Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
-                                            <span className="input-group-text">
-                                            </span>
-                                              <textarea
-                                            className="form-control ps-0"
-                                            id="data"
-                                            name="gujaratiName" 
-                                            placeholder="Gujarati Name"
-                                            autoComplete="off"
-                                            onKeyUp={handleKeyUp}
-                                            value={formData.gujaratiName}
-                                            onChange={handleChange}
-                                        />
+                                            <span className="input-group-text"></span>
+                                            <textarea
+                                                className="form-control ps-0"
+                                                id="data"
+                                                name="gujaratiName"
+                                                placeholder="Gujarati Name"
+                                                autoComplete="off"
+                                                onKeyUp={handleKeyUp}
+                                                value={formData.gujaratiName}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                     </div>
                                 </div>
-                            {/* </div>
+                                {/* </div>
                             <div className="row"> */}
                                 <div className="col-lg-4">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           calories
+                                            calories
                                         </label>
                                         <input
                                             type="text"
@@ -362,11 +378,9 @@ function CreateMenu() {
                     </div>
                 </div>
             </form>
-            <script type="text/javascript">
-               
-	</script>
+            <script type="text/javascript"></script>
+            <PopupVariety setFormData={setFormData} formData={formData}/>
         </div>
-        
     );
 }
 export default CreateMenu;
