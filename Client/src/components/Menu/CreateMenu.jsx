@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import PopupVariety from "./PopupVariety";
 
-function CreateMenu({selectedDates}) {
-    const calendarRef = useRef(null); 
+function CreateMenu({ selectedDates }) {
+    const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
             const today = new Date();
             const formattedSelectedDate = selectedDates ? new Date(selectedDates).toISOString().split('T')[0] : today.toISOString().split('T')[0];
             setFormData({
-
+                ...formData,
                 date: formattedSelectedDate,
-            }); 
+            });
             const calendar = new Litepicker({
                 element: document.getElementById("datepicker-icon-prepend"),
                 buttonText: {
@@ -27,21 +27,25 @@ function CreateMenu({selectedDates}) {
             calendarRef.current = calendar;
             calendar.on("selected", (startDate, endDate) => {
                 const formattedDate = startDate.format("YYYY-MM-DD");
-                setFormData({
+                setFormData((formData) => ({
                     ...formData,
                     date: formattedDate,
-                });
+                }));
+                // setFormData({
+                //     ...formData,
+                //     date: formattedDate,
+                // });
             });
         }
-    
+
         return () => {
             if (calendarRef.current) {
                 calendarRef.current.destroy();
             }
         };
-    }, [selectedDates]); 
+    }, [selectedDates]);
     const [formData, setFormData] = useState({
-        date: selectedDates,
+        date: selectedDates ? new Date(selectedDates).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         name: "",
         calories: 1,
         description: "",
@@ -60,12 +64,12 @@ function CreateMenu({selectedDates}) {
             disableTransliteration(input);
         };
     }, []);
-const handleDateSelect = (date) => {
+    const handleDateSelect = (date) => {
         setFormData({
-          ...formData,
-          date: date.format('YYYY-MM-DD') 
+            ...formData,
+            date: date.format('YYYY-MM-DD')
         });
-      };
+    };
     const handleKeyUp = (e) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -210,7 +214,7 @@ const handleDateSelect = (date) => {
                                                     placeholder="Select a date"
                                                     name="date"
                                                     id="datepicker-icon-prepend"
-                                                    value={formData.date || new Date().toLocaleDateString('en-CA')}
+                                                    value={formData.date ? formData.date : new Date().toISOString().split('T')[0]}
                                                     onChange={handleChange}
                                                 />
                                             </div>
@@ -372,14 +376,14 @@ const handleDateSelect = (date) => {
                                     <path d="M12 5l0 14" />
                                     <path d="M5 12l14 0" />
                                 </svg>
-                                Create new Variety
+                                Menu for {formData.date}
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
             <script type="text/javascript"></script>
-            <PopupVariety setFormData={setFormData} formData={formData}/>
+            <PopupVariety setFormData={setFormData} formData={formData} />
         </div>
     );
 }

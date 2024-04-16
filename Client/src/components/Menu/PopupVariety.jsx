@@ -63,10 +63,9 @@ function PopupVariety({setFormData, formData}) {
     const actionTemplate = (rowData) => (
         <div className="text-center">
             <Button
-                icon="pi pi-pencil"
+                // icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
                 onClick={() => {
-                    console.log(rowData);
                     setFormData((formData) => ({
                         ...formData,
                         _id: rowData._id,
@@ -78,31 +77,24 @@ function PopupVariety({setFormData, formData}) {
                         status: rowData.status,
                         createdat: rowData.createdat,
                         updatedat: rowData.updatedat,
-
-                        // {
-                        //     _id: rowData._id,
-                        //     name: rowData.name,
-                        //     calories: rowData.calories,
-                        //     description: rowData.description,
-                        //     gujaratiName: rowData.gujaratiName,
-                        //     communityid: rowData.communityid,
-                        //     status: rowData.status,
-                        //     createdat: rowData.createdat,
-                        //     updatedat: rowData.updatedat,
-                        // }    
-                    
                     }));
-                    
-                    console.log(formData)
                     document.getElementById('data').value = rowData.gujaratiName;
-            
                 }}
                 data-bs-dismiss="modal"
-                // data-bs-toggle="modal"
-                // data-bs-target="#modal-report"
-            />
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-switch-3">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M3 17h2.397a5 5 0 0 0 4.096 -2.133l.177 -.253m3.66 -5.227l.177 -.254a5 5 0 0 1 4.096 -2.133h3.397" />
+                    <path d="M18 4l3 3l-3 3" />
+                    <path d="M3 7h2.397a5 5 0 0 1 4.096 2.133l4.014 5.734a5 5 0 0 0 4.096 2.133h3.397" />
+                    <path d="M18 20l3 -3l-3 -3" />
+                    </svg>
+                    Use This
+            </Button>
         </div>
     );
+    
+    
     const LoadingPlaceholder = () => (
         <li className="list-group-item">
             <div className="row align-items-center">
