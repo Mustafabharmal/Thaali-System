@@ -134,7 +134,7 @@ function CreateMenu({ selectedDates }) {
                 updatedat: new Date().toISOString(),
             }));
             // console.log(formData);
-            const response = await fetch("http://localhost:3000/variety/add", {
+            const response = await fetch("http://localhost:3000/menu/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
