@@ -184,6 +184,7 @@ document.getElementById('data1').value = matchedEvent.gujaratiName;
                                         className="btn btn-primary d-none d-sm-inline-block"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modal-report"
+                                        onClick={() =>{ setSelectedDates('')}}
                                     // href="/Menus"
                                     >
                                         <svg
