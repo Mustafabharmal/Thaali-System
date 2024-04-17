@@ -11,10 +11,33 @@ function Login() {
             [e.target.name]: e.target.value
         });
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
         console.log("Form Submitted");
+        try {
+            const response = await fetch("http://localhost:3000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include' ,
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                localStorage.setItem("token", responseData.token);
+                console.log(responseData);
+                console.log("User Login successfully");
+                window.location.href = "/";
+                // history.push("/");
+            } else {
+                const errorData = await response.json();
+                console.error("Failed to login user:", errorData.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
     }
 
     return (

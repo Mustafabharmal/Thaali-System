@@ -76,7 +76,7 @@ function addUser() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        // console.log(formData);
         try {
             setFormData((prevData) => ({
                 ...prevData,

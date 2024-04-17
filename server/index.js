@@ -143,6 +143,8 @@ const userRoutes = require('./routes/userRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const varietyRoutes = require('./routes/VarietyRoutes');
 const MenuRoutes = require('./routes/MenuRoutes');
+const authRoutes = require('./routes/AuthRoutes');
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -151,7 +153,8 @@ app.use(cors({
   credentials: true,
 }));
 app.use(bodyParser.json());
-
+app.use(cookieParser('trial'));
+app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/community', communityRoutes);
 app.use('/variety', varietyRoutes);
