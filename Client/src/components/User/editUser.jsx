@@ -1,9 +1,15 @@
-import React from "react";
+import React,{useContext}  from "react";
+import AuthContext from '../../store/auth-context';
 function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues, setComValues}) {
     // console.log("hello from me" + formData.id);
     // console.log(typeof formData.id);
     // console.log("hello from me"+formData)
     // console.log(formData.action)
+    const authCtx = useContext(AuthContext);
+    
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     return (
         <div
             className="modal modal-blur fade"
@@ -38,7 +44,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <div className="col-lg-6">
+                                {isAdmin &&(<div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             communityid
@@ -66,7 +72,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             ))}
                                         </select>
                                     </div>
-                                </div>
+                                </div>)}
                             </div>
                             <label className="form-label">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
@@ -154,9 +160,10 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             value={formData.role}
                                             onChange={handleChange}
                                         >
+                                            {isAdmin&&(
                                             <option value="0" defaultValue={true}>
                                                 Admin
-                                            </option>
+                                            </option>)}
                                             <option value="1">Manager</option>
                                             <option value="2">User</option>
                                         </select>

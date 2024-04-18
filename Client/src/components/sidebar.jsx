@@ -6,6 +6,7 @@ import AuthContext from '../store/auth-context';
 function Sidebar() {
     const location = useLocation();
     const path = location.pathname;
+
     // let variable = { userFrom: localStorage.getItem('name') };
     const authCtx = useContext(AuthContext);
     // console.log(authCtx.userid)
@@ -14,7 +15,10 @@ function Sidebar() {
     const logoutHandler = () => {
         authCtx.logout();
       };
-
+ const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
+    const UserName = authCtx.name;
     return (
         <>
             <header className="navbar navbar-expand-md d-print-none">
@@ -387,9 +391,9 @@ function Sidebar() {
                                     }}
                                 ></span>
                                 <div className="d-none d-xl-block ps-2">
-                                    <div>Mustafa Bharmal</div>
+                                    <div>{UserName}</div>
                                     <div className="mt-1 small text-secondary">
-                                        Admin
+                                        {isAdmin ? "Admin" : isManager ? "Manager" : "User"}
                                     </div>
                                 </div>
                             </a>
@@ -464,7 +468,7 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                <li
+                                {(isAdmin || isManager)&&(<li
                                     className={`nav-item ${
                                         path.startsWith("/user") ? "active" : ""
                                     }`}
@@ -497,7 +501,8 @@ function Sidebar() {
                                             User
                                         </span>
                                     </a>
-                                </li>
+                                </li>)}
+                                {isAdmin && (
                                 <li
                                     className={`nav-item ${
                                         path.startsWith("/community")
@@ -534,7 +539,8 @@ function Sidebar() {
                                             Community
                                         </span>
                                     </a>
-                                </li>
+                                </li>)}
+                                {( isAdmin || isManager) &&(
                                 <li
                                     className={`nav-item ${
                                         path.startsWith("/variety")
@@ -571,7 +577,7 @@ function Sidebar() {
                                             Variety
                                         </span>
                                     </a>
-                                </li>
+                                </li>)}
                                 <li
                                     className={`nav-item ${
                                         path.startsWith("/menus")

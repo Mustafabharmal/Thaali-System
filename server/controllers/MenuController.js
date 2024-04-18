@@ -4,10 +4,19 @@ const { ObjectId } = require("bson");
 
 const menuController = {
     getMenus: async (req, res) => {
+        
         try {
             await db.connect();
             const collection = db.db("ThaliSystem").collection("menu");
-            const documents = await collection.find({ status: 1 }).toArray();
+            let documents;
+
+            if (req.isAdmin) {
+                documents = await collection.find({ status: 1 }).toArray();
+            } else {
+                documents = await collection.find({ status: 1, communityid: req.communityid }).toArray();
+            }
+        
+            // res.status(200).json(documents);
             res.status(200).json(documents);
         } catch (err) {
             console.error('Error:', err);
@@ -16,10 +25,17 @@ const menuController = {
     },
 
     addMenu: async (req, res) => {
+        if(!req.isAdmin && !req.isManager){
+            return res.status(403).json({ error: 'You are not an admin OR MANAGER' });
+          }
         try {
             const formData = req.body;
             await db.connect();
             const collection = db.db('ThaliSystem').collection('menu');
+            if(req.isManager)
+            {
+                formData.communityid = req.communityid;
+            }
             const newMenu = new Menu(formData);
             const result = await collection.insertOne(newMenu);
             if (result) {
@@ -34,6 +50,9 @@ const menuController = {
     },
 
     updateMenu: async (req, res) => {
+        if(!req.isAdmin && !req.isManager){
+            return res.status(403).json({ error: 'You are not an admin OR MANAGER' });
+          }
         const menuId = req.params.id;
         const updatedMenu = req.body;
         try {
@@ -41,6 +60,10 @@ const menuController = {
             const collection = db.db("ThaliSystem").collection("menu");
             const updatedMenuWithoutId = { ...updatedMenu };
             delete updatedMenuWithoutId._id;
+            if(req.isManager)
+            {
+                updatedMenuWithoutId.communityid = req.communityid;
+            }
             const result = await collection.updateOne({ _id: new ObjectId(menuId) }, { $set: updatedMenuWithoutId });
             if (result.modifiedCount === 1) {
                 res.status(200).json({ message: "Menu updated successfully" });
@@ -54,6 +77,9 @@ const menuController = {
     },
 
     deleteMenu: async (req, res) => {
+        if(!req.isAdmin && !req.isManager){
+            return res.status(403).json({ error: 'You are not an admin OR MANAGER' });
+          }
         const menuId = req.params.id;
         const newStatus = req.body.status;
         try {

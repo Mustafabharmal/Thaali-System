@@ -4,12 +4,18 @@ import User from "./user";
 import AuthContext from '../../store/auth-context';
 function addUser() {
     const authCtx = useContext(AuthContext);
+    // const authCtx = useContext(AuthContext);
+    
+    // console.log(authCtx);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const [formData, setFormData] = useState({
         name: "",
-        communityid: "0",
-        thaaliuser: "1",
+        communityid: isManager ? authCtx.communityid : "0",
+        thaaliuser: "0",
         email: "",
-        role: "0",
+        role: isAdmin ?0:1,
         password: "",
         headcount: "1",
         // unit: '',
@@ -23,7 +29,8 @@ function addUser() {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        fetchComData();
+        isAdmin && (
+            fetchComData())
     }, []);
     
     const fetchComData = async () => {
@@ -143,6 +150,7 @@ function addUser() {
                                         onChange={handleChange}
                                     />
                                 </div>
+                                {isAdmin&&(
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
@@ -171,7 +179,7 @@ function addUser() {
                                             ))}
                                         </select>
                                     </div>
-                                </div>
+                                </div>)}
                             </div>
                             <label className="form-label">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
@@ -269,12 +277,10 @@ function addUser() {
                                             value={formData.role}
                                             onChange={handleChange}
                                         >
-                                            <option
-                                                value="0"
-                                                defaultValue={true}
-                                            >
+                                           {isAdmin&&(
+                                            <option value="0" defaultValue={true}>
                                                 Admin
-                                            </option>
+                                            </option>)}
                                             <option value="1">Manager</option>
                                             <option value="2">User</option>
                                         </select>

@@ -3,12 +3,15 @@ import axios from 'axios';
 import AuthContext from '../../store/auth-context';
 function addVeriety() {
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const [formData, setFormData] = useState({
         name: "",
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "0",
+        communityid: isManager ? authCtx.communityid : "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -22,7 +25,7 @@ function addVeriety() {
     //     enableTransliteration(input3, "gu");
     // }, []);
     useEffect(() => {
-        fetchComData();
+        isAdmin&&(fetchComData());
         const input = document.getElementById('data');
         enableTransliteration(input, 'gu');
         // console.log(input.value)
@@ -173,6 +176,7 @@ function addVeriety() {
                                         onChange={handleChange}
                                     />
                                 </div>
+                                {isAdmin&&(
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
@@ -201,7 +205,7 @@ function addVeriety() {
                                             ))}
                                         </select>
                                     </div>
-                                </div>
+                                </div>)}
                             </div>
                             <div className="row">
                                 <div className="col-lg-8">

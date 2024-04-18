@@ -5,6 +5,9 @@ import PopupVariety from "./PopupVariety";
 import AuthContext from '../../store/auth-context';
 function CreateMenu({ selectedDates }) {
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -53,14 +56,15 @@ function CreateMenu({ selectedDates }) {
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "0",
+        communityid: isManager ? authCtx.communityid : "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
     });
     const [ComValues, setComValues] = useState([]);
     useEffect(() => {
-        fetchComData();
+        isAdmin&&(
+        fetchComData())
         const input = document.getElementById("data");
         enableTransliteration(input, "gu");
         return () => {
@@ -261,6 +265,7 @@ function CreateMenu({ selectedDates }) {
                                             />
                                         </div>
                                     </div>
+                                    {isAdmin&&(
                                     <div className="col-lg-6">
                                         <div className="mb-3">
                                             <label className="form-label">
@@ -292,7 +297,7 @@ function CreateMenu({ selectedDates }) {
                                                 ))}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>)}
                                 </div>
                             </div>
                             <div className="row">

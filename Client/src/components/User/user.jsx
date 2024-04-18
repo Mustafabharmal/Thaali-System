@@ -16,14 +16,20 @@ import AuthContext from '../../store/auth-context';
 function User() {
     const [dataTableValues, setDataTableValues] = useState([]);
     const authCtx = useContext(AuthContext);
+    
+    // console.log(authCtx);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
+
     const [loading, setLoading] = useState(true); 
     const [formData, setFormData] = useState({
         _id: "",
         name: "",
-        communityid: "0",
-        thaaliuser: "1",
+        communityid: isManager ? authCtx.communityid : "0",
+        thaaliuser: "0",
         email: "",
-        role: "0",
+        role: isAdmin ?0:1,
         password: "",
         headcount: "1",
         phoneno: "",
@@ -35,7 +41,8 @@ function User() {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        fetchComData();
+        isAdmin && (
+        fetchComData())
     }, []);
     
     const fetchComData = async () => {
@@ -418,6 +425,7 @@ function User() {
                                                 filterMatchMode="custom"
                                                 filterFunction={(value, filter) => customFilter(value, filter)}
                                             />
+                                            {isAdmin&&(
                                            <Column
                                                 field="communityid"
                                                 header={<div className="text-center">Community</div>}
@@ -436,7 +444,7 @@ function User() {
                                                         filter
                                                     )
                                                 }
-                                            />
+                                            />)}
                                                 
                                             <Column
                                                 field="headcount"

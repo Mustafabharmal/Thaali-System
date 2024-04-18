@@ -14,16 +14,9 @@ const sendToken = (user, statusCode, res) => {
       name: user.name,
       role: user.role,
       communityid: user.communityid,
-    //   _id: "",
-    //   name: "",
-    //   communityid: "0",
       thaaliuser: user.thaaliuser,
-    //   email: "",
-    //   role: "0",
-    //   password: "",
       headcount: user.headcount,
       phoneno: user.phoneno,
-    //   status:1,
       address: user.address,
       token,
     });
@@ -45,7 +38,7 @@ const authController = {
                       // Cookie expires in 24 hours
                     //    res.status(200).json({ message: "Login successful" });
                     // res.status(200).json({ user: tokenUser, msg: "Login successful!" })
-                    // console.log(user)
+                    console.log(user)
                      sendToken(user, 201, res);
 
                 // res.status(200).json({ message: "Login successful" });

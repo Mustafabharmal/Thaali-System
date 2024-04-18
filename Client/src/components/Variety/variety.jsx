@@ -15,6 +15,9 @@ import EditVarity from "./EditVarity";
 import AuthContext from '../../store/auth-context';
 function Variety() {
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -27,7 +30,7 @@ function Variety() {
         calories: 1,
         description: "",
         gujaratiName: "",
-        communityid: "0",
+        communityid: isManager ? authCtx.communityid : "0",
         status: 1,
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -35,10 +38,11 @@ function Variety() {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        fetchComData();
+        isAdmin &&(
+        fetchComData());
         const input = document.getElementById('data1');
         enableTransliteration1(input, 'gu');
-        console.log(input)
+        // console.log(input)
         return () => {
             // Clean up the transliteration when the component unmounts
             //   input.transliterator.disable();
@@ -399,6 +403,7 @@ function Variety() {
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                             headerStyle={{ textAlign: "center" }} // Center-align the header
                                                         />
+                                                        {isAdmin&&(
                                                         <Column
                                                             field="communityid"
                                                             header={<div className="text-center">Community</div>}
@@ -415,7 +420,7 @@ function Variety() {
                                                                 customFilter(ComValues.find(community => community._id === value)?.name || '', filter
                                                                 )
                                                             }
-                                                        />
+                                                        />)}
                                                         <Column
                                                             field="location"
                                                             header="Gujarati Name"

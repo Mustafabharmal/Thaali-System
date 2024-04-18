@@ -10,16 +10,19 @@ function Menu() {
     const [selectedDates, setSelectedDates] = useState('');
     const [dataTableValues, setDataTableValues] = useState([]);
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const [events, setEvents] = useState([]);
-    const [formData, setFormData] = useState({  
+    const [formData, setFormData] = useState({
         _id: "",
         date: "",
         name: "",
         gujaratiName: "",
         description: "",
         calories: "",
-        status: "",
-        communityid: "0",
+        status: 1,
+        communityid: isManager ? authCtx.communityid : "0",
         createdat: "",
         updatedat: "",
     });
@@ -79,7 +82,7 @@ function Menu() {
         const y = today.getFullYear();
         const m = today.getMonth();
         const calendarEl = document.getElementById('calendar-main');
-
+    
         let calendar = null;
         if (calendarEl) {
             calendar = new FullCalendar.Calendar(calendarEl, {
@@ -102,74 +105,59 @@ function Menu() {
                 timeFormat: 'H(:mm)',
                 events: events,
                 dateClick: function (info) {
-                    setSelectedDates(info.dateStr);
-                    const modal = document.getElementById('modal-report');
-                    if (modal) {
-                        new bootstrap.Modal(modal).show();
-                    } else {
-                        console.error('Modal element with ID "modal-report" not found');
+                    if (isAdmin || isManager) {
+                        setSelectedDates(info.dateStr);
+                        const modal = document.getElementById('modal-report');
+                        if (modal) {
+                            new bootstrap.Modal(modal).show();
+                        } else {
+                            console.error('Modal element with ID "modal-report" not found');
+                        }
                     }
                 },
                 eventClick: function (info) {
-                  console.log(info.event)
-                  const event = info.event; // Get the clicked event object
-
-                //   const eventData = event.extendedProps; // Extract the extended properties from the event
-              
-                  // Fetch relevant data from eventData
-                //   const { name, gujaratiName, description, calories, status,communityid } = eventData;
-                const eventId = event.id;
-                // console.log(_id)
- const matchedEvent = dataTableValues.find(item => item._id === eventId);
-document.getElementById('data1').value = matchedEvent.gujaratiName;
-    if (matchedEvent) {
-        // Update formData with the _id of the matched event
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            _id: matchedEvent._id,
-            // Update other fields of formData as needed
-            date: matchedEvent.date,
-            name: matchedEvent.name,
-            gujaratiName: matchedEvent.gujaratiName,
-            description: matchedEvent.description,
-            calories: matchedEvent.calories,
-            status: matchedEvent.status,
-            communityid: matchedEvent.communityid,
-            createdat: matchedEvent.createdat,
-            updatedat: matchedEvent.updatedat,
-        }));
-    } else {
-        console.log("Event not found in dataTableValues");
-    }
-                  // Log or use the fetched data as needed
-                //   console.log("Name:", name);
-                //   console.log("Gujarati Name:", gujaratiName);
-                //   console.log("Description:", description);
-                //   console.log("Calories:", calories);
-                //   console.log("Status:", status);
-                //     console.log("Community ID:", communityid);
-
-                    ; // Get the date of the event
-                    // console.log(date)
-              
-                    const modal = document.getElementById('modal-edit');
-
-                    if (modal) {
-                        new bootstrap.Modal(modal).show();
-                    } else {
-                        console.error('Modal element with ID "modal-report" not found');
+                    if (isAdmin || isManager) {
+                        console.log(info.event);
+                        const event = info.event; // Get the clicked event object
+                        const eventId = event.id;
+                        const matchedEvent = dataTableValues.find(item => item._id === eventId);
+                        document.getElementById('data1').value = matchedEvent.gujaratiName;
+                        if (matchedEvent) {
+                            setFormData(prevFormData => ({
+                                ...prevFormData,
+                                _id: matchedEvent._id,
+                                date: matchedEvent.date,
+                                name: matchedEvent.name,
+                                gujaratiName: matchedEvent.gujaratiName,
+                                description: matchedEvent.description,
+                                calories: matchedEvent.calories,
+                                status: matchedEvent.status,
+                                communityid: matchedEvent.communityid,
+                                createdat: matchedEvent.createdat,
+                                updatedat: matchedEvent.updatedat,
+                            }));
+                        } else {
+                            console.log("Event not found in dataTableValues");
+                        }
+                        const modal = document.getElementById('modal-edit');
+                        if (modal) {
+                            new bootstrap.Modal(modal).show();
+                        } else {
+                            console.error('Modal element with ID "modal-report" not found');
+                        }
                     }
                 },
             });
             calendar.render();
         }
-
+    
         return () => {
             if (calendar) {
                 calendar.destroy();
             }
         };
     }, [events]);
+
 
     return (
         <>
@@ -182,40 +170,41 @@ document.getElementById('data1').value = matchedEvent.gujaratiName;
                                 <h2 className="page-title">Menu</h2>
                             </div>
 
-                            <div className="col-auto ms-auto d-print-none">
-                                <div className="btn-list">
-                                    <a
-                                        href="#"
-                                        className="btn btn-primary d-none d-sm-inline-block"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modal-report"
-                                        onClick={() =>{ setSelectedDates('')}}
-                                    // href="/Menus"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="icon"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="2"
-                                            stroke="currentColor"
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
+                            {(isAdmin || isManager) && (
+                                <div className="col-auto ms-auto d-print-none">
+                                    <div className="btn-list">
+                                        <a
+                                            href="#"
+                                            className="btn btn-primary d-none d-sm-inline-block"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal-report"
+                                            onClick={() => { setSelectedDates('') }}
+                                        // href="/Menus"
                                         >
-                                            <path
-                                                stroke="none"
-                                                d="M0 0h24v24H0z"
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="icon"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="2"
+                                                stroke="currentColor"
                                                 fill="none"
-                                            />
-                                            <path d="M12 5l0 14" />
-                                            <path d="M5 12l14 0" />
-                                        </svg>
-                                        Create Menu
-                                    </a>
-                                </div>
-                            </div>
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M12 5l0 14" />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                            Create Menu
+                                        </a>
+                                    </div>
+                                </div>)}
                         </div>
                     </div>
                 </div>
@@ -247,11 +236,13 @@ document.getElementById('data1').value = matchedEvent.gujaratiName;
                     </div>
                 </div>
             </div>
-
+{(isAdmin || isManager)&&(
+    <>
             <CreateMenu selectedDates={selectedDates} />
             <EditMenu selectedDates={selectedDates} formData={formData} setFormData={setFormData} />
-           
+            </>
+)}
         </>
-    )
+    );
 }
 export default Menu

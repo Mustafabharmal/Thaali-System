@@ -13,6 +13,9 @@ import axios from "axios";
 import AuthContext from '../../store/auth-context';
 function PopupEditVariety({setFormData, formData}) {
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -33,7 +36,8 @@ function PopupEditVariety({setFormData, formData}) {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        fetchComData();
+        (isAdmin &&
+        fetchComData());
         return () => {
         };
       }, []);
@@ -229,7 +233,7 @@ function PopupEditVariety({setFormData, formData}) {
                                     sortable
                                     headerStyle={{ textAlign: "center" }}
                                 />
-                                <Column
+                              {(isAdmin)&&(  <Column
                                     field="communityid"
                                     header={<div className="text-center">Community</div>}
                                     body={(rowData) => (
@@ -240,7 +244,7 @@ function PopupEditVariety({setFormData, formData}) {
                                     style={{ textAlign: "center", width: "8em" }}
                                     sortable
                                     headerStyle={{ textAlign: "center" }}
-                                />
+                                />)}
                                 <Column
                                     field="location"
                                     header="Gujarati Name"

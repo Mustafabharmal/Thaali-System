@@ -20,8 +20,25 @@ function App() {
     // const location = useLocation();
     // // Check if the current route is '/Login', if yes, do not render Sidebar
     // const showSidebar = location.pathname !== '/Login';
+    // const authCtx = useContext(AuthContext);
+
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
+    // if (!authCtx.token) {
+    //     // console.log("Token:", authCtx.token);
+    //     authCtx.isLoggedIn=false;
+    //     // isLoggedIn = false;
+    // }
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
+    if (!authCtx.token) {
+        // console.log("Token:", authCtx.token);
+        authCtx.isLoggedIn = false;
+        authCtx.logout();
+        // isLoggedIn = false;
+    }
+
     return (
         <>
             <BrowserRouter>
@@ -31,11 +48,11 @@ function App() {
                     {isLoggedIn && <Sidebar />}
                     {/* {location.pathname !== '/Login' && <Sidebar />} */}
                     <Routes>
-                        <Route path="/Login"  element={
-                                <Protected isLoggedIn={!isLoggedIn}>
-                                    <Login />
-                                </Protected>
-                            }  />
+                        <Route path="/Login" element={
+                            <Protected isLoggedIn={!isLoggedIn}>
+                                <Login />
+                            </Protected>
+                        } />
                         <Route
                             path="/"
                             element={
@@ -45,22 +62,28 @@ function App() {
                             }
                         />
                         {/* <Route exact path="/" element={ /> */}
-                        <Route path="/user" element={
-                            <Protected isLoggedIn={isLoggedIn}>
-                                <User />
-                            </Protected>
-                        } />
-                        <Route path="/community" element={<Protected isLoggedIn={isLoggedIn}>
-                            <Community />
-                        </Protected>} />
+                        {(isAdmin || isManager) && (
+                            <Route path="/user" element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <User />
+                                </Protected>
+                            } />
+                        )}
+                        {isAdmin && (
+                            <Route path="/community" element={<Protected isLoggedIn={isLoggedIn}>
+                                <Community />
+                            </Protected>} />
+                        )}
                         {/* <Route path="/unit" element={<Unit />} /> */}
-                        <Route path="/variety" element={<Protected isLoggedIn={isLoggedIn}>
-                            <Variety />
-                        </Protected>} />
+                        {(isAdmin || isManager) && (
+                            <Route path="/variety" element={<Protected isLoggedIn={isLoggedIn}>
+                                <Variety />
+                            </Protected>} />
+                        )}
                         <Route path="/menus" element={<Protected isLoggedIn={isLoggedIn}>
                             <Menus />
                         </Protected>} />
-                        <Route path="/*" element= {< NotFound />} />
+                        <Route path="/*" element={< NotFound />} />
                     </Routes>
                     <Footer />
                 </div>

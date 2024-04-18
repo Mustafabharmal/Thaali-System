@@ -4,6 +4,9 @@ const { ObjectId } = require("bson");
 
 const communityController = {
   getCommunities: async (req, res) => {
+    if(!req.isAdmin){
+      return res.status(403).json({ error: 'You are not an admin' });
+    }
     try {
       await db.connect();
       const collection = db.db("ThaliSystem").collection("community");
@@ -16,6 +19,9 @@ const communityController = {
   },
 
   addCommunity: async (req, res) => {
+    if(!req.isAdmin){
+      return res.status(403).json({ error: 'You are not an admin' });
+    }
     try {
       const formData = req.body;
       await db.connect();
@@ -34,6 +40,9 @@ const communityController = {
   },
 
   updateCommunity: async (req, res) => {
+    if(!req.isAdmin){
+      return res.status(403).json({ error: 'You are not an admin' });
+    }
     const communityId = req.params.id;
     const updatedCommunity = req.body;
     try {
@@ -54,6 +63,9 @@ const communityController = {
   },
 
   deleteCommunity: async (req, res) => {
+    if(!req.isAdmin){
+      return res.status(403).json({ error: 'You are not an admin' });
+    }
     const communityId = req.params.id;
     const newStatus = req.body.status;
     try {

@@ -5,6 +5,9 @@ import { Button } from "primereact/button";
 import AuthContext from '../../store/auth-context';
 function EditMenu({ selectedDates,formData, setFormData}) {
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
+    const isManager = authCtx.role === 1|| authCtx.role === "1";
+    const isUser = authCtx.role === 2|| authCtx.role === "2";
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -92,7 +95,8 @@ function EditMenu({ selectedDates,formData, setFormData}) {
 
     const [ComValues, setComValues] = useState([]);
     useEffect(() => {
-        fetchComData();
+       isAdmin &&(
+        fetchComData())
         const input = document.getElementById("data1");
         enableTransliteration1(input, "gu");
         return () => {
@@ -298,6 +302,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                                             />
                                         </div>
                                     </div>
+                                    {isAdmin&&(
                                     <div className="col-lg-6">
                                         <div className="mb-3">
                                             <label className="form-label">
@@ -329,7 +334,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                                                 ))}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>)}
                                 </div>
                             </div>
                             <div className="row">
