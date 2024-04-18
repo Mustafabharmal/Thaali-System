@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-
-
+import AuthContext from '../../store/auth-context';
 function addVeriety() {
+    const authCtx = useContext(AuthContext);
     const [formData, setFormData] = useState({
         name: "",
         calories: 1,
@@ -54,6 +54,9 @@ function addVeriety() {
     const fetchComData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/community', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
                 withCredentials: true,
             });
     
@@ -118,6 +121,7 @@ function addVeriety() {
             const response = await fetch("http://localhost:3000/variety/add", {
                 method: "POST",
                 headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
 

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import AuthContext from '../../store/auth-context';
 function NewCommunity() {
+    const authCtx = useContext(AuthContext);
     const [formData, setFormData] = useState({
         // _id: "",
         name: "",
@@ -51,6 +53,7 @@ function NewCommunity() {
             const response = await fetch("http://localhost:3000/community/add", {
                 method: "POST",
                 headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
 

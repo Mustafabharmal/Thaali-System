@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -12,7 +12,9 @@ import "primeflex/primeflex.css";
 import axios from 'axios';
 import AddVeriety from "./addVeriety";
 import EditVarity from "./EditVarity";
+import AuthContext from '../../store/auth-context';
 function Variety() {
+    const authCtx = useContext(AuthContext);
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -59,6 +61,10 @@ function Variety() {
     const fetchComData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/community', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+            
                 withCredentials: true,
             });
 
@@ -153,6 +159,7 @@ function Variety() {
             const response = await fetch(`http://localhost:3000/variety/update/${formData._id}`, {
                 method: "PUT",
                 headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
@@ -185,6 +192,7 @@ function Variety() {
             const response = await fetch(`http://localhost:3000/variety/delete/${formData._id}`, {
                 method: "PUT",
                 headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
@@ -227,6 +235,9 @@ function Variety() {
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/variety', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
                 withCredentials: true,
             });
             const transformedData = response.data.map(item => {

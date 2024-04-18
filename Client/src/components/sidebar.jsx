@@ -8,7 +8,7 @@ function Sidebar() {
     const path = location.pathname;
     // let variable = { userFrom: localStorage.getItem('name') };
     const authCtx = useContext(AuthContext);
-    console.log(authCtx.userid)
+    // console.log(authCtx.userid)
     // console.log("heellov from sidebar: "+authCtx);
     // console.log(variable)
     const logoutHandler = () => {

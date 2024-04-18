@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Toast } from 'primereact/toast';
 import CreateMenu from "./CreateMenu";
 import axios from 'axios';
 import EditMenu from "./EditMenu";
+import AuthContext from '../../store/auth-context';
 // import { use } from "../../../../server/routes/MenuRoutes";
 function Menu() {
     const toast = useRef(null);
     const [selectedDates, setSelectedDates] = useState('');
     const [dataTableValues, setDataTableValues] = useState([]);
+    const authCtx = useContext(AuthContext);
     const [events, setEvents] = useState([]);
     const [formData, setFormData] = useState({  
         _id: "",
@@ -25,6 +27,9 @@ function Menu() {
         try {
             const response = await axios.get('http://localhost:3000/menu', {
                 withCredentials: true,
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
             });
             const transformedData = response.data.map(item => ({
                 _id: item._id,

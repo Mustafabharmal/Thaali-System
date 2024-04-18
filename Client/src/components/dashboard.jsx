@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef , useContext} from "react";
 import axios from 'axios';
+import AuthContext from '../store/auth-context';
 function Dashboard() {
+    const authCtx = useContext(AuthContext);
     function isToday(dateString) {
         const today = new Date();
         const date = new Date(dateString);
@@ -13,6 +15,9 @@ function Dashboard() {
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/menu', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
                 withCredentials: true,
             });
             const transformedData = response.data.map(item => ({

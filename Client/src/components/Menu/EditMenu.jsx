@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import PopupEditVariety from "./PopupEditVariety";
 import { Button } from "primereact/button";
+import AuthContext from '../../store/auth-context';
 function EditMenu({ selectedDates,formData, setFormData}) {
+    const authCtx = useContext(AuthContext);
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -70,6 +72,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
           const response = await fetch(`http://localhost:3000/menu/delete/${formData._id}`, {
             method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -114,6 +117,9 @@ function EditMenu({ selectedDates,formData, setFormData}) {
             const response = await axios.get(
                 "http://localhost:3000/community",
                 {
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                    },
                     withCredentials: true,
                 }
             );
@@ -170,6 +176,7 @@ function EditMenu({ selectedDates,formData, setFormData}) {
             const response = await fetch(`http://localhost:3000/menu/update/${formData._id}`, {
                 method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },  
             body: JSON.stringify({

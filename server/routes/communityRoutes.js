@@ -3,11 +3,12 @@
 const express = require('express');
 const router = express.Router();
 const communityController = require('../controllers/communityController');
+const  {authenticateToken}  = require('../middleware/AuthenticateToken');
 
-router.get('/', communityController.getCommunities);
-router.post('/add', communityController.addCommunity);
-router.put('/update/:id', communityController.updateCommunity);
-router.put('/delete/:id', communityController.deleteCommunity);
+router.get('/',authenticateToken, communityController.getCommunities);
+router.post('/add',authenticateToken, communityController.addCommunity);
+router.put('/update/:id', authenticateToken,communityController.updateCommunity);
+router.put('/delete/:id', authenticateToken,communityController.deleteCommunity);
 
 module.exports = router;
     

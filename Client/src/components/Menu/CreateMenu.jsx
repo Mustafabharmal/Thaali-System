@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+// import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PopupVariety from "./PopupVariety";
-
+import AuthContext from '../../store/auth-context';
 function CreateMenu({ selectedDates }) {
+    const authCtx = useContext(AuthContext);
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -83,6 +85,7 @@ function CreateMenu({ selectedDates }) {
             const response = await axios.get(
                 "http://localhost:3000/community",
                 {
+                    headers: {authorization: `Mustafa ${authCtx.token}`},
                     withCredentials: true,
                 }
             );
@@ -139,6 +142,7 @@ function CreateMenu({ selectedDates }) {
             const response = await fetch("http://localhost:3000/menu/add", {
                 method: "POST",
                 headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
 

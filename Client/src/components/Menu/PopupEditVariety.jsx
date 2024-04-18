@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -10,7 +10,9 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from "axios";
+import AuthContext from '../../store/auth-context';
 function PopupEditVariety({setFormData, formData}) {
+    const authCtx = useContext(AuthContext);
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -41,6 +43,9 @@ function PopupEditVariety({setFormData, formData}) {
             const response = await axios.get(
                 "http://localhost:3000/community",
                 {
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                    },
                     withCredentials: true,
                 }
             );
@@ -123,6 +128,9 @@ function PopupEditVariety({setFormData, formData}) {
     const fetchData = async () => {
         try {
             const response = await axios.get("http://localhost:3000/variety", {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
                 withCredentials: true,
             });
             const transformedData = response.data.map((item) => {

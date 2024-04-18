@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext} from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -11,8 +11,11 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
 import EditUser from "./editUser";
+import AuthContext from '../../store/auth-context';
+
 function User() {
     const [dataTableValues, setDataTableValues] = useState([]);
+    const authCtx = useContext(AuthContext);
     const [loading, setLoading] = useState(true); 
     const [formData, setFormData] = useState({
         _id: "",
@@ -39,6 +42,9 @@ function User() {
         try {
             const response = await axios.get('http://localhost:3000/community', {
                 withCredentials: true,
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
             });
     
             const transformedData = response.data.map(item => ({
@@ -61,6 +67,7 @@ function User() {
           const response = await fetch(`http://localhost:3000/users/update/${formData._id}`, {
             method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },  
             body: JSON.stringify({
@@ -92,6 +99,7 @@ function User() {
           const response = await fetch(`http://localhost:3000/users/delete/${formData._id}`, {
             method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -134,6 +142,9 @@ function User() {
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/users', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
                 withCredentials: true,
             });
             const transformedData = response.data.map(item => {

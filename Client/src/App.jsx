@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import { useContext } from 'react';
 import AuthContext from './store/auth-context';
 import Protected from './components/Protected';
+import NotFound from "./components/Auth/404";
 // import Menu from "./components/Menu/Menus";
 function App() {
     // const location = useLocation();
@@ -25,36 +26,41 @@ function App() {
         <>
             <BrowserRouter>
                 <div className="page">
-                  {/* <Sidebar /> */}
-                  {/* {window.location.pathname.toLowerCase() !== '/login' && <Sidebar />} */}
-                  {isLoggedIn && <Sidebar />}
-                {/* {location.pathname !== '/Login' && <Sidebar />} */}
+                    {/* <Sidebar /> */}
+                    {/* {window.location.pathname.toLowerCase() !== '/login' && <Sidebar />} */}
+                    {isLoggedIn && <Sidebar />}
+                    {/* {location.pathname !== '/Login' && <Sidebar />} */}
                     <Routes>
-                        <Route path="/Login" element={<Login />} />
+                        <Route path="/Login"  element={
+                                <Protected isLoggedIn={!isLoggedIn}>
+                                    <Login />
+                                </Protected>
+                            }  />
                         <Route
-                        path="/"
-                        element={
-                            <Protected isLoggedIn={isLoggedIn}>
-                           <Dashboard />
-                            </Protected>
-                        }
+                            path="/"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <Dashboard />
+                                </Protected>
+                            }
                         />
                         {/* <Route exact path="/" element={ /> */}
                         <Route path="/user" element={
                             <Protected isLoggedIn={isLoggedIn}>
-                           <User />
+                                <User />
                             </Protected>
                         } />
                         <Route path="/community" element={<Protected isLoggedIn={isLoggedIn}>
-                           <Community />
-                            </Protected>} />
+                            <Community />
+                        </Protected>} />
                         {/* <Route path="/unit" element={<Unit />} /> */}
                         <Route path="/variety" element={<Protected isLoggedIn={isLoggedIn}>
-                           <Variety />
-                            </Protected> } />
+                            <Variety />
+                        </Protected>} />
                         <Route path="/menus" element={<Protected isLoggedIn={isLoggedIn}>
-                           <Menus />
-                            </Protected> } />
+                            <Menus />
+                        </Protected>} />
+                        <Route path="/*" element= {< NotFound />} />
                     </Routes>
                     <Footer />
                 </div>

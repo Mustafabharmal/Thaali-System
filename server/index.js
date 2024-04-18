@@ -139,11 +139,12 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const userRoutes = require('./routes/userRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const varietyRoutes = require('./routes/VarietyRoutes');
 const MenuRoutes = require('./routes/MenuRoutes');
-const authRoutes = require('./routes/AuthRoutes');
+const authRoutes = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;

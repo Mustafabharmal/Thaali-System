@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -12,8 +12,11 @@ import "primeflex/primeflex.css";
 import axios from 'axios';
 import NewCommunity from "./newCommunity"; 
 import EditCommunity from "./editCommunity";
+import AuthContext from '../../store/auth-context';
 function Community() {
     const toast = React.createRef();
+    const authCtx = useContext(AuthContext);
+    // console.log(authCtx.token)
     const [loading, setLoading] = useState(false); 
     const [dataTableValues, setDataTableValues] = useState([]);
     const [globalFilter, setGlobalFilter] = useState("");
@@ -85,6 +88,7 @@ function Community() {
           const response = await fetch(`http://localhost:3000/community/update/${formData._id}`, {
             method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },  
             body: JSON.stringify({
@@ -116,6 +120,7 @@ function Community() {
           const response = await fetch(`http://localhost:3000/community/delete/${formData._id}`, {
             method: "PUT",
             headers: {
+                authorization: `Mustafa ${authCtx.token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -157,6 +162,9 @@ function Community() {
         try {
             const response = await axios.get('http://localhost:3000/community', {
                 withCredentials: true,
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
             });
             const transformedData = response.data.map(item => {
                 // const unitsInfo = item.user && item.user.units
