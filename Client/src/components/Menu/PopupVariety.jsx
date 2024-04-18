@@ -190,22 +190,20 @@ function PopupVariety({setFormData, formData}) {
                                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                                 globalFilter={globalFilter.trim() ? globalFilter : null}
-                                header={ <div className="table-header">
-                                <span className="p-input-icon-left">
-                                    <i className="pi pi-search" />
-                                    <InputText
-                                        type="search"
-                                        onInput={handleGlobalFilter}
-                                        placeholder="Search"
-                                    />
-                                </span>
-                                {/* <Button
-                                    type="button"
-                                    icon="pi pi-times"
-                                    onClick={() => setGlobalFilter("")}
-                                    className="p-button-danger p-button-outlined p-button-sm ms-2"
-                                /> */}
-                            </div>}
+                                header={ 
+                                    <div className="table-header">
+                                    <div className="input-group" style={{ maxWidth: "300px" }}>
+                                        <span className="input-group-text">
+                                            <i className="pi pi-search" />
+                                        </span>
+                                        <input
+                                            type="search"
+                                            className="form-control shadow-none"
+                                            placeholder="Search Variety"
+                                            onInput={handleGlobalFilter}
+                                        />
+                                    </div>
+                                </div>    }
                                 selectionMode="multiple"
                                 selection={selectedRows}
                                 onSelectionChange={(e) => setSelectedRows(e.value)}

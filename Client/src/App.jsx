@@ -9,6 +9,7 @@ import Variety from "./components/Variety/variety";
 import Menus from "./components/Menu/Menus";
 import CreateMenu from "./components/Menu/CreateMenu";
 import Login from "./components/Auth/Login";
+import Footer from "./components/Footer";
 function App() {
     // const location = useLocation();
     // const location = useLocation();
@@ -31,6 +32,7 @@ function App() {
                         <Route path="/variety" element={<Variety/> } />
                         <Route path="/menus" element={<Menus/> } />
                     </Routes>
+                    <Footer />
                 </div>
             </BrowserRouter>
         </>

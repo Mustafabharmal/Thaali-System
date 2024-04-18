@@ -178,15 +178,18 @@ function User() {
     useEffect(() => {}, []);
     const header = (
         <div className="table-header">
-            <span className="p-input-icon-left">
+        <div className="input-group" style={{ maxWidth: "300px" }}>
+            <span className="input-group-text">
                 <i className="pi pi-search" />
-                <InputText
-                    type="search"
-                    onInput={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="Search User"
-                />
             </span>
+            <input
+                type="search"
+                className="form-control shadow-none"
+                placeholder="Search User"
+                onChange={(e) => setGlobalFilter(e.target.value)}
+            />
         </div>
+    </div>
     );
     const LoadingPlaceholder = () => (
         <li className="list-group-item">

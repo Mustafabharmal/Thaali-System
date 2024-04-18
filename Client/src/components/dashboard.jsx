@@ -1,6 +1,59 @@
-import React from "react";
-
+import React, { useState, useEffect, useRef } from "react";
+import axios from 'axios';
 function Dashboard() {
+    function isToday(dateString) {
+        const today = new Date();
+        const date = new Date(dateString);
+        return date.getDate() === today.getDate() &&
+               date.getMonth() === today.getMonth() &&
+               date.getFullYear() === today.getFullYear();
+    }
+    
+    const [dataTableValues, setDataTableValues] = useState([]);
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/menu', {
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => ({
+                _id: item._id,
+                name: item.name,
+                date: item.date,
+                gujaratiName: item.gujaratiName,
+                description: item.description,
+                calories: item.calories,
+                status: item.status,
+                communityid: item.communityid,
+                createdat: item.createdat,
+                updatedat: item.updatedat,
+            }));
+            console.log(transformedData)
+            // Filter menus that are not past
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+            const notPastMenus = transformedData.filter(item => item.date >= today);
+            console.log(notPastMenus)
+            // Display only the first 10 menus
+
+            let firstTenMenus;
+            if (notPastMenus.length <= 10) {
+                firstTenMenus = notPastMenus;
+            } else {
+                firstTenMenus = notPastMenus.slice(0, 10);
+            }
+            console.log("hello:" + firstTenMenus)
+
+            setDataTableValues(firstTenMenus);
+            // console.log(dataTableValues)
+            console.log('Data fetched:', dataTableValues);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <>
             <div className="page-wrapper">
@@ -14,16 +67,11 @@ function Dashboard() {
 
                             <div className="col-auto ms-auto d-print-none">
                                 <div className="btn-list">
-                                    <span className="d-none d-sm-inline">
-                                        <a href="#" className="btn">
-                                            New view
-                                        </a>
-                                    </span>
                                     <a
-                                        href="#"
+                                        href="/menus"
                                         className="btn btn-primary d-none d-sm-inline-block"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modal-report"
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#modal-report"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +93,7 @@ function Dashboard() {
                                             <path d="M12 5l0 14" />
                                             <path d="M5 12l14 0" />
                                         </svg>
-                                        Create new report
+                                        Create Menus
                                     </a>
                                     <a
                                         href="#"
@@ -125,8 +173,8 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="h1 mb-3">75%</div>
-                                        <div className="d-flex mb-2">
+                                        <div className="h1 mb-3">{ } user counts for the pertiucular community id.</div>
+                                        {/* <div className="d-flex mb-2">
                                             <div>Conversion rate</div>
                                             <div className="ms-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
@@ -153,7 +201,7 @@ function Dashboard() {
                                                     </svg>
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         {/* <div className="progress progress-sm">
                                             <div
                                                 className="progress-bar bg-primary"
@@ -177,7 +225,7 @@ function Dashboard() {
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
                                             <div className="subheader">
-                                                Revenue
+                                                Community
                                             </div>
                                             <div className="ms-auto lh-1">
                                                 <div className="dropdown">
@@ -215,9 +263,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-0 me-2">
-                                                $4,300
+                                                { } community counts for admin
                                             </div>
-                                            <div className="me-auto">
+                                            {/* <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
                                                     8%
                                                     <svg
@@ -241,7 +289,7 @@ function Dashboard() {
                                                         <path d="M14 7l7 0l0 7" />
                                                     </svg>
                                                 </span>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                     <div
@@ -255,7 +303,7 @@ function Dashboard() {
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
                                             <div className="subheader">
-                                                New clients
+                                                Variety
                                             </div>
                                             <div className="ms-auto lh-1">
                                                 <div className="dropdown">
@@ -293,9 +341,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                6,782
+                                                { } number of Variety created
                                             </div>
-                                            <div className="me-auto">
+                                            {/* <div className="me-auto">
                                                 <span className="text-yellow d-inline-flex align-items-center lh-1">
                                                     0%
                                                     <svg
@@ -318,7 +366,7 @@ function Dashboard() {
                                                         <path d="M5 12l14 0" />
                                                     </svg>
                                                 </span>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div
                                             id="chart-new-clients"
@@ -332,7 +380,7 @@ function Dashboard() {
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
                                             <div className="subheader">
-                                                Active users
+                                                Total Menu Created
                                             </div>
                                             <div className="ms-auto lh-1">
                                                 <div className="dropdown">
@@ -370,9 +418,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                2,986
+                                                { } total count of the menu created
                                             </div>
-                                            <div className="me-auto">
+                                            {/* <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
                                                     4%
                                                     <svg
@@ -396,12 +444,12 @@ function Dashboard() {
                                                         <path d="M14 7l7 0l0 7" />
                                                     </svg>
                                                 </span>
-                                            </div>
+                                            </div> */}
                                         </div>
-                                        <div
+                                        {/* <div
                                             id="chart-active-users"
                                             className="chart-sm"
-                                        ></div>
+                                        ></div> */}
                                     </div>
                                 </div>
                             </div>
@@ -569,70 +617,56 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                        
-                            <div className="col-lg-6">
-                                <div className="row row-cards">
-                                    <div className="col-12">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <p className="mb-3">
-                                                    Using Storage{" "}
-                                                    <strong>6854.45 MB </strong>
-                                                    of 8 GB
-                                                </p>
-                                                <div className="progress progress-separated mb-3">
-                                                    <div
-                                                        className="progress-bar bg-primary"
-                                                        role="progressbar"
-                                                        style={{ width: "44%" }}
-                                                        aria-label="Regular"
+
+                            <div className="col-lg-12">
+                                <div className="card">
+                                    <div className="card-header border-0">
+                                        <div className="card-title">
+                                            Upcomming Menus
+                                        </div>
+                                    </div>
+                                    {/* <div className="position-relative">
+                                        <div className="position-absolute top-0 left-0 px-3 mt-1 w-75">
+                                            <div className="row g-2">
+                                                <div className="col-auto">
+                                                    {/* <div
+                                                        className="chart-sparkline chart-sparkline-square"
+                                                        id="sparkline-activity"
                                                     ></div>
-                                                    <div
-                                                        className="progress-bar bg-info"
-                                                        role="progressbar"
-                                                        style={{ width: "19%" }}
-                                                        aria-label="System"
-                                                    ></div>
-                                                    <div
-                                                        className="progress-bar bg-success"
-                                                        role="progressbar"
-                                                        style={{ width: "9%" }}
-                                                        aria-label="Shared"
-                                                    ></div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-auto d-flex align-items-center pe-2">
-                                                        <span className="legend me-2 bg-primary"></span>
-                                                        <span>Regular</span>
-                                                        <span className="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary">
-                                                            915MB
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-auto d-flex align-items-center px-2">
-                                                        <span className="legend me-2 bg-info"></span>
-                                                        <span>System</span>
-                                                        <span className="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary">
-                                                            415MB
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-auto d-flex align-items-center px-2">
-                                                        <span className="legend me-2 bg-success"></span>
-                                                        <span>Shared</span>
-                                                        <span className="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary">
-                                                            201MB
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-auto d-flex align-items-center ps-2">
-                                                        <span className="legend me-2"></span>
-                                                        <span>Free</span>
-                                                        <span className="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary">
-                                                            612MB
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="chart-development-activity"></div>
+                                    </div> */}
+                                    <div className="card-table table-responsive">
+                                        <table className="table table-vcenter">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Name</th>
+                                                    <th>Gujarati Name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {dataTableValues.map(item => (
+                                                   <tr key={item._id} className={isToday(item.date) ? 'table-primary' : ''}>
+                                                        <td className="text-nowrap text-secondary w-3">{item.date}</td>
+                                                        <td className="td-truncate w-5">
+                                                            <div className="text-truncate">{item.name} ({item.description})</div>
+                                                        </td>
+                                                        <td className="text-nowrap w-4">{item.gujaratiName}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>    
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div className="col-lg-6">
+                                <div className="row row-cards">
+                                   
                                     <div className="col-12">
                                         <div
                                             className="card"
@@ -1200,1194 +1234,12 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-6">
-                                <div className="card">
-                                    <div className="card-header border-0">
-                                        <div className="card-title">
-                                            Development activity
-                                        </div>
-                                    </div>
-                                    <div className="position-relative">
-                                        <div className="position-absolute top-0 left-0 px-3 mt-1 w-75">
-                                            <div className="row g-2">
-                                                <div className="col-auto">
-                                                    <div
-                                                        className="chart-sparkline chart-sparkline-square"
-                                                        id="sparkline-activity"
-                                                    ></div>
-                                                </div>
-                                                {/* <div className="col">
-                                                    <div>
-                                                        Today's Earning:
-                                                        $4,262.40
-                                                    </div>
-                                                    <div className="text-secondary">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            className="icon icon-inline text-green"
-                                                            width="24"
-                                                            height="24"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="2"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        >
-                                                            <path
-                                                                stroke="none"
-                                                                d="M0 0h24v24H0z"
-                                                                fill="none"
-                                                            />
-                                                            <path d="M3 17l6 -6l4 4l8 -8" />
-                                                            <path d="M14 7l7 0l0 7" />
-                                                        </svg>
-                                                        +5% more than yesterday
-                                                    </div>
-                                                </div> */}
-                                            </div>
-                                        </div>
-                                        <div id="chart-development-activity"></div>
-                                    </div>
-                                    <div className="card-table table-responsive">
-                                        <table className="table table-vcenter">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Commit</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td className="w-1">
-                                                        {/* <span className="avatar avatar-sm" style="background-image: url(../assets/static/avatars/000m.jpg)"></span> */}
-                                                        <span
-                                                            className="avatar avatar-sm"
-                                                            style={{
-                                                                backgroundImage:
-                                                                    "url(../assets/static/avatars/000m.jpg)",
-                                                            }}
-                                                        ></span>
-                                                    </td>
-                                                    <td className="td-truncate">
-                                                        <div className="text-truncate">
-                                                            Fix dart Sass
-                                                            compatibility
-                                                            (#29755)
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-nowrap text-secondary">
-                                                        28 Nov 2019
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="w-1">
-                                                        <span className="avatar avatar-sm">
-                                                            JL
-                                                        </span>
-                                                    </td>
-                                                    <td className="td-truncate">
-                                                        <div className="text-truncate">
-                                                            Change deprecated
-                                                            html tags to text
-                                                            decoration classes
-                                                            (#29604)
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-nowrap text-secondary">
-                                                        27 Nov 2019
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="w-1">
-                                                        {/* <span className="avatar avatar-sm" style="background-image: url(../assets/static/avatars/002m.jpg)"></span> */}
-                                                        <span
-                                                            className="avatar avatar-sm"
-                                                            style={{
-                                                                backgroundImage:
-                                                                    "url(../assets/static/avatars/002m.jpg)",
-                                                            }}
-                                                        ></span>
-                                                    </td>
-                                                    <td className="td-truncate">
-                                                        <div className="text-truncate">
-                                                            justify-content:between
-                                                            ⇒
-                                                            justify-content:space-between
-                                                            (#29734)
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-nowrap text-secondary">
-                                                        26 Nov 2019
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="w-1">
-                                                        {/* <span className="avatar avatar-sm" style="background-image: url(../assets/static/avatars/003m.jpg)"></span> */}
-                                                        <span
-                                                            className="avatar avatar-sm"
-                                                            style={{
-                                                                backgroundImage:
-                                                                    "url(../assets/static/avatars/003m.jpg)",
-                                                            }}
-                                                        ></span>
-                                                    </td>
-                                                    <td className="td-truncate">
-                                                        <div className="text-truncate">
-                                                            Update
-                                                            change-version.js
-                                                            (#29736)
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-nowrap text-secondary">
-                                                        26 Nov 2019
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="w-1">
-                                                        {/* <span className="avatar avatar-sm" style="background-image: url(../assets/static/avatars/000f.jpg)"></span> */}
-                                                        <span
-                                                            className="avatar avatar-sm"
-                                                            style={{
-                                                                backgroundImage:
-                                                                    "url(../assets/static/avatars/000f.jpg)",
-                                                            }}
-                                                        ></span>
-                                                    </td>
-                                                    <td className="td-truncate">
-                                                        <div className="text-truncate">
-                                                            Regenerate
-                                                            package-lock.json
-                                                            (#29730)
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-nowrap text-secondary">
-                                                        25 Nov 2019
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="card card-md">
-                                    <div className="card-stamp card-stamp-lg">
-                                        <div className="card-stamp-icon bg-primary">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="icon"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="2"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
-                                                    fill="none"
-                                                />
-                                                <path d="M5 11a7 7 0 0 1 14 0v7a1.78 1.78 0 0 1 -3.1 1.4a1.65 1.65 0 0 0 -2.6 0a1.65 1.65 0 0 1 -2.6 0a1.65 1.65 0 0 0 -2.6 0a1.78 1.78 0 0 1 -3.1 -1.4v-7" />
-                                                <path d="M10 10l.01 0" />
-                                                <path d="M14 10l.01 0" />
-                                                <path d="M10 14a3.5 3.5 0 0 0 4 0" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col-10">
-                                                <h3 className="h1">
-                                                    Tabler Icons
-                                                </h3>
-                                                <div className="markdown text-secondary">
-                                                    All icons come from the
-                                                    Tabler Icons set and are
-                                                    MIT-licensed. Visit
-                                                    <a
-                                                        href="https://tabler-icons.io"
-                                                        target="_blank"
-                                                        rel="noopener"
-                                                    >
-                                                        tabler-icons.io
-                                                    </a>
-                                                    , download any of the 4637
-                                                    icons in SVG, PNG
-                                                    or&nbsp;React and use them
-                                                    in your favourite design
-                                                    tools.
-                                                </div>
-                                                <div className="mt-3">
-                                                    <a
-                                                        href="https://tabler-icons.io"
-                                                        className="btn btn-primary"
-                                                        target="_blank"
-                                                        rel="noopener"
-                                                    >
-                                                        Download icons
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                           
-                            <div className="col-12">
-                                <div className="card">
-                                    <div className="card-header">
-                                        <h3 className="card-title">Invoices</h3>
-                                    </div>
-                                    <div className="card-body border-bottom py-3">
-                                        <div className="d-flex">
-                                            <div className="text-secondary">
-                                                Show
-                                                <div className="mx-2 d-inline-block">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control form-control-sm"
-                                                        defaultValue="8"
-                                                        size="3"
-                                                        aria-label="Invoices count"
-                                                    />
-                                                </div>
-                                                entries
-                                            </div>
-                                            <div className="ms-auto text-secondary">
-                                                Search:
-                                                <div className="ms-2 d-inline-block">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control form-control-sm"
-                                                        aria-label="Search invoice"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="table-responsive">
-                                        <table className="table card-table table-vcenter text-nowrap datatable">
-                                            <thead>
-                                                <tr>
-                                                    <th className="w-1">
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select all invoices"
-                                                        />
-                                                    </th>
-                                                    <th className="w-1">
-                                                        No.
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            className="icon icon-sm icon-thick"
-                                                            width="24"
-                                                            height="24"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="2"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        >
-                                                            <path
-                                                                stroke="none"
-                                                                d="M0 0h24v24H0z"
-                                                                fill="none"
-                                                            />
-                                                            <path d="M6 15l6 -6l6 6" />
-                                                        </svg>
-                                                    </th>
-                                                    <th>Invoice Subject</th>
-                                                    <th>Client</th>
-                                                    <th>VAT No.</th>
-                                                    <th>Created</th>
-                                                    <th>Status</th>
-                                                    <th>Price</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001401
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Design Works
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-us me-2"></span>
-                                                        Carlson Limited
-                                                    </td>
-                                                    <td>87956621</td>
-                                                    <td>15 Dec 2017</td>
-                                                    <td>
-                                                        <span className="badge bg-success me-1"></span>{" "}
-                                                        Paid
-                                                    </td>
-                                                    <td>$887</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001402
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            UX Wireframes
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-gb me-2"></span>
-                                                        Adobe
-                                                    </td>
-                                                    <td>87956421</td>
-                                                    <td>12 Apr 2017</td>
-                                                    <td>
-                                                        <span className="badge bg-warning me-1"></span>{" "}
-                                                        Pending
-                                                    </td>
-                                                    <td>$1200</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001403
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            New Dashboard
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-de me-2"></span>
-                                                        Bluewolf
-                                                    </td>
-                                                    <td>87952621</td>
-                                                    <td>23 Oct 2017</td>
-                                                    <td>
-                                                        <span className="badge bg-warning me-1"></span>{" "}
-                                                        Pending
-                                                    </td>
-                                                    <td>$534</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001404
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Landing Page
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-br me-2"></span>
-                                                        Salesforce
-                                                    </td>
-                                                    <td>87953421</td>
-                                                    <td>2 Sep 2017</td>
-                                                    <td>
-                                                        <span className="badge bg-secondary me-1"></span>{" "}
-                                                        Due in 2 Weeks
-                                                    </td>
-                                                    <td>$1500</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001405
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Marketing Templates
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-pl me-2"></span>
-                                                        Printic
-                                                    </td>
-                                                    <td>87956621</td>
-                                                    <td>29 Jan 2018</td>
-                                                    <td>
-                                                        <span className="badge bg-danger me-1"></span>{" "}
-                                                        Paid Today
-                                                    </td>
-                                                    <td>$648</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001406
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Sales Presentation
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-br me-2"></span>
-                                                        Tabdaq
-                                                    </td>
-                                                    <td>87956621</td>
-                                                    <td>4 Feb 2018</td>
-                                                    <td>
-                                                        <span className="badge bg-secondary me-1"></span>{" "}
-                                                        Due in 3 Weeks
-                                                    </td>
-                                                    <td>$300</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001407
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Logo & Print
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-us me-2"></span>
-                                                        Apple
-                                                    </td>
-                                                    <td>87956621</td>
-                                                    <td>22 Mar 2018</td>
-                                                    <td>
-                                                        <span className="badge bg-success me-1"></span>{" "}
-                                                        Paid Today
-                                                    </td>
-                                                    <td>$2500</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input
-                                                            className="form-check-input m-0 align-middle"
-                                                            type="checkbox"
-                                                            aria-label="Select invoice"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <span className="text-secondary">
-                                                            001408
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="invoice.html"
-                                                            className="text-reset"
-                                                            tabIndex="-1"
-                                                        >
-                                                            Icons
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <span className="flag flag-xs flag-country-pl me-2"></span>
-                                                        Tookapic
-                                                    </td>
-                                                    <td>87956621</td>
-                                                    <td>13 May 2018</td>
-                                                    <td>
-                                                        <span className="badge bg-success me-1"></span>{" "}
-                                                        Paid Today
-                                                    </td>
-                                                    <td>$940</td>
-                                                    <td className="text-end">
-                                                        <span className="dropdown">
-                                                            <button
-                                                                className="btn dropdown-toggle align-text-top"
-                                                                data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown"
-                                                            >
-                                                                Actions
-                                                            </button>
-                                                            <div className="dropdown-menu dropdown-menu-end">
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Action
-                                                                </a>
-                                                                <a
-                                                                    className="dropdown-item"
-                                                                    href="#"
-                                                                >
-                                                                    Another
-                                                                    action
-                                                                </a>
-                                                            </div>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="card-footer d-flex align-items-center">
-                                        <p className="m-0 text-secondary">
-                                            Showing <span>1</span> to{" "}
-                                            <span>8</span> of <span>16</span>{" "}
-                                            entries
-                                        </p>
-                                        <ul className="pagination m-0 ms-auto">
-                                            <li className="page-item disabled">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                    tabIndex="-1"
-                                                    aria-disabled="true"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth="2"
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path
-                                                            stroke="none"
-                                                            d="M0 0h24v24H0z"
-                                                            fill="none"
-                                                        />
-                                                        <path d="M15 6l-6 6l6 6" />
-                                                    </svg>
-                                                    prev
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    1
-                                                </a>
-                                            </li>
-                                            <li className="page-item active">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    2
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    3
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    4
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    5
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    className="page-link"
-                                                    href="#"
-                                                >
-                                                    next
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth="2"
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path
-                                                            stroke="none"
-                                                            d="M0 0h24v24H0z"
-                                                            fill="none"
-                                                        />
-                                                        <path d="M9 6l6 6l-6 6" />
-                                                    </svg>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* <footer className="footer footer-transparent d-print-none">
-                    <div className="container-xl">
-                        <div className="row text-center align-items-center flex-row-reverse">
-                            <div className="col-lg-auto ms-lg-auto">
-                                <ul className="list-inline list-inline-dots mb-0">
-                                    <li className="list-inline-item">
-                                        <a
-                                            href="https://tabler.io/docs"
-                                            target="_blank"
-                                            className="link-secondary"
-                                            rel="noopener"
-                                        >
-                                            Documentation
-                                        </a>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <a
-                                            href="./license.html"
-                                            className="link-secondary"
-                                        >
-                                            License
-                                        </a>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <a
-                                            href="https://github.com/tabler/tabler"
-                                            target="_blank"
-                                            className="link-secondary"
-                                            rel="noopener"
-                                        >
-                                            Source code
-                                        </a>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <a
-                                            href="https://github.com/sponsors/codecalm"
-                                            target="_blank"
-                                            className="link-secondary"
-                                            rel="noopener"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="icon text-pink icon-filled icon-inline"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="2"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
-                                                    fill="none"
-                                                />
-                                                <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
-                                            </svg>
-                                            Sponsor
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="col-12 col-lg-auto mt-3 mt-lg-0">
-                                <ul className="list-inline list-inline-dots mb-0">
-                                    <li className="list-inline-item">
-                                        Copyright &copy; 2023
-                                        <a href="." className="link-secondary">
-                                            Tabler
-                                        </a>
-                                        . All rights reserved.
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <a
-                                            href="./changelog.html"
-                                            className="link-secondary"
-                                            rel="noopener"
-                                        >
-                                            v1.0.0-beta20
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </footer> */}
-            </div>
-            <div
-                className="modal modal-blur fade"
-                id="modal-report"
-                tabIndex="-1"
-                role="dialog"
-                aria-hidden="true"
-            >
-                <div className="modal-dialog modal-lg" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">New report</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="mb-3">
-                                <label className="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="example-text-input"
-                                    placeholder="Your report name"
-                                />
-                            </div>
-                            <label className="form-label">Report type</label>
-                            <div className="form-selectgroup-boxes row mb-3">
-                                <div className="col-lg-6">
-                                    <label className="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="report-type"
-                                            defaultValue="1"
-                                            className="form-selectgroup-input"
-                                            defaultChecked={true}
-                                        />
-                                        <span className="form-selectgroup-label d-flex align-items-center p-3">
-                                            <span className="me-3">
-                                                <span className="form-selectgroup-check"></span>
-                                            </span>
-                                            <span className="form-selectgroup-label-content">
-                                                <span className="form-selectgroup-title strong mb-1">
-                                                    Simple
-                                                </span>
-                                                <span className="d-block text-secondary">
-                                                    Provide only basic data
-                                                    needed for the report
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div className="col-lg-6">
-                                    <label className="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="report-type"
-                                            defaultValue="1"
-                                            className="form-selectgroup-input"
-                                        />
-                                        <span className="form-selectgroup-label d-flex align-items-center p-3">
-                                            <span className="me-3">
-                                                <span className="form-selectgroup-check"></span>
-                                            </span>
-                                            <span className="form-selectgroup-label-content">
-                                                <span className="form-selectgroup-title strong mb-1">
-                                                    Advanced
-                                                </span>
-                                                <span className="d-block text-secondary">
-                                                    Insert charts and additional
-                                                    advanced analyses to be
-                                                    inserted in the report
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-8">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Report url
-                                        </label>
-                                        <div className="input-group input-group-flat">
-                                            <span className="input-group-text">
-                                                https://tabler.io/reports/
-                                            </span>
-                                            <input
-                                                type="text"
-                                                className="form-control ps-0"
-                                                defaultValue="report-01"
-                                                autoComplete="off"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Visibility
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            defaultValue="1"
-                                        >
-                                            <option value="1">Private</option>
-                                            <option value="2">Public</option>
-                                            <option value="3">Hidden</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Client name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Reporting period
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div>
-                                        <label className="form-label">
-                                            Additional information
-                                        </label>
-                                        <textarea
-                                            className="form-control"
-                                            rows="3"
-                                        ></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <a
-                                href="#"
-                                className="btn btn-link link-secondary"
-                                data-bs-dismiss="modal"
-                            >
-                                Cancel
-                            </a>
-                            <a
-                                href="#"
-                                className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="icon"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path
-                                        stroke="none"
-                                        d="M0 0h24v24H0z"
-                                        fill="none"
-                                    />
-                                    <path d="M12 5l0 14" />
-                                    <path d="M5 12l14 0" />
-                                </svg>
-                                Create new report
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
+
         </>
     );
 }
