@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef , useContext } from "react";
 import logo from "../../assets/static/logo.svg";
+import AuthContext from '../../store/auth-context';
+import { useNavigate } from 'react-router-dom';
+
 function Login() {
+    const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
+
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -15,29 +21,85 @@ function Login() {
         e.preventDefault();
         console.log(formData);
         console.log("Form Submitted");
-        try {
-            const response = await fetch("http://localhost:3000/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include' ,
-                body: JSON.stringify(formData),
-            });
-            if (response.ok) {
-                const responseData = await response.json();
-                localStorage.setItem("token", responseData.token);
-                console.log(responseData);
-                console.log("User Login successfully");
+        // const handleSubmit = async (event) => {
+        //     event.preventDefault();
+    
+        //     const enteredEmail = emailInputRef.current.value;
+        //     const enteredPassword = passwordInputRef.current.value;
+    
+            // setIsLoading(true);
+            
+            try {
+                const response = await fetch("http://localhost:3000/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(formData),
+                });
+    
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData);
+                    
+                    const expirationTime = new Date(
+                        new Date().getTime() + +'3600' * 1000
+                      );
+                      authCtx.login(
+                        responseData.token,
+                        expirationTime.toISOString(),
+                        responseData.email,
+                        responseData.id,
+                        responseData.name,
+                        responseData.role,
+                        responseData.communityid,
+                        responseData.thaaliuser,
+                        responseData.headcount,
+                        responseData.phoneno,
+                        responseData.address
+                      );
+
+                    // const expirationTime = new Date(responseData.expiresIn);
+                    // authCtx.login(responseData.token, expirationTime.toISOString(), responseData.username, responseData.id);
+                    // navigate('/', { replace: true });
                 window.location.href = "/";
-                // history.push("/");
-            } else {
-                const errorData = await response.json();
-                console.error("Failed to login user:", errorData.message);
+
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Authentication failed' );
+                }
+            } catch (error) {
+                console.error("Error:", error.message);
+                alert(error.message);
             }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+    
+            // setIsLoading(false);
+        // };
+        // try {
+        //     const response = await fetch("http://localhost:3000/auth/login", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         credentials: 'include' ,
+        //         body: JSON.stringify(formData),
+        //     });
+        //     if (response.ok) {
+        //         const responseData = await response.json();
+        //         // localStorage.setItem("token", responseData.token);
+        //         console.log(responseData.token);
+        //         // console.log(responseData);
+        //         console.log("User Login successfully");
+        //         // window.location.href = "/";
+        //         // history.push("/");
+        //     } else {
+        //         const errorData = await response.json();
+        //         console.error("Failed to login user:", errorData.message);
+        //     }
+        // } catch (error) {
+        //     console.error("Error:", error);
+        // }
     }
 
     return (

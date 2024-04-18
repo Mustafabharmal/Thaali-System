@@ -27,11 +27,11 @@ function Dashboard() {
                 createdat: item.createdat,
                 updatedat: item.updatedat,
             }));
-            console.log(transformedData)
+            // console.log(transformedData)
             // Filter menus that are not past
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date >= today);
-            console.log(notPastMenus)
+            // console.log(notPastMenus)
             // Display only the first 10 menus
 
             let firstTenMenus;
@@ -40,11 +40,11 @@ function Dashboard() {
             } else {
                 firstTenMenus = notPastMenus.slice(0, 10);
             }
-            console.log("hello:" + firstTenMenus)
+            // console.log("hello:" + firstTenMenus)
 
             setDataTableValues(firstTenMenus);
             // console.log(dataTableValues)
-            console.log('Data fetched:', dataTableValues);
+            // console.log('Data fetched:', dataTableValues);
         } catch (error) {
             console.error('Error fetching data:', error);
         }

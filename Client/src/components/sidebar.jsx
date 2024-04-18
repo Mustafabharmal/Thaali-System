@@ -1,10 +1,20 @@
 import React from "react";
 import logo from "../assets/static/logo.svg";
 import { NavLink, useLocation } from "react-router-dom";
-
+import { useContext } from 'react';
+import AuthContext from '../store/auth-context';
 function Sidebar() {
     const location = useLocation();
     const path = location.pathname;
+    // let variable = { userFrom: localStorage.getItem('name') };
+    const authCtx = useContext(AuthContext);
+    console.log(authCtx.userid)
+    // console.log("heellov from sidebar: "+authCtx);
+    // console.log(variable)
+    const logoutHandler = () => {
+        authCtx.logout();
+      };
+
     return (
         <>
             <header className="navbar navbar-expand-md d-print-none">
@@ -404,7 +414,8 @@ function Sidebar() {
                                     Settings
                                 </a>
                                 <a
-                                    href="./sign-in.html"
+                                    // href="./sign-in.html"
+                                    onClick={logoutHandler}
                                     className="dropdown-item"
                                 >
                                     Logout
