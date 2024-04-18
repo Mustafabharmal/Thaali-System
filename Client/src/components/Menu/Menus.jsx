@@ -82,7 +82,7 @@ function Menu() {
         const y = today.getFullYear();
         const m = today.getMonth();
         const calendarEl = document.getElementById('calendar-main');
-    
+
         let calendar = null;
         if (calendarEl) {
             calendar = new FullCalendar.Calendar(calendarEl, {
@@ -150,7 +150,7 @@ function Menu() {
             });
             calendar.render();
         }
-    
+
         return () => {
             if (calendar) {
                 calendar.destroy();
@@ -236,12 +236,12 @@ function Menu() {
                     </div>
                 </div>
             </div>
-{(isAdmin || isManager)&&(
-    <>
-            <CreateMenu selectedDates={selectedDates} />
-            <EditMenu selectedDates={selectedDates} formData={formData} setFormData={setFormData} />
-            </>
-)}
+            {(isAdmin || isManager) && (
+                <>
+                    <CreateMenu selectedDates={selectedDates} />
+                    <EditMenu selectedDates={selectedDates} formData={formData} setFormData={setFormData} />
+                </>
+            )}
         </>
     );
 }

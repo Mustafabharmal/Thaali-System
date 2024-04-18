@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef , useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import logo from "../../assets/static/logo.svg";
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
+    const authCtx = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -23,58 +23,58 @@ function Login() {
         console.log("Form Submitted");
         // const handleSubmit = async (event) => {
         //     event.preventDefault();
-    
+
         //     const enteredEmail = emailInputRef.current.value;
         //     const enteredPassword = passwordInputRef.current.value;
-    
-            // setIsLoading(true);
-            
-            try {
-                const response = await fetch("http://localhost:3000/auth/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(formData),
-                });
-    
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log(responseData);
-                    
-                    const expirationTime = new Date(
-                        new Date().getTime() + +'3600' * 1000
-                      );
-                      authCtx.login(
-                        responseData.token,
-                        expirationTime.toISOString(),
-                        responseData.email,
-                        responseData.id,
-                        responseData.name,
-                        responseData.role,
-                        responseData.communityid,
-                        responseData.thaaliuser,
-                        responseData.headcount,
-                        responseData.phoneno,
-                        responseData.address
-                      );
 
-                    // const expirationTime = new Date(responseData.expiresIn);
-                    // authCtx.login(responseData.token, expirationTime.toISOString(), responseData.username, responseData.id);
-                    // navigate('/', { replace: true });
+        // setIsLoading(true);
+
+        try {
+            const response = await fetch("http://localhost:3000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log(responseData);
+
+                const expirationTime = new Date(
+                    new Date().getTime() + +'3600' * 1000
+                );
+                authCtx.login(
+                    responseData.token,
+                    expirationTime.toISOString(),
+                    responseData.email,
+                    responseData.id,
+                    responseData.name,
+                    responseData.role,
+                    responseData.communityid,
+                    responseData.thaaliuser,
+                    responseData.headcount,
+                    responseData.phoneno,
+                    responseData.address
+                );
+
+                // const expirationTime = new Date(responseData.expiresIn);
+                // authCtx.login(responseData.token, expirationTime.toISOString(), responseData.username, responseData.id);
+                // navigate('/', { replace: true });
                 window.location.href = "/";
 
-                } else {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Authentication failed' );
-                }
-            } catch (error) {
-                console.error("Error:", error.message);
-                alert(error.message);
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Authentication failed');
             }
-    
-            // setIsLoading(false);
+        } catch (error) {
+            console.error("Error:", error.message);
+            alert(error.message);
+        }
+
+        // setIsLoading(false);
         // };
         // try {
         //     const response = await fetch("http://localhost:3000/auth/login", {

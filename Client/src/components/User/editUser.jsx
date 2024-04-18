@@ -1,12 +1,12 @@
-import React,{useContext}  from "react";
+import React, { useContext } from "react";
 import AuthContext from '../../store/auth-context';
-function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues, setComValues}) {
+function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues, setComValues }) {
     // console.log("hello from me" + formData.id);
     // console.log(typeof formData.id);
     // console.log("hello from me"+formData)
     // console.log(formData.action)
     const authCtx = useContext(AuthContext);
-    
+
     const isAdmin = authCtx.role === 0 || authCtx.role === "0";
     const isManager = authCtx.role === 1 || authCtx.role === "1";
     const isUser = authCtx.role === 2 || authCtx.role === "2";
@@ -19,7 +19,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
             aria-hidden="false"
         >
             <form onSubmit={handleUpdate}>
-            <input type="hidden" name="_id" value={formData._id} />
+                <input type="hidden" name="_id" value={formData._id} />
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -44,7 +44,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                         onChange={handleChange}
                                     />
                                 </div>
-                                {isAdmin &&(<div className="col-lg-6">
+                                {isAdmin && (<div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
                                             communityid
@@ -83,7 +83,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             name="thaaliuser"
                                             value="0"
                                             className="form-selectgroup-input"
-                                            checked={formData.thaaliuser === 0 || formData.thaaliuser==="0"}
+                                            checked={formData.thaaliuser === 0 || formData.thaaliuser === "0"}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -108,7 +108,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             name="thaaliuser"
                                             value="1"
                                             className="form-selectgroup-input"
-                                            checked={formData.thaaliuser === 1|| formData.thaaliuser==="1"}
+                                            checked={formData.thaaliuser === 1 || formData.thaaliuser === "1"}
                                             onChange={handleChange}
                                         />
                                         <span className="form-selectgroup-label d-flex align-items-center p-3">
@@ -160,10 +160,10 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             value={formData.role}
                                             onChange={handleChange}
                                         >
-                                            {isAdmin&&(
-                                            <option value="0" defaultValue={true}>
-                                                Admin
-                                            </option>)}
+                                            {isAdmin && (
+                                                <option value="0" defaultValue={true}>
+                                                    Admin
+                                                </option>)}
                                             <option value="1">Manager</option>
                                             <option value="2">User</option>
                                         </select>
@@ -218,7 +218,7 @@ function EditUser({ formData, setFormData, handleChange,handleUpdate ,ComValues,
                                             />
                                         </div>
                                     </div> */}
-                            {/* </div>
+                                {/* </div>
                             <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">

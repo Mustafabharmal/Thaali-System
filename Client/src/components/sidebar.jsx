@@ -14,8 +14,8 @@ function Sidebar() {
     // console.log(variable)
     const logoutHandler = () => {
         authCtx.logout();
-      };
- const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    };
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
     const isManager = authCtx.role === 1 || authCtx.role === "1";
     const isUser = authCtx.role === 2 || authCtx.role === "2";
     const UserName = authCtx.name;
@@ -41,7 +41,7 @@ function Sidebar() {
                             width="160"
                             height="50"
                             alt="LOGO"
-                            // className="navbar-brand-image"
+                        // className="navbar-brand-image"
                         />
                     </a>
                     {/* </h1> */}
@@ -435,9 +435,8 @@ function Sidebar() {
                         <div className="container-xl">
                             <ul className="navbar-nav">
                                 <li
-                                    className={`nav-item ${
-                                        path === "/" ? "active" : ""
-                                    }`}
+                                    className={`nav-item ${path === "/" ? "active" : ""
+                                        }`}
                                 >
                                     <a className="nav-link" href="./">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
@@ -468,10 +467,9 @@ function Sidebar() {
                                         </span>
                                     </a>
                                 </li>
-                                {(isAdmin || isManager)&&(<li
-                                    className={`nav-item ${
-                                        path.startsWith("/user") ? "active" : ""
-                                    }`}
+                                {(isAdmin || isManager) && (<li
+                                    className={`nav-item ${path.startsWith("/user") ? "active" : ""
+                                        }`}
                                 >
                                     <a className="nav-link" href="/user">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
@@ -503,87 +501,84 @@ function Sidebar() {
                                     </a>
                                 </li>)}
                                 {isAdmin && (
-                                <li
-                                    className={`nav-item ${
-                                        path.startsWith("/community")
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                >
-                                    <a className="nav-link" href="/community">
-                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="icon icon-tabler icon-tabler-map-pins"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="2"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
+                                    <li
+                                        className={`nav-item ${path.startsWith("/community")
+                                                ? "active"
+                                                : ""
+                                            }`}
+                                    >
+                                        <a className="nav-link" href="/community">
+                                            <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="icon icon-tabler icon-tabler-map-pins"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth="2"
+                                                    stroke="currentColor"
                                                     fill="none"
-                                                />
-                                                <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
-                                                <path d="M8 7l0 .01" />
-                                                <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
-                                                <path d="M16 15l0 .01" />
-                                            </svg>
-                                        </span>
-                                        <span className="nav-link-title">
-                                            Community
-                                        </span>
-                                    </a>
-                                </li>)}
-                                {( isAdmin || isManager) &&(
-                                <li
-                                    className={`nav-item ${
-                                        path.startsWith("/variety")
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                >
-                                    <a className="nav-link" href="/variety">
-                                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="icon icon-tabler icon-tabler-components"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="2"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path
+                                                        stroke="none"
+                                                        d="M0 0h24v24H0z"
+                                                        fill="none"
+                                                    />
+                                                    <path d="M10.828 9.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+                                                    <path d="M8 7l0 .01" />
+                                                    <path d="M18.828 17.828a4 4 0 1 0 -5.656 0l2.828 2.829l2.828 -2.829z" />
+                                                    <path d="M16 15l0 .01" />
+                                                </svg>
+                                            </span>
+                                            <span className="nav-link-title">
+                                                Community
+                                            </span>
+                                        </a>
+                                    </li>)}
+                                {(isAdmin || isManager) && (
+                                    <li
+                                        className={`nav-item ${path.startsWith("/variety")
+                                                ? "active"
+                                                : ""
+                                            }`}
+                                    >
+                                        <a className="nav-link" href="/variety">
+                                            <span className="nav-link-icon d-md-none d-lg-inline-block">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="icon icon-tabler icon-tabler-components"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth="2"
+                                                    stroke="currentColor"
                                                     fill="none"
-                                                />
-                                                <path d="M3 12l3 3l3 -3l-3 -3z" />
-                                                <path d="M15 12l3 3l3 -3l-3 -3z" />
-                                                <path d="M9 6l3 3l3 -3l-3 -3z" />
-                                                <path d="M9 18l3 3l3 -3l-3 -3z" />
-                                            </svg>
-                                        </span>
-                                        <span className="nav-link-title">
-                                            Variety
-                                        </span>
-                                    </a>
-                                </li>)}
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path
+                                                        stroke="none"
+                                                        d="M0 0h24v24H0z"
+                                                        fill="none"
+                                                    />
+                                                    <path d="M3 12l3 3l3 -3l-3 -3z" />
+                                                    <path d="M15 12l3 3l3 -3l-3 -3z" />
+                                                    <path d="M9 6l3 3l3 -3l-3 -3z" />
+                                                    <path d="M9 18l3 3l3 -3l-3 -3z" />
+                                                </svg>
+                                            </span>
+                                            <span className="nav-link-title">
+                                                Variety
+                                            </span>
+                                        </a>
+                                    </li>)}
                                 <li
-                                    className={`nav-item ${
-                                        path.startsWith("/menus")
+                                    className={`nav-item ${path.startsWith("/menus")
                                             ? "active"
                                             : ""
-                                    }`}
+                                        }`}
                                 >
                                     <a className="nav-link" href="/menus">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">

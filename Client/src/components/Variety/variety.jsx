@@ -15,9 +15,9 @@ import EditVarity from "./EditVarity";
 import AuthContext from '../../store/auth-context';
 function Variety() {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -38,8 +38,8 @@ function Variety() {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        isAdmin &&(
-        fetchComData());
+        isAdmin && (
+            fetchComData());
         const input = document.getElementById('data1');
         enableTransliteration1(input, 'gu');
         // console.log(input)
@@ -68,7 +68,7 @@ function Variety() {
                 headers: {
                     authorization: `Mustafa ${authCtx.token}`,
                 },
-            
+
                 withCredentials: true,
             });
 
@@ -403,24 +403,24 @@ function Variety() {
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                             headerStyle={{ textAlign: "center" }} // Center-align the header
                                                         />
-                                                        {isAdmin&&(
-                                                        <Column
-                                                            field="communityid"
-                                                            header={<div className="text-center">Community</div>}
-                                                            body={(rowData) => (
-                                                                <div className="text-center">
-                                                                    {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
-                                                                </div>
-                                                            )}
-                                                            style={{ textAlign: "center", width: "8em" }}
-                                                            sortable
-                                                            filter
-                                                            filterMatchMode="custom"
-                                                            filterFunction={(value, filter) =>
-                                                                customFilter(ComValues.find(community => community._id === value)?.name || '', filter
-                                                                )
-                                                            }
-                                                        />)}
+                                                        {isAdmin && (
+                                                            <Column
+                                                                field="communityid"
+                                                                header={<div className="text-center">Community</div>}
+                                                                body={(rowData) => (
+                                                                    <div className="text-center">
+                                                                        {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
+                                                                    </div>
+                                                                )}
+                                                                style={{ textAlign: "center", width: "8em" }}
+                                                                sortable
+                                                                filter
+                                                                filterMatchMode="custom"
+                                                                filterFunction={(value, filter) =>
+                                                                    customFilter(ComValues.find(community => community._id === value)?.name || '', filter
+                                                                    )
+                                                                }
+                                                            />)}
                                                         <Column
                                                             field="location"
                                                             header="Gujarati Name"

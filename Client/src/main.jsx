@@ -4,10 +4,10 @@ import App from './App.jsx'
 import { AuthContextProvider } from './store/auth-context.jsx'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-      <AuthContextProvider>
-     <div className="page">
+    <AuthContextProvider>
+      <div className="page">
         <App />
-    </div>
+      </div>
     </AuthContextProvider>
   </React.StrictMode>,
 )

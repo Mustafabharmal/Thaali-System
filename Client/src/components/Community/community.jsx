@@ -10,14 +10,14 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from 'axios';
-import NewCommunity from "./newCommunity"; 
+import NewCommunity from "./newCommunity";
 import EditCommunity from "./editCommunity";
 import AuthContext from '../../store/auth-context';
 function Community() {
     const toast = React.createRef();
     const authCtx = useContext(AuthContext);
     // console.log(authCtx.token)
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
@@ -35,13 +35,14 @@ function Community() {
                 icon="pi pi-trash"
                 className="p-button-rounded btn btn-danger"
                 onClick={() => deleteRow(rowData)}
-                
+
             />
             <Button
                 icon="pi pi-pencil"
                 className="p-button-rounded btn btn-primary"
                 onClick={() => {
-                    setFormData(rowData)}}
+                    setFormData(rowData)
+                }}
                 data-bs-toggle="modal"
                 data-bs-target="#modal-edit"
             />
@@ -69,82 +70,82 @@ function Community() {
     };
     const header = (
         <div className="table-header">
-        <div className="input-group" style={{ maxWidth: "300px" }}>
-            <span className="input-group-text">
-                <i className="pi pi-search" />
-            </span>
-            <input
-                type="search"
-                className="form-control shadow-none"
-                placeholder="Search Community"
-                onChange={(e) => setGlobalFilter(e.target.value)}
-            />
+            <div className="input-group" style={{ maxWidth: "300px" }}>
+                <span className="input-group-text">
+                    <i className="pi pi-search" />
+                </span>
+                <input
+                    type="search"
+                    className="form-control shadow-none"
+                    placeholder="Search Community"
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                />
+            </div>
         </div>
-    </div>
     );
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch(`http://localhost:3000/community/update/${formData._id}`, {
-            method: "PUT",
-            headers: {
-                authorization: `Mustafa ${authCtx.token}`,
-              "Content-Type": "application/json",
-            },  
-            body: JSON.stringify({
-              ...formData,
-              updatedat: Date.now(),
-            }),
-          });
-          if (response.ok) {
-            console.log("Community updated successfully");
-            window.location.reload(); 
-          } else {
-            console.error("Failed to update Community");
-          }
+            const response = await fetch(`http://localhost:3000/community/update/${formData._id}`, {
+                method: "PUT",
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    updatedat: Date.now(),
+                }),
+            });
+            if (response.ok) {
+                console.log("Community updated successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to update Community");
+            }
         } catch (error) {
-          console.error("Error:", error);
+            console.error("Error:", error);
         }
-      };
-      const deleteRow =async (rowData) => {
+    };
+    const deleteRow = async (rowData) => {
         console.log('Delete row:', rowData);
         setFormData(rowData);
         $('#modal-small').modal('show');
-        
-      };
-      const handleConfirmDelete = async () => { 
+
+    };
+    const handleConfirmDelete = async () => {
         $('#modal-small').modal('hide');
 
         try {
-            
-          const response = await fetch(`http://localhost:3000/community/delete/${formData._id}`, {
-            method: "PUT",
-            headers: {
-                authorization: `Mustafa ${authCtx.token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              status: 0,
-            }),
-          });
-          if (response.ok) {
-            console.log("Community deleted successfully");
-            window.location.reload(); 
-          } else {
-            console.error("Failed to delete Community");
-          }
+
+            const response = await fetch(`http://localhost:3000/community/delete/${formData._id}`, {
+                method: "PUT",
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    status: 0,
+                }),
+            });
+            if (response.ok) {
+                console.log("Community deleted successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to delete Community");
+            }
         } catch (error) {
-          console.error("Error:", error);
+            console.error("Error:", error);
         }
-      }
-      const handleChange = (e) => {
+    }
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => {
             const intValue = [
                 // "communityid",
                 // "thaaliuser",
                 // "role",
-              
+
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -180,10 +181,10 @@ function Community() {
                     status: item.status,
                     createdat: item.createdat,
                     updatedat: item.updatedat,
-                   
+
                 };
             });
-            setLoading(false); 
+            setLoading(false);
             setDataTableValues(transformedData); // Set the state directly without using prevData
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -191,185 +192,185 @@ function Community() {
         finally {
             setLoading(false); // Set loading to false regardless of success or failure
         }
-        setLoading(false); 
+        setLoading(false);
     };
     useEffect(() => {
         fetchData();
     }, []);
     return (
         <>
-        <div className="page-wrapper">
-        <div className="page-header d-print-none">
-            <div className="container-xl">
-                <div className="row g-2 align-items-center">
-                    <div className="col">
-                        <div className="page-pretitle">Overview</div>
-                        <h2 className="page-title">Community</h2>
-                    </div>
+            <div className="page-wrapper">
+                <div className="page-header d-print-none">
+                    <div className="container-xl">
+                        <div className="row g-2 align-items-center">
+                            <div className="col">
+                                <div className="page-pretitle">Overview</div>
+                                <h2 className="page-title">Community</h2>
+                            </div>
 
-                    <div className="col-auto ms-auto d-print-none">
-                        <div className="btn-list">
-                            <a
-                                href="#"
-                                className="btn btn-primary d-none d-sm-inline-block"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modal-report"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="icon"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path
-                                        stroke="none"
-                                        d="M0 0h24v24H0z"
-                                        fill="none"
-                                    />
-                                    <path d="M12 5l0 14" />
-                                    <path d="M5 12l14 0" />
-                                </svg>
-                                Create new Community
-                            </a>
-                            <a
-                                href="#"
-                                className="btn btn-primary d-sm-none btn-icon"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modal-report"
-                                aria-label="Create new report"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="icon"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path
-                                        stroke="none"
-                                        d="M0 0h24v24H0z"
-                                        fill="none"
-                                    />
-                                    <path d="M12 5l0 14" />
-                                    <path d="M5 12l14 0" />
-                                </svg>
-                            </a>
+                            <div className="col-auto ms-auto d-print-none">
+                                <div className="btn-list">
+                                    <a
+                                        href="#"
+                                        className="btn btn-primary d-none d-sm-inline-block"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-report"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="icon"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path
+                                                stroke="none"
+                                                d="M0 0h24v24H0z"
+                                                fill="none"
+                                            />
+                                            <path d="M12 5l0 14" />
+                                            <path d="M5 12l14 0" />
+                                        </svg>
+                                        Create new Community
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className="btn btn-primary d-sm-none btn-icon"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-report"
+                                        aria-label="Create new report"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="icon"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path
+                                                stroke="none"
+                                                d="M0 0h24v24H0z"
+                                                fill="none"
+                                            />
+                                            <path d="M12 5l0 14" />
+                                            <path d="M5 12l14 0" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div className="col-12">
-            <Toast ref={toast} />
-            <div className="page-body">
-                <div className="container-xl">
-                    <div className="row row-deck row-cards">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="card">
-                                    <div className="card-body">
-                                        
-                                    {loading ? ( // Display loading spinner when loading is true
-                                       <ul className="list-group list-group-flush placeholder-glow">
-                                       <LoadingPlaceholder />
-                                       <LoadingPlaceholder />
-                                       <LoadingPlaceholder />
-                                       <LoadingPlaceholder />
-                                   </ul>
-                                ) : (
-                                    <DataTable
-                                    value={dataTableValues}
-                                    className="p-datatable-striped"
-                                    paginator
-                                    rows={5}
-                                    rowsPerPageOptions={[5, 10, 20]}
-                                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                                    globalFilter={globalFilter}
-                                    header={header}
-                                    selectionMode="multiple"
-                                    selection={selectedRows}
-                                    onSelectionChange={(e) => setSelectedRows(e.value)}
-                                    style={{ fontSize: "1em" }}
-                                >
-                                    <Column style={{ display: "none" }} hidden field="id" header="#" />
-                                    <Column
-                                        field="name"
-                                        header="Community Name"
-                                        body={(rowData) => (
-                                            <div className="text-center">{rowData.name}</div>
-                                        )}
-                                        style={{ textAlign: "center", width: "8em" }}
-                                        sortable
-                                        filter
-                                        filterMatchMode="custom"
-                                        filterFunction={(value, filter) => customFilter(value, filter)}
-                                        headerStyle={{ textAlign: "center" }} // Center-align the header
-                                    />
-                                    <Column
-                                        field="location"
-                                        header="Community Location"
-                                        body={(rowData) => (
-                                            <div className="text-center">{rowData.address}</div>
-                                        )}
-                                        style={{ textAlign: "center", width: "8em" }}
-                                        sortable
-                                        filter
-                                        headerStyle={{ textAlign: "center" }} // Center-align the header
-                                        filterMatchMode="custom"
-                                        filterFunction={(value, filter) => customFilter(value, filter)}
-                                    />
-                                    
-                                    <Column
-                                        body={actionTemplate}
-                                        header="Action"
-                                        style={{ textAlign: "center", width: "8em" }}
-                                    />
-                                </DataTable>
-                                        )}
+                <div className="col-12">
+                    <Toast ref={toast} />
+                    <div className="page-body">
+                        <div className="container-xl">
+                            <div className="row row-deck row-cards">
+                                <div className="container-fluid">
+                                    <div className="row">
+                                        <div className="card">
+                                            <div className="card-body">
+
+                                                {loading ? ( // Display loading spinner when loading is true
+                                                    <ul className="list-group list-group-flush placeholder-glow">
+                                                        <LoadingPlaceholder />
+                                                        <LoadingPlaceholder />
+                                                        <LoadingPlaceholder />
+                                                        <LoadingPlaceholder />
+                                                    </ul>
+                                                ) : (
+                                                    <DataTable
+                                                        value={dataTableValues}
+                                                        className="p-datatable-striped"
+                                                        paginator
+                                                        rows={5}
+                                                        rowsPerPageOptions={[5, 10, 20]}
+                                                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                                        globalFilter={globalFilter}
+                                                        header={header}
+                                                        selectionMode="multiple"
+                                                        selection={selectedRows}
+                                                        onSelectionChange={(e) => setSelectedRows(e.value)}
+                                                        style={{ fontSize: "1em" }}
+                                                    >
+                                                        <Column style={{ display: "none" }} hidden field="id" header="#" />
+                                                        <Column
+                                                            field="name"
+                                                            header="Community Name"
+                                                            body={(rowData) => (
+                                                                <div className="text-center">{rowData.name}</div>
+                                                            )}
+                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            sortable
+                                                            filter
+                                                            filterMatchMode="custom"
+                                                            filterFunction={(value, filter) => customFilter(value, filter)}
+                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                        />
+                                                        <Column
+                                                            field="location"
+                                                            header="Community Location"
+                                                            body={(rowData) => (
+                                                                <div className="text-center">{rowData.address}</div>
+                                                            )}
+                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            sortable
+                                                            filter
+                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                            filterMatchMode="custom"
+                                                            filterFunction={(value, filter) => customFilter(value, filter)}
+                                                        />
+
+                                                        <Column
+                                                            body={actionTemplate}
+                                                            header="Action"
+                                                            style={{ textAlign: "center", width: "8em" }}
+                                                        />
+                                                    </DataTable>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>      
+                </div>
             </div>
-        </div>
-    </div>
-    <NewCommunity/>
-    <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} />
-    {/* <EditUser /> */}
+            <NewCommunity />
+            <EditCommunity formData={formData} setFormData={setFormData} handleChange={handleChange} handleUpdate={handleUpdate} />
+            {/* <EditUser /> */}
             <div className="modal modal-blur fade" id="modal-small" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
-                <div className="modal-content">
-                    <div className="modal-body">
-                    <div className="modal-title">Are you sure?</div>
-                    <div>If you proceed, the Community will be deleted.</div>
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <div className="modal-title">Are you sure?</div>
+                            <div>If you proceed, the Community will be deleted.</div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
+                                Yes, delete Community
+                            </button>
+                        </div>
                     </div>
-                    <div className="modal-footer">
-                    <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
-                        Yes, delete Community
-                    </button>
-                    </div>
-                </div>
                 </div>
             </div>
-    </>
+        </>
     )
 }
 export default Community;

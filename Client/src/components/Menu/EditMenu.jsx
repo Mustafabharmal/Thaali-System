@@ -3,11 +3,11 @@ import axios from "axios";
 import PopupEditVariety from "./PopupEditVariety";
 import { Button } from "primereact/button";
 import AuthContext from '../../store/auth-context';
-function EditMenu({ selectedDates,formData, setFormData}) {
+function EditMenu({ selectedDates, formData, setFormData }) {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -61,42 +61,42 @@ function EditMenu({ selectedDates,formData, setFormData}) {
     //     createdat: Date.now(),
     //     updatedat: Date.now(),
     // });
-    const deleteRow =async (rowData) => {
+    const deleteRow = async (rowData) => {
         console.log('Delete row:', rowData);
         setFormData(rowData);
         $('#modal-small').modal('show');
-        
-      };
-    const handleConfirmDelete = async () => { 
+
+    };
+    const handleConfirmDelete = async () => {
         $('#modal-small').modal('hide');
 
         try {
-            
-          const response = await fetch(`http://localhost:3000/menu/delete/${formData._id}`, {
-            method: "PUT",
-            headers: {
-                authorization: `Mustafa ${authCtx.token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              status: 0,
-            }),
-          });
-          if (response.ok) {
-            console.log("Variety deleted successfully");
-            window.location.reload(); 
-          } else {
-            console.error("Failed to delete Variety");
-          }
+
+            const response = await fetch(`http://localhost:3000/menu/delete/${formData._id}`, {
+                method: "PUT",
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    status: 0,
+                }),
+            });
+            if (response.ok) {
+                console.log("Variety deleted successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to delete Variety");
+            }
         } catch (error) {
-          console.error("Error:", error);
+            console.error("Error:", error);
         }
-      }
+    }
 
     const [ComValues, setComValues] = useState([]);
     useEffect(() => {
-       isAdmin &&(
-        fetchComData())
+        isAdmin && (
+            fetchComData())
         const input = document.getElementById("data1");
         enableTransliteration1(input, "gu");
         return () => {
@@ -179,15 +179,15 @@ function EditMenu({ selectedDates,formData, setFormData}) {
             // console.log(formData);
             const response = await fetch(`http://localhost:3000/menu/update/${formData._id}`, {
                 method: "PUT",
-            headers: {
-                authorization: `Mustafa ${authCtx.token}`,
-              "Content-Type": "application/json",
-            },  
-            body: JSON.stringify({
-              ...formData,
-              updatedat: Date.now(),
-              gujaratiName: document.getElementById('data1').value,
-            }),
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    updatedat: Date.now(),
+                    gujaratiName: document.getElementById('data1').value,
+                }),
             });
             // console.log(formData)
             if (response.ok) {
@@ -302,39 +302,39 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                                             />
                                         </div>
                                     </div>
-                                    {isAdmin&&(
-                                    <div className="col-lg-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">
-                                                communityid
-                                            </label>
-                                            <select
-                                                className="form-select"
-                                                name="communityid"
-                                                value={formData.communityid}
-                                                onChange={handleChange}
-                                            >
-                                                <option
-                                                    value="0"
-                                                    defaultValue="true"
-                                                    // selected="true"
-                                                    // selected="true"
-                                                    // isselected="true"
-                                                    disabled={true}
+                                    {isAdmin && (
+                                        <div className="col-lg-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">
+                                                    communityid
+                                                </label>
+                                                <select
+                                                    className="form-select"
+                                                    name="communityid"
+                                                    value={formData.communityid}
+                                                    onChange={handleChange}
                                                 >
-                                                    select One
-                                                </option>
-                                                {ComValues.map((community) => (
                                                     <option
-                                                        key={community._id}
-                                                        value={community._id}
+                                                        value="0"
+                                                        defaultValue="true"
+                                                        // selected="true"
+                                                        // selected="true"
+                                                        // isselected="true"
+                                                        disabled={true}
                                                     >
-                                                        {community.name}
+                                                        select One
                                                     </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>)}
+                                                    {ComValues.map((community) => (
+                                                        <option
+                                                            key={community._id}
+                                                            value={community._id}
+                                                        >
+                                                            {community.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>)}
                                 </div>
                             </div>
                             <div className="row">
@@ -393,28 +393,28 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="modal-footer">
-                        <a
-        href="#"
-        className="btn btn-link link-secondary"
-        data-bs-dismiss="modal"
-    >
-        Cancel
-    </a>
-    <button
-        type="button"
-        className="btn btn-danger"
-        onClick={() => deleteRow(formData)} // Call deleteRow function with formData
-    >
-        Delete Menu
-    </button>
-    <button
-        type="submit"
-        className="btn btn-primary ms-auto"
-        data-bs-dismiss="modal"
-    >
-        {/* <svg
+                            <a
+                                href="#"
+                                className="btn btn-link link-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </a>
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={() => deleteRow(formData)} // Call deleteRow function with formData
+                            >
+                                Delete Menu
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-primary ms-auto"
+                                data-bs-dismiss="modal"
+                            >
+                                {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             className="icon"
             width="24"
@@ -434,8 +434,8 @@ function EditMenu({ selectedDates,formData, setFormData}) {
             <path d="M12 5l0 14" />
             <path d="M5 12l14 0" />
         </svg> */}
-       Update Menu for {formData.date}
-    </button>
+                                Update Menu for {formData.date}
+                            </button>
 
                         </div>
                     </div>
@@ -467,8 +467,8 @@ function EditMenu({ selectedDates,formData, setFormData}) {
                             >
                                 Cancel
                             </button>
-                            <button type="button" className="btn btn-danger"   onClick={handleConfirmDelete}>
-                              
+                            <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
+
                                 Yes, delete Menu
                             </button>
                         </div>

@@ -6,7 +6,7 @@ class Variety {
         this.name = formData.name || "";
         this.calories = formData.calories || 0;
         // this.quantity = formData.quantity || 0;
-        this.gujaratiName = formData. gujaratiName || "";
+        this.gujaratiName = formData.gujaratiName || "";
         this.communityid = formData.communityid || "";
         this.description = formData.description || "";
         this.status = formData.status || 1;

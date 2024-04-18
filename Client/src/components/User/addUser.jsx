@@ -5,23 +5,23 @@ import AuthContext from '../../store/auth-context';
 function addUser() {
     const authCtx = useContext(AuthContext);
     // const authCtx = useContext(AuthContext);
-    
+
     // console.log(authCtx);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const [formData, setFormData] = useState({
         name: "",
         communityid: isManager ? authCtx.communityid : "0",
         thaaliuser: "0",
         email: "",
-        role: isAdmin ?0:1,
+        role: isAdmin ? 0 : 1,
         password: "",
         headcount: "1",
         // unit: '',
         phoneno: "",
         // planValidTill: "",
-        status:1,
+        status: 1,
         address: "",
         createdat: Date.now(),
         updatedat: Date.now(),
@@ -32,7 +32,7 @@ function addUser() {
         isAdmin && (
             fetchComData())
     }, []);
-    
+
     const fetchComData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/community', {
@@ -41,7 +41,7 @@ function addUser() {
                 },
                 withCredentials: true,
             });
-    
+
             const transformedData = response.data.map(item => ({
                 _id: item._id,
                 name: item.name,
@@ -50,7 +50,7 @@ function addUser() {
                 createdat: item.createdat,
                 updatedat: item.updatedat,
             }));
-    
+
             setComValues(transformedData);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -69,7 +69,7 @@ function addUser() {
                 // "communityid",
                 // "thaaliuser",
                 "role",
-              
+
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -107,7 +107,7 @@ function addUser() {
 
             if (response.ok) {
                 console.log("User created successfully");
-                window.location.reload(); 
+                window.location.reload();
                 // Optionally, you can reset the form or perform any other actions
             } else {
                 console.error("Failed to create user");
@@ -150,36 +150,36 @@ function addUser() {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                {isAdmin&&(
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            communityid
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="communityid"
-                                            value={formData.communityid}
-                                            onChange={handleChange}
-                                        >
-                                            <option
-                                                value="0"
-                                                defaultValue="true"
-                                                disabled={true}
+                                {isAdmin && (
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                communityid
+                                            </label>
+                                            <select
+                                                className="form-select"
+                                                name="communityid"
+                                                value={formData.communityid}
+                                                onChange={handleChange}
                                             >
-                                                select One
-                                            </option>
-                                            {/* <option value="1">Upleta</option>
+                                                <option
+                                                    value="0"
+                                                    defaultValue="true"
+                                                    disabled={true}
+                                                >
+                                                    select One
+                                                </option>
+                                                {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
                                             <option value="3">Jamnagar</option> */}
-                                            {ComValues.map(community => (
-                                                <option key={community._id} value={community._id}>
-                                                    {community.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>)}
+                                                {ComValues.map(community => (
+                                                    <option key={community._id} value={community._id}>
+                                                        {community.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>)}
                             </div>
                             <label className="form-label">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
@@ -277,10 +277,10 @@ function addUser() {
                                             value={formData.role}
                                             onChange={handleChange}
                                         >
-                                           {isAdmin&&(
-                                            <option value="0" defaultValue={true}>
-                                                Admin
-                                            </option>)}
+                                            {isAdmin && (
+                                                <option value="0" defaultValue={true}>
+                                                    Admin
+                                                </option>)}
                                             <option value="1">Manager</option>
                                             <option value="2">User</option>
                                         </select>
@@ -335,7 +335,7 @@ function addUser() {
                                         />
                                     </div>
                                 </div> */}
-                            {/* </div>
+                                {/* </div>
                             <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">

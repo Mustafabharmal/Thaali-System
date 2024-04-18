@@ -11,11 +11,11 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import axios from "axios";
 import AuthContext from '../../store/auth-context';
-function PopupVariety({setFormData, formData}) {
+function PopupVariety({ setFormData, formData }) {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const toast = React.createRef();
     const [loading, setLoading] = useState(false);
     const [dataTableValues, setDataTableValues] = useState([]);
@@ -36,11 +36,11 @@ function PopupVariety({setFormData, formData}) {
     const [ComValues, setComValues] = useState([]);
 
     useEffect(() => {
-        isAdmin&&(fetchComData());
+        isAdmin && (fetchComData());
         return () => {
         };
-      }, []);
-   
+    }, []);
+
     const fetchComData = async () => {
         try {
             const response = await axios.get(
@@ -96,13 +96,13 @@ function PopupVariety({setFormData, formData}) {
                     <path d="M18 4l3 3l-3 3" />
                     <path d="M3 7h2.397a5 5 0 0 1 4.096 2.133l4.014 5.734a5 5 0 0 0 4.096 2.133h3.397" />
                     <path d="M18 20l3 -3l-3 -3" />
-                    </svg>
-                    Use This
+                </svg>
+                Use This
             </Button>
         </div>
     );
-    
-    
+
+
     const LoadingPlaceholder = () => (
         <li className="list-group-item">
             <div className="row align-items-center">
@@ -120,13 +120,13 @@ function PopupVariety({setFormData, formData}) {
             </div>
         </li>
     );
-  
- 
+
+
     const handleGlobalFilter = (e) => {
         setGlobalFilter(e.target.value);
     };
 
-    
+
 
     const fetchData = async () => {
         try {
@@ -194,93 +194,93 @@ function PopupVariety({setFormData, formData}) {
                                 </ul>
                             ) : (
                                 <DataTable
-                                value={dataTableValues}
-                                className="p-datatable-striped"
-                                paginator
-                                rows={10}
-                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                                globalFilter={globalFilter.trim() ? globalFilter : null}
-                                header={ 
-                                    <div className="table-header">
-                                    <div className="input-group" style={{ maxWidth: "300px" }}>
-                                        <span className="input-group-text">
-                                            <i className="pi pi-search" />
-                                        </span>
-                                        <input
-                                            type="search"
-                                            className="form-control shadow-none"
-                                            placeholder="Search Variety"
-                                            onInput={handleGlobalFilter}
-                                        />
-                                    </div>
-                                </div>    }
-                                selectionMode="multiple"
-                                selection={selectedRows}
-                                onSelectionChange={(e) => setSelectedRows(e.value)}
-                                style={{ fontSize: "1em" }}
-                            >
-                                <Column style={{ display: "none" }} hidden field="id" header="#" />
-                                <Column
-                                    field="name"
-                                    header="Variety Name"
-                                    body={(rowData) => (
-                                        <div className="text-center">{rowData.name}</div>
-                                    )}
-                                    style={{ textAlign: "center", width: "8em" }}
-                                    sortable
-                                    headerStyle={{ textAlign: "center" }}
-                                />
-                                {isAdmin&&(
-                                <Column
-                                    field="communityid"
-                                    header={<div className="text-center">Community</div>}
-                                    body={(rowData) => (
-                                        <div className="text-center">
-                                            {ComValues.find((community) => community._id === rowData.communityid)?.name || "N/A"}
-                                        </div>
-                                    )}
-                                    style={{ textAlign: "center", width: "8em" }}
-                                    sortable
-                                    headerStyle={{ textAlign: "center" }}
-                                />)}
-                                <Column
-                                    field="location"
-                                    header="Gujarati Name"
-                                    body={(rowData) => (
-                                        <div className="text-center">{rowData.gujaratiName}</div>
-                                    )}
-                                    style={{ textAlign: "center", width: "8em" }}
-                                    sortable
-                                    headerStyle={{ textAlign: "center" }}
-                                />
-                                <Column
-                                    field="description"
-                                    header="Description"
-                                    body={(rowData) => (
-                                        <div className="text-center">{rowData.description}</div>
-                                    )}
-                                    style={{ textAlign: "center", width: "8em" }}
-                                    sortable
-                                    headerStyle={{ textAlign: "center" }}
-                                />
-                                <Column
-                                    field="calories"
-                                    header="Calories"
-                                    body={(rowData) => (
-                                        <div className="text-center">{rowData.calories}</div>
-                                    )}
-                                    style={{ textAlign: "center", width: "8em" }}
-                                    sortable
-                                    headerStyle={{ textAlign: "center" }}
-                                />
-                                <Column
-                                    body={actionTemplate}
-                                    header="Action"
-                                    style={{ textAlign: "center", width: "8em" }}
-                                />
-                            </DataTable>
-                            
+                                    value={dataTableValues}
+                                    className="p-datatable-striped"
+                                    paginator
+                                    rows={10}
+                                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                    globalFilter={globalFilter.trim() ? globalFilter : null}
+                                    header={
+                                        <div className="table-header">
+                                            <div className="input-group" style={{ maxWidth: "300px" }}>
+                                                <span className="input-group-text">
+                                                    <i className="pi pi-search" />
+                                                </span>
+                                                <input
+                                                    type="search"
+                                                    className="form-control shadow-none"
+                                                    placeholder="Search Variety"
+                                                    onInput={handleGlobalFilter}
+                                                />
+                                            </div>
+                                        </div>}
+                                    selectionMode="multiple"
+                                    selection={selectedRows}
+                                    onSelectionChange={(e) => setSelectedRows(e.value)}
+                                    style={{ fontSize: "1em" }}
+                                >
+                                    <Column style={{ display: "none" }} hidden field="id" header="#" />
+                                    <Column
+                                        field="name"
+                                        header="Variety Name"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.name}</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        headerStyle={{ textAlign: "center" }}
+                                    />
+                                    {isAdmin && (
+                                        <Column
+                                            field="communityid"
+                                            header={<div className="text-center">Community</div>}
+                                            body={(rowData) => (
+                                                <div className="text-center">
+                                                    {ComValues.find((community) => community._id === rowData.communityid)?.name || "N/A"}
+                                                </div>
+                                            )}
+                                            style={{ textAlign: "center", width: "8em" }}
+                                            sortable
+                                            headerStyle={{ textAlign: "center" }}
+                                        />)}
+                                    <Column
+                                        field="location"
+                                        header="Gujarati Name"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.gujaratiName}</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        headerStyle={{ textAlign: "center" }}
+                                    />
+                                    <Column
+                                        field="description"
+                                        header="Description"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.description}</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        headerStyle={{ textAlign: "center" }}
+                                    />
+                                    <Column
+                                        field="calories"
+                                        header="Calories"
+                                        body={(rowData) => (
+                                            <div className="text-center">{rowData.calories}</div>
+                                        )}
+                                        style={{ textAlign: "center", width: "8em" }}
+                                        sortable
+                                        headerStyle={{ textAlign: "center" }}
+                                    />
+                                    <Column
+                                        body={actionTemplate}
+                                        header="Action"
+                                        style={{ textAlign: "center", width: "8em" }}
+                                    />
+                                </DataTable>
+
                             )}
                             {/* <div className="col-12">
                             <Toast ref={toast} />

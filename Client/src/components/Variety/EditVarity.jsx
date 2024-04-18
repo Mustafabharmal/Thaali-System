@@ -5,11 +5,11 @@ import React, { useState, useEffect, useContext } from "react";
 // import axios from 'axios';
 import AuthContext from '../../store/auth-context';
 
-function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}) {
+function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValues }) {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     return (
         // <></>
         <div
@@ -44,58 +44,58 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                                         onChange={handleChange}
                                     />
                                 </div>
-                                {isAdmin&&(
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            communityid
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="communityid"
-                                            value={formData.communityid}
-                                            onChange={handleChange}
-                                        >
-                                            <option
-                                                value="0"
-                                                defaultValue="true"
-                                                // selected="true"
-                                                // isselected="true"
-                                                disabled={true}
+                                {isAdmin && (
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                communityid
+                                            </label>
+                                            <select
+                                                className="form-select"
+                                                name="communityid"
+                                                value={formData.communityid}
+                                                onChange={handleChange}
                                             >
-                                                select One
-                                            </option>
-                                            {/* <option value="1">Upleta</option>
+                                                <option
+                                                    value="0"
+                                                    defaultValue="true"
+                                                    // selected="true"
+                                                    // isselected="true"
+                                                    disabled={true}
+                                                >
+                                                    select One
+                                                </option>
+                                                {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
                                             <option value="3">Jamnagar</option> */}
-                                            {ComValues.map(community => (
-                                                <option key={community._id} value={community._id}>
-                                                    {community.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>)}
+                                                {ComValues.map(community => (
+                                                    <option key={community._id} value={community._id}>
+                                                        {community.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>)}
                             </div>
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           Gujarati Name
+                                            Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
                                             <span className="input-group-text">
                                             </span>
-                                              <textarea
-                                            className="form-control ps-0"
-                                            id="data1"
-                                            name="gujaratiName" 
-                                            placeholder="Gujarati Name"
-                                            autoComplete="off"
-                                            onKeyUp={handleKeyUp}
-                                            value={formData.gujaratiName}
-                                            onChange={handleChange}
-                                        />
+                                            <textarea
+                                                className="form-control ps-0"
+                                                id="data1"
+                                                name="gujaratiName"
+                                                placeholder="Gujarati Name"
+                                                autoComplete="off"
+                                                onKeyUp={handleKeyUp}
+                                                value={formData.gujaratiName}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                                 <div className="col-lg-2">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           calories
+                                            calories
                                         </label>
                                         <input
                                             type="text"
@@ -172,11 +172,11 @@ function EditVarity({ formData, handleChange,handleUpdate,handleKeyUp,ComValues}
                 </div>
             </form>
             <script type="text/javascript">
-            
-	</script>
-    {/* <PopupVariety /> */}
+
+            </script>
+            {/* <PopupVariety /> */}
         </div>
-        
+
     );
 }
 export default EditVarity;

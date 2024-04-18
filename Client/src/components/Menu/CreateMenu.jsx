@@ -5,9 +5,9 @@ import PopupVariety from "./PopupVariety";
 import AuthContext from '../../store/auth-context';
 function CreateMenu({ selectedDates }) {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const calendarRef = useRef(null);
     useEffect(() => {
         if (window.Litepicker) {
@@ -63,8 +63,8 @@ function CreateMenu({ selectedDates }) {
     });
     const [ComValues, setComValues] = useState([]);
     useEffect(() => {
-        isAdmin&&(
-        fetchComData())
+        isAdmin && (
+            fetchComData())
         const input = document.getElementById("data");
         enableTransliteration(input, "gu");
         return () => {
@@ -89,7 +89,7 @@ function CreateMenu({ selectedDates }) {
             const response = await axios.get(
                 "http://localhost:3000/community",
                 {
-                    headers: {authorization: `Mustafa ${authCtx.token}`},
+                    headers: { authorization: `Mustafa ${authCtx.token}` },
                     withCredentials: true,
                 }
             );
@@ -265,39 +265,39 @@ function CreateMenu({ selectedDates }) {
                                             />
                                         </div>
                                     </div>
-                                    {isAdmin&&(
-                                    <div className="col-lg-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">
-                                                communityid
-                                            </label>
-                                            <select
-                                                className="form-select"
-                                                name="communityid"
-                                                value={formData.communityid}
-                                                onChange={handleChange}
-                                            >
-                                                <option
-                                                    value="0"
-                                                    defaultValue="true"
-                                                    // selected="true"
-                                                    // selected="true"
-                                                    // isselected="true"
-                                                    disabled={true}
+                                    {isAdmin && (
+                                        <div className="col-lg-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">
+                                                    communityid
+                                                </label>
+                                                <select
+                                                    className="form-select"
+                                                    name="communityid"
+                                                    value={formData.communityid}
+                                                    onChange={handleChange}
                                                 >
-                                                    select One
-                                                </option>
-                                                {ComValues.map((community) => (
                                                     <option
-                                                        key={community._id}
-                                                        value={community._id}
+                                                        value="0"
+                                                        defaultValue="true"
+                                                        // selected="true"
+                                                        // selected="true"
+                                                        // isselected="true"
+                                                        disabled={true}
                                                     >
-                                                        {community.name}
+                                                        select One
                                                     </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>)}
+                                                    {ComValues.map((community) => (
+                                                        <option
+                                                            key={community._id}
+                                                            value={community._id}
+                                                        >
+                                                            {community.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>)}
                                 </div>
                             </div>
                             <div className="row">

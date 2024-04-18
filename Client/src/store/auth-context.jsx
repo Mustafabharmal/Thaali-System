@@ -24,8 +24,8 @@ const AuthContext = React.createContext({
     headcount,
     phoneno,
     address
-  ) => {},
-  logout: () => {},
+  ) => { },
+  logout: () => { },
 });
 
 export const useAuth = () => {

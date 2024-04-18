@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef , useContext} from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from 'axios';
 import AuthContext from '../store/auth-context';
 function Dashboard() {
@@ -7,10 +7,10 @@ function Dashboard() {
         const today = new Date();
         const date = new Date(dateString);
         return date.getDate() === today.getDate() &&
-               date.getMonth() === today.getMonth() &&
-               date.getFullYear() === today.getFullYear();
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear();
     }
-    
+
     const [dataTableValues, setDataTableValues] = useState([]);
     const fetchData = async () => {
         try {
@@ -654,7 +654,7 @@ function Dashboard() {
                                             </thead>
                                             <tbody>
                                                 {dataTableValues.map(item => (
-                                                   <tr key={item._id} className={isToday(item.date) ? 'table-primary' : ''}>
+                                                    <tr key={item._id} className={isToday(item.date) ? 'table-primary' : ''}>
                                                         <td className="text-nowrap text-secondary w-3">{item.date}</td>
                                                         <td className="td-truncate w-5">
                                                             <div className="text-truncate">{item.name} ({item.description})</div>
@@ -663,7 +663,7 @@ function Dashboard() {
                                                     </tr>
                                                 ))}
                                             </tbody>
-                                        </table>    
+                                        </table>
                                     </div>
 
                                 </div>
@@ -671,7 +671,7 @@ function Dashboard() {
 
                             <div className="col-lg-6">
                                 <div className="row row-cards">
-                                   
+
                                     <div className="col-12">
                                         <div
                                             className="card"

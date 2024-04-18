@@ -13,7 +13,6 @@ class Menu {
         this.status = formData.status || 1;
         this.createdat = formData.createdat || new Date();
         this.updatedat = formData.updatedat || new Date();
-     
     }
 }
 

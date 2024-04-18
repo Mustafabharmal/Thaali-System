@@ -3,9 +3,9 @@ import axios from 'axios';
 import AuthContext from '../../store/auth-context';
 function addVeriety() {
     const authCtx = useContext(AuthContext);
-    const isAdmin = authCtx.role === 0|| authCtx.role === "0";
-    const isManager = authCtx.role === 1|| authCtx.role === "1";
-    const isUser = authCtx.role === 2|| authCtx.role === "2";
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     const [formData, setFormData] = useState({
         name: "",
         calories: 1,
@@ -25,20 +25,20 @@ function addVeriety() {
     //     enableTransliteration(input3, "gu");
     // }, []);
     useEffect(() => {
-        isAdmin&&(fetchComData());
+        isAdmin && (fetchComData());
         const input = document.getElementById('data');
         enableTransliteration(input, 'gu');
         // console.log(input.value)
         return () => {
-          // Clean up the transliteration when the component unmounts
-        //   input.transliterator.disable();
-        disableTransliteration(input); 
+            // Clean up the transliteration when the component unmounts
+            //   input.transliterator.disable();
+            disableTransliteration(input);
         };
-      }, []);
-    
-   
-      const handleKeyUp = (e) => {
-        
+    }, []);
+
+
+    const handleKeyUp = (e) => {
+
         setFormData((prevData) => ({
             ...prevData,
             gujaratiName: e.target.value,
@@ -53,7 +53,7 @@ function addVeriety() {
     //     }));
     //     console.log(gujaratiName);
     // };
-    
+
     const fetchComData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/community', {
@@ -62,7 +62,7 @@ function addVeriety() {
                 },
                 withCredentials: true,
             });
-    
+
             const transformedData = response.data.map(item => ({
                 _id: item._id,
                 name: item.name,
@@ -71,7 +71,7 @@ function addVeriety() {
                 createdat: item.createdat,
                 updatedat: item.updatedat,
             }));
-    
+
             setComValues(transformedData);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -84,7 +84,7 @@ function addVeriety() {
         // [name]: value,
         // }));
         // console.log(document.getElementById('data').value);
-        
+
         const { name, value } = e.target;
         setFormData((prevData) => {
             // Convert strings to integers for specific fields
@@ -92,7 +92,7 @@ function addVeriety() {
                 // "communityid",
                 // "thaaliuser",
                 // "role",
-              
+
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -130,10 +130,10 @@ function addVeriety() {
 
                 body: JSON.stringify(formData),
             });
-// console.log(formData)
+            // console.log(formData)
             if (response.ok) {
                 console.log("User created successfully");
-                window.location.reload(); 
+                window.location.reload();
                 // Optionally, you can reset the form or perform any other actions
             } else {
                 console.error("Failed to create user");
@@ -142,7 +142,7 @@ function addVeriety() {
             console.error("Error:", error);
         }
     };
-   
+
     return (
         <div
             className="modal modal-blur fade"
@@ -176,56 +176,56 @@ function addVeriety() {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                {isAdmin&&(
-                                <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            communityid
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="communityid"
-                                            value={formData.communityid}
-                                            onChange={handleChange}
-                                        >
-                                            <option
-                                                value="0"
-                                                defaultValue="true"
-                                                disabled={true}
+                                {isAdmin && (
+                                    <div className="col-lg-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">
+                                                communityid
+                                            </label>
+                                            <select
+                                                className="form-select"
+                                                name="communityid"
+                                                value={formData.communityid}
+                                                onChange={handleChange}
                                             >
-                                                select One
-                                            </option>
-                                            {/* <option value="1">Upleta</option>
+                                                <option
+                                                    value="0"
+                                                    defaultValue="true"
+                                                    disabled={true}
+                                                >
+                                                    select One
+                                                </option>
+                                                {/* <option value="1">Upleta</option>
                                             <option value="2">Rajkot</option>
                                             <option value="3">Jamnagar</option> */}
-                                              {ComValues.map(community => (
-                                                <option key={community._id} value={community._id}>
-                                                    {community.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>)}
+                                                {ComValues.map(community => (
+                                                    <option key={community._id} value={community._id}>
+                                                        {community.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>)}
                             </div>
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           Gujarati Name
+                                            Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
                                             <span className="input-group-text">
                                             </span>
-                                              <textarea
-                                            className="form-control ps-0"
-                                            id="data"
-                                            name="gujaratiName" 
-                                            placeholder="Gujarati Name"
-                                            autoComplete="off"
-                                            onKeyUp={handleKeyUp}
-                                            value={formData.gujaratiName}
-                                            onChange={handleChange}
-                                        />
+                                            <textarea
+                                                className="form-control ps-0"
+                                                id="data"
+                                                name="gujaratiName"
+                                                placeholder="Gujarati Name"
+                                                autoComplete="off"
+                                                onKeyUp={handleKeyUp}
+                                                value={formData.gujaratiName}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@ function addVeriety() {
                                 <div className="col-lg-2">
                                     <div className="mb-3">
                                         <label className="form-label">
-                                           calories
+                                            calories
                                         </label>
                                         <input
                                             type="text"
@@ -302,10 +302,10 @@ function addVeriety() {
                 </div>
             </form>
             <script type="text/javascript">
-               
-	</script>
+
+            </script>
         </div>
-        
+
     );
 }
 export default addVeriety;

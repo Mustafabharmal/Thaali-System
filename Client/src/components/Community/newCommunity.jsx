@@ -23,7 +23,7 @@ function NewCommunity() {
                 // "communityid",
                 // "thaaliuser",
                 // "role",
-              
+
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -40,7 +40,7 @@ function NewCommunity() {
         });
     };
 
-  
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
@@ -62,7 +62,7 @@ function NewCommunity() {
 
             if (response.ok) {
                 console.log("User created successfully");
-                window.location.reload(); 
+                window.location.reload();
                 // Optionally, you can reset the form or perform any other actions
             } else {
                 console.error("Failed to create user");
@@ -106,7 +106,7 @@ function NewCommunity() {
                                     />
                                 </div>
                             </div>
-                         
+
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div>

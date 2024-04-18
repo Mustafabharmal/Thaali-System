@@ -1,5 +1,5 @@
 import React from "react";
-function EditCommunity({ formData, setFormData, handleChange,handleUpdate }) {
+function EditCommunity({ formData, setFormData, handleChange, handleUpdate }) {
     // console.log("hello from me" + formData.id);
     // console.log(typeof formData.id);
     // console.log("hello from me"+formData)
@@ -13,7 +13,7 @@ function EditCommunity({ formData, setFormData, handleChange,handleUpdate }) {
             aria-hidden="false"
         >
             <form onSubmit={handleUpdate}>
-            <input type="hidden" name="_id" value={formData._id} />
+                <input type="hidden" name="_id" value={formData._id} />
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
