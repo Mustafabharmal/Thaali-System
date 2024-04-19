@@ -95,7 +95,7 @@ function NewCommunity() {
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-12">
-                                    <label className="form-label">Name of Community</label>
+                                    <label className="form-label required">Name of Community</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -103,6 +103,7 @@ function NewCommunity() {
                                         placeholder="Name of Community"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -110,7 +111,7 @@ function NewCommunity() {
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div>
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Address
                                         </label>
                                         <textarea
@@ -120,6 +121,7 @@ function NewCommunity() {
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
+                                            required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -134,7 +136,7 @@ function NewCommunity() {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

@@ -34,7 +34,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
-                                    <label className="form-label">Name</label>
+                                    <label className="form-label required">Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -42,11 +42,12 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                         placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                                 {isAdmin && (<div className="col-lg-6">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             communityid
                                         </label>
                                         <select
@@ -54,6 +55,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             name="communityid"
                                             value={formData.communityid}
                                             onChange={handleChange}
+                                            required
                                         >
                                             <option
                                                 value="0"
@@ -62,9 +64,6 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             >
                                                 select One
                                             </option>
-                                            {/* <option value="1">Upleta</option>
-                                            <option value="2">Rajkot</option>
-                                            <option value="3">Jamnagar</option> */}
                                             {ComValues.map(community => (
                                                 <option key={community._id} value={community._id}>
                                                     {community.name}
@@ -74,7 +73,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                     </div>
                                 </div>)}
                             </div>
-                            <label className="form-label">User type</label>
+                            <label className="form-label required">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
                                     <label className="form-selectgroup-item">
@@ -131,7 +130,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Email Id
                                         </label>
                                         <div className="input-group input-group-flat">
@@ -147,18 +146,20 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">Role</label>
+                                        <label className="form-label required">Role</label>
                                         <select
                                             className="form-select"
                                             name="role"
                                             value={formData.role}
                                             onChange={handleChange}
+                                            required
                                         >
                                             {isAdmin && (
                                                 <option value="0" defaultValue={true}>
@@ -175,7 +176,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             <div className="row">
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Password
                                         </label>
                                         <input
@@ -185,12 +186,13 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
                                 <div className="col-lg-2">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Head Count
                                         </label>
                                         <input
@@ -200,6 +202,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             name="headcount"
                                             value={formData.headcount}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -222,7 +225,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             phoneno No.
                                         </label>
                                         <input
@@ -232,6 +235,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             name="phoneno"
                                             value={formData.phoneno}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -251,7 +255,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                     </div> */}
                                 <div className="col-lg-12">
                                     <div>
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Address
                                         </label>
                                         <textarea
@@ -261,6 +265,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
+                                            required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -275,7 +280,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

@@ -34,7 +34,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
-                                    <label className="form-label"> Variety Name</label>
+                                    <label className="form-label required"> Variety Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -42,12 +42,13 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                                         placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                                 {isAdmin && (
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
+                                            <label className="form-label required">
                                                 communityid
                                             </label>
                                             <select
@@ -55,6 +56,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                                                 name="communityid"
                                                 value={formData.communityid}
                                                 onChange={handleChange}
+                                                required
                                             >
                                                 <option
                                                     value="0"
@@ -80,7 +82,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
@@ -95,6 +97,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                                                 onKeyUp={handleKeyUp}
                                                 value={formData.gujaratiName}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -103,7 +106,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                             <div className="row">
                                 <div className="col-lg-2">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             calories
                                         </label>
                                         <input
@@ -114,6 +117,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                                             rows="3"
                                             value={formData.calories}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -129,6 +133,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                                             name="description"
                                             value={formData.description}
                                             onChange={handleChange}
+                                            // required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -143,7 +148,7 @@ function EditVarity({ formData, handleChange, handleUpdate, handleKeyUp, ComValu
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

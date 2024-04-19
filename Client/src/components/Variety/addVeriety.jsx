@@ -166,7 +166,7 @@ function addVeriety() {
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
-                                    <label className="form-label"> Variety Name</label>
+                                    <label className="form-label required"> Variety Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -174,12 +174,13 @@ function addVeriety() {
                                         placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                                 {isAdmin && (
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
+                                            <label className="form-label required">
                                                 communityid
                                             </label>
                                             <select
@@ -187,6 +188,7 @@ function addVeriety() {
                                                 name="communityid"
                                                 value={formData.communityid}
                                                 onChange={handleChange}
+                                                required
                                             >
                                                 <option
                                                     value="0"
@@ -210,7 +212,7 @@ function addVeriety() {
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
@@ -225,6 +227,7 @@ function addVeriety() {
                                                 onKeyUp={handleKeyUp}
                                                 value={formData.gujaratiName}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -233,7 +236,7 @@ function addVeriety() {
                             <div className="row">
                                 <div className="col-lg-2">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             calories
                                         </label>
                                         <input
@@ -244,6 +247,7 @@ function addVeriety() {
                                             rows="3"
                                             value={formData.calories}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -259,6 +263,7 @@ function addVeriety() {
                                             name="description"
                                             value={formData.description}
                                             onChange={handleChange}
+                                            
                                         ></textarea>
                                     </div>
                                 </div>
@@ -273,7 +278,7 @@ function addVeriety() {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

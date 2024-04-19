@@ -27,8 +27,8 @@ function EditCommunity({ formData, setFormData, handleChange, handleUpdate }) {
                         </div>
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
-                                <div className="col-lg-6">
-                                    <label className="form-label">Name</label>
+                                <div className="col-lg-12">
+                                    <label className="form-label required">Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -36,13 +36,14 @@ function EditCommunity({ formData, setFormData, handleChange, handleUpdate }) {
                                         placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div>
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Location
                                         </label>
                                         <textarea
@@ -52,6 +53,7 @@ function EditCommunity({ formData, setFormData, handleChange, handleUpdate }) {
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
+                                            required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -66,7 +68,7 @@ function EditCommunity({ formData, setFormData, handleChange, handleUpdate }) {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

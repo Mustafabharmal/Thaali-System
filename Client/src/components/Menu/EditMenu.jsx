@@ -226,7 +226,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
+                                            <label className="form-label required">
                                                 Datepicker
                                             </label>
                                             <div className="input-icon">
@@ -263,6 +263,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                                     id="datepicker-icon-prepend1"
                                                     value={formData.date ? formData.date : new Date().toISOString().split('T')[0]}
                                                     onChange={handleChange}
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -288,8 +289,8 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
-                                                {" "}
+                                            <label className="form-label required">
+                                    
                                                 Variety Name
                                             </label>
                                             <input
@@ -299,13 +300,14 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                                 placeholder="Name"
                                                 value={formData.name}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
                                     {isAdmin && (
                                         <div className="col-lg-6">
                                             <div className="mb-3">
-                                                <label className="form-label">
+                                                <label className="form-label required">
                                                     communityid
                                                 </label>
                                                 <select
@@ -313,6 +315,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                                     name="communityid"
                                                     value={formData.communityid}
                                                     onChange={handleChange}
+                                                    required
                                                 >
                                                     <option
                                                         value="0"
@@ -340,7 +343,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
@@ -354,6 +357,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                                 onKeyUp={handleKeyUp}
                                                 value={formData.gujaratiName}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -362,7 +366,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                             <div className="row"> */}
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             calories
                                         </label>
                                         <input
@@ -373,12 +377,13 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                             rows="3"
                                             value={formData.calories}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
                                 <div className="col-lg-12">
                                     <div>
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Description
                                         </label>
                                         <textarea
@@ -388,6 +393,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                                             name="description"
                                             value={formData.description}
                                             onChange={handleChange}
+                                            required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -412,7 +418,7 @@ function EditMenu({ selectedDates, formData, setFormData }) {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 {/* <svg
             xmlns="http://www.w3.org/2000/svg"

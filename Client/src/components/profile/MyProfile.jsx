@@ -125,7 +125,7 @@ function MyProfile() {
                                                                             <div className="form-selectgroup-boxes row mb-3">
                                                                                 <div className="row">
                                                                                     <div className="col-lg-6">
-                                                                                        <label className="form-label">Name</label>
+                                                                                        <label className="form-label required">Name</label>
                                                                                         <input
                                                                                             type="text"
                                                                                             className="form-control"
@@ -133,6 +133,7 @@ function MyProfile() {
                                                                                             placeholder="Name"
                                                                                             value={formData.name}
                                                                                             onChange={handleChange}
+                                                                                            required
                                                                                         />
                                                                                     </div>
 
@@ -141,7 +142,7 @@ function MyProfile() {
 
                                                                                     <div className="col-lg-6">
                                                                                         <div className="mb-3">
-                                                                                            <label className="form-label">
+                                                                                            <label className="form-label required">
                                                                                                 Email Id
                                                                                             </label>
                                                                                             <div className="input-group input-group-flat">
@@ -156,6 +157,7 @@ function MyProfile() {
                                                                                                     name="email"
                                                                                                     value={formData.email}
                                                                                                     onChange={handleChange}
+                                                                                                    required
                                                                                                 />
                                                                                             </div>
                                                                                         </div>
@@ -166,7 +168,7 @@ function MyProfile() {
 
                                                                                 <div className="col-lg-2">
                                                                                     <div className="mb-3">
-                                                                                        <label className="form-label">
+                                                                                        <label className="form-label required">
                                                                                             Head Count
                                                                                         </label>
                                                                                         <input
@@ -176,12 +178,13 @@ function MyProfile() {
                                                                                             name="headcount"
                                                                                             value={formData.headcount}
                                                                                             onChange={handleChange}
+                                                                                            required
                                                                                         />
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="col-lg-4">
                                                                                     <div className="mb-3">
-                                                                                        <label className="form-label">
+                                                                                        <label className="form-label required">
                                                                                             phoneno No.
                                                                                         </label>
                                                                                         <input
@@ -191,12 +194,13 @@ function MyProfile() {
                                                                                             name="phoneno"
                                                                                             value={formData.phoneno}
                                                                                             onChange={handleChange}
+                                                                                            required
                                                                                         />
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="col-lg-6">
                                                                                     <div>
-                                                                                        <label className="form-label">
+                                                                                        <label className="form-label required">
                                                                                             Address
                                                                                         </label>
                                                                                         <textarea
@@ -206,6 +210,7 @@ function MyProfile() {
                                                                                             name="address"
                                                                                             value={formData.address}
                                                                                             onChange={handleChange}
+                                                                                            required
                                                                                         ></textarea>
                                                                                     </div>
                                                                                 </div>

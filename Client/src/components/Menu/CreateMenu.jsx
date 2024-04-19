@@ -189,7 +189,7 @@ function CreateMenu({ selectedDates }) {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
+                                            <label className="form-label required">
                                                 Datepicker
                                             </label>
                                             <div className="input-icon">
@@ -226,6 +226,7 @@ function CreateMenu({ selectedDates }) {
                                                     id="datepicker-icon-prepend"
                                                     value={formData.date ? formData.date : new Date().toISOString().split('T')[0]}
                                                     onChange={handleChange}
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -251,8 +252,8 @@ function CreateMenu({ selectedDates }) {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
-                                                {" "}
+                                            <label className="form-label required">
+                                                {/* {" "} */}
                                                 Variety Name
                                             </label>
                                             <input
@@ -262,13 +263,14 @@ function CreateMenu({ selectedDates }) {
                                                 placeholder="Name"
                                                 value={formData.name}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
                                     {isAdmin && (
                                         <div className="col-lg-6">
                                             <div className="mb-3">
-                                                <label className="form-label">
+                                                <label className="form-label required">
                                                     communityid
                                                 </label>
                                                 <select
@@ -276,6 +278,7 @@ function CreateMenu({ selectedDates }) {
                                                     name="communityid"
                                                     value={formData.communityid}
                                                     onChange={handleChange}
+                                                    required
                                                 >
                                                     <option
                                                         value="0"
@@ -303,7 +306,7 @@ function CreateMenu({ selectedDates }) {
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Gujarati Name
                                         </label>
                                         <div className="input-group input-group-flat">
@@ -317,6 +320,7 @@ function CreateMenu({ selectedDates }) {
                                                 onKeyUp={handleKeyUp}
                                                 value={formData.gujaratiName}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -325,7 +329,7 @@ function CreateMenu({ selectedDates }) {
                             <div className="row"> */}
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             calories
                                         </label>
                                         <input
@@ -336,6 +340,7 @@ function CreateMenu({ selectedDates }) {
                                             rows="3"
                                             value={formData.calories}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -351,6 +356,7 @@ function CreateMenu({ selectedDates }) {
                                             name="description"
                                             value={formData.description}
                                             onChange={handleChange}
+                                            // required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -365,7 +371,7 @@ function CreateMenu({ selectedDates }) {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

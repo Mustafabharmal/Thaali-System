@@ -139,8 +139,9 @@ function addUser() {
                         </div>
                         <div className="modal-body">
                             <div className="form-selectgroup-boxes row mb-3">
+                            <div className="row">
                                 <div className="col-lg-6">
-                                    <label className="form-label">Name</label>
+                                    <label className="form-label required">Name</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -148,12 +149,13 @@ function addUser() {
                                         placeholder="Name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        required
                                     />
                                 </div>
                                 {isAdmin && (
                                     <div className="col-lg-6">
                                         <div className="mb-3">
-                                            <label className="form-label">
+                                            <label className="form-label required">
                                                 communityid
                                             </label>
                                             <select
@@ -161,6 +163,7 @@ function addUser() {
                                                 name="communityid"
                                                 value={formData.communityid}
                                                 onChange={handleChange}
+                                                required
                                             >
                                                 <option
                                                     value="0"
@@ -181,7 +184,10 @@ function addUser() {
                                         </div>
                                     </div>)}
                             </div>
-                            <label className="form-label">User type</label>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg-12">
+                            <label className="form-label required">User type</label>
                             <div className="form-selectgroup-boxes row mb-3">
                                 <div className="col-lg-6">
                                     <label className="form-selectgroup-item">
@@ -243,17 +249,19 @@ function addUser() {
                                     </label>
                                 </div>
                             </div>
+                            </div>
+                            </div>
                             <div className="row">
                                 <div className="col-lg-8">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Email Id
                                         </label>
                                         <div className="input-group input-group-flat">
                                             <span className="input-group-text">
                                             </span>
                                             <input
-                                                type="text"
+                                                type="email"
                                                 className="form-control ps-0"
                                                 // defaultValue="report-01"
                                                 placeholder="Email Id"
@@ -261,13 +269,14 @@ function addUser() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Role
                                         </label>
                                         <select
@@ -275,6 +284,7 @@ function addUser() {
                                             name="role"
                                             value={formData.role}
                                             onChange={handleChange}
+                                            required
                                         >
                                             {isAdmin && (
                                                 <option value="0" defaultValue={true}>
@@ -289,7 +299,7 @@ function addUser() {
                             <div className="row">
                                 <div className="col-lg-4">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Password
                                         </label>
                                         <input
@@ -299,12 +309,13 @@ function addUser() {
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
                                 <div className="col-lg-2">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Head Count
                                         </label>
                                         <input
@@ -314,12 +325,13 @@ function addUser() {
                                             name="headcount"
                                             value={formData.headcount}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
                                     <div className="mb-3">
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             phoneno No.
                                         </label>
                                         <input
@@ -329,12 +341,13 @@ function addUser() {
                                             name="phoneno"
                                             value={formData.phoneno}
                                             onChange={handleChange}
+                                            required
                                         />
                                     </div>
                                 </div>
                                 <div className="col-lg-12">
                                     <div>
-                                        <label className="form-label">
+                                        <label className="form-label required">
                                             Address
                                         </label>
                                         <textarea
@@ -344,6 +357,7 @@ function addUser() {
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
+                                            required
                                         ></textarea>
                                     </div>
                                 </div>
@@ -353,12 +367,12 @@ function addUser() {
                             <a
                                 href="#"
                                 className="btn btn-link link-secondary"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             ></a>
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                data-bs-dismiss="modal"
+                                // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
