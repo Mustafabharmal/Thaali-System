@@ -110,7 +110,13 @@ function addUser() {
                 window.location.reload();
                 // Optionally, you can reset the form or perform any other actions
             } else {
-                console.error("Failed to create user");
+                const responseData = await response.json(); // Extract error message from response
+                if (response.status === 400 && responseData.error === "User with this email already exists") {
+                    // Show error message for duplicate email
+                    alert("Another user with this email already exists");
+                } else {
+                    console.error("Failed to create user");
+                }
             }
         } catch (error) {
             console.error("Error:", error);

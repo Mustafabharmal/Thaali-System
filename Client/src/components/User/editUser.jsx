@@ -138,7 +138,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                                                 {/* Email Id */}
                                             </span>
                                             <input
-                                                type="text"
+                                                type="email"
                                                 className="form-control ps-0"
                                                 // defaultValue="report-01"
                                                 placeholder="Email Id"

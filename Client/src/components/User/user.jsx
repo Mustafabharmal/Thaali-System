@@ -86,7 +86,13 @@ function User() {
                 console.log("User updated successfully");
                 window.location.reload();
             } else {
-                console.error("Failed to update user");
+                const responseData = await response.json(); // Extract error message from response
+                if (response.status === 400 && responseData.error === "Another user with this email already exists") {
+                    // Show error message for duplicate email
+                    alert("Another user with this email already exists");
+                } else {
+                    console.error("Failed to create user");
+                }
             }
         } catch (error) {
             console.error("Error:", error);

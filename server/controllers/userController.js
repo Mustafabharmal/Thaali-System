@@ -29,63 +29,73 @@ const userController = {
             res.status(500).send("Internal Server Error");
         }
     },
-    addUser: async (req, res) => {
-        if (!req.isAdmin && !req.isManager) {
-            return res
-                .status(403)
-                .json({ error: "You are not an admin OR MANAGER" });
+  
+addUser: async (req, res) => {
+    if (!req.isAdmin && !req.isManager) {
+        return res.status(403).json({ error: "You are not an admin or manager" });
+    }
+    try {
+        const formData = req.body;
+        await db.connect();
+        const collection = db.db("ThaliSystem").collection("users");
+        
+        // Check if user with the same email already exists
+        const existingUser = await collection.findOne({ email: formData.email });
+        if (existingUser) {
+            return res.status(400).json({ error: "User with this email already exists" });
         }
-        try {
-            const formData = req.body;
-            await db.connect();
-            const collection = db.db("ThaliSystem").collection("users");
-            if (req.isManager) {
-                formData.communityid = req.communityid;
-            }
-            const newUser = new User(formData);
-            const result = await collection.insertOne(newUser);
-            if (result) {
-                res.status(201).json({ message: "User created successfully" });
-            } else {
-                res.status(500).json({ error: "Failed to create user" });
-            }
-        } catch (err) {
-            console.error("Error:", err);
-            res.status(500).json({ error: "Internal Server Error" });
-        }
-    },
 
-    updateUser: async (req, res) => {
-        if (!req.isAdmin && !req.isManager) {
-            return res
-                .status(403)
-                .json({ error: "You are not an admin OR MANAGER" });
+        if (req.isManager) {
+            formData.communityid = req.communityid;
         }
-        const userId = req.params.id;
-        const updatedUser = req.body;
-        try {
-            await db.connect();
-            const collection = db.db("ThaliSystem").collection("users");
-            const updatedUserWithoutId = { ...updatedUser };
-            delete updatedUserWithoutId._id;
-            if (req.isManager) {
-                updatedUserWithoutId.communityid = req.communityid;
-            }
-            const result = await collection.updateOne(
-                { _id: new ObjectId(userId) },
-                { $set: updatedUserWithoutId }
-            );
-            if (result.modifiedCount === 1) {
-                res.status(200).json({ message: "User updated successfully" });
-            } else {
-                res.status(404).json({ message: "User not found" });
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            res.status(500).json({ message: "Internal server error" });
+        const newUser = new User(formData);
+        const result = await collection.insertOne(newUser);
+        if (result) {
+            res.status(201).json({ message: "User created successfully" });
+        } else {
+            res.status(500).json({ error: "Failed to create user" });
         }
-    },
+    } catch (err) {
+        console.error("Error:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+},
 
+updateUser: async (req, res) => {
+    if (!req.isAdmin && !req.isManager) {
+        return res.status(403).json({ error: "You are not an admin or manager" });
+    }
+    const userId = req.params.id;
+    const updatedUser = req.body;
+    try {
+        await db.connect();
+        const collection = db.db("ThaliSystem").collection("users");
+        const updatedUserWithoutId = { ...updatedUser };
+        delete updatedUserWithoutId._id;
+        
+        // Check if user with the same email already exists
+        const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne: userId } });
+        if (existingUser) {
+            return res.status(400).json({ error: "Another user with this email already exists" });
+        }
+
+        if (req.isManager) {
+            updatedUserWithoutId.communityid = req.communityid;
+        }
+        const result = await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: updatedUserWithoutId }
+        );
+        if (result.modifiedCount === 1) {
+            res.status(200).json({ message: "User updated successfully" });
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+},
     updateUserStatus: async (req, res) => {
         if (!req.isAdmin && !req.isManager) {
             return res

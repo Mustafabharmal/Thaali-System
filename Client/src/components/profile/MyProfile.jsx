@@ -65,7 +65,13 @@ function MyProfile() {
                 authCtx.updateUser(formData);
                 window.location.reload();
             } else {
-                console.error("Failed to create user");
+                const responseData = await response.json(); // Extract error message from response
+                if (response.status === 400 && responseData.error === "Another user with this email already exists") {
+                    // Show error message for duplicate email
+                    alert("Another user with this email already exists");
+                } else {
+                    console.error("Failed to create user");
+                }
             }
         } catch (error) {
             console.error("Error:", error);
@@ -91,31 +97,31 @@ function MyProfile() {
                         <div className="row row-deck row-cards">
                             <div className="container-fluid">
                                 <div className="row">
-                                    <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs">
-                                                    <li class="nav-item">
-                                                        <a href="#tabs-home-7" class="nav-link active" data-bs-toggle="tab">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                                    <div className="col-md-12">
+                                        <div className="card">
+                                            <div className="card-header">
+                                                <ul className="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs">
+                                                    <li className="nav-item">
+                                                        <a href="#tabs-home-7" className="nav-link active" data-bs-toggle="tab">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon me-2" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                                                             Profile</a>
                                                     </li>
-                                                    <li class="nav-item">
-                                                        <a href="#tabs-profile-7" class="nav-link " data-bs-toggle="tab">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                                                    <li className="nav-item">
+                                                        <a href="#tabs-profile-7" className="nav-link " data-bs-toggle="tab">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon me-2" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                                                             Update Password</a>
                                                     </li>
 
-                                                    <li class="nav-item">
-                                                        <a href="#tabs-activity-7" class="nav-link" data-bs-toggle="tab">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12h4l3 8l4 -16l3 8h4" /></svg>
+                                                    <li className="nav-item">
+                                                        <a href="#tabs-activity-7" className="nav-link" data-bs-toggle="tab">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon me-2" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12h4l3 8l4 -16l3 8h4" /></svg>
                                                             Forget Password</a>
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <div class="card-body">
-                                                <div class="tab-content">
-                                                    <div class="tab-pane active show" id="tabs-home-7">
+                                            <div className="card-body">
+                                                <div className="tab-content">
+                                                    <div className="tab-pane active show" id="tabs-home-7">
 
                                                         <div className="card">
                                                             <div className="card-body">
@@ -237,11 +243,11 @@ function MyProfile() {
                                                         </div>
 
                                                     </div>
-                                                    <div class="tab-pane" id="tabs-profile-7">
+                                                    <div className="tab-pane" id="tabs-profile-7">
                                                         <h4>Update Password</h4>
                                                         <div>Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique enim at diam, sem nunc amet, pellentesque id egestas velit sed</div>
                                                     </div>
-                                                    <div class="tab-pane" id="tabs-activity-7">
+                                                    <div className="tab-pane" id="tabs-activity-7">
                                                         <h4>Forget Password</h4>
                                                         <div>Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
                                                     </div>

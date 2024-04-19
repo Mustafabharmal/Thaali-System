@@ -57,10 +57,8 @@ const userController = {
         }
     },
     updateMe: async (req, res) => {
-        if (!req.isAdmin && !req.isManager &&!req.isUser) {
-            return res
-                .status(403)
-                .json({ error: "You are not an admin OR MANAGER" });
+        if (!req.isAdmin && !req.isManager && !req.isUser) {
+            return res.status(403).json({ error: "You are not an admin, manager, or user" });
         }
         const userId = req.userId;
         const updatedUser = req.body;
@@ -69,6 +67,13 @@ const userController = {
             const collection = db.db("ThaliSystem").collection("users");
             const updatedUserWithoutId = { ...updatedUser };
             delete updatedUserWithoutId._id;
+            
+            // Check if user with the same email already exists
+            const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne: userId } });
+            if (existingUser) {
+                return res.status(400).json({ error: "Another user with this email already exists" });
+            }
+    
             if (req.isManager) {
                 updatedUserWithoutId.communityid = req.communityid;
             }
@@ -77,7 +82,7 @@ const userController = {
                 { $set: updatedUserWithoutId }
             );
             if (result.modifiedCount === 1) {
-                res.status(200).json({ message: "User updated successfully" ,user: result});
+                res.status(200).json({ message: "User updated successfully", user: result });
             } else {
                 res.status(404).json({ message: "User not found" });
             }
@@ -85,8 +90,8 @@ const userController = {
             console.error("Error:", error);
             res.status(500).json({ message: "Internal server error" });
         }
-
     },
+    
     
     // addUser: async (req, res) => {
     //     if (!req.isAdmin && !req.isManager) {
