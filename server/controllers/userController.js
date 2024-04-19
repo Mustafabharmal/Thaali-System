@@ -3,6 +3,7 @@ const User = require("../models/user");
 const db = require("../config/db");
 const { ObjectId } = require("bson");
 const nodemailer = require("nodemailer");
+const bcrypt = require('bcrypt');
 const userController = {
     getAllUsers: async (req, res) => {
         if (!req.isAdmin && !req.isManager) {
@@ -49,7 +50,12 @@ const userController = {
             if (req.isManager) {
                 formData.communityid = req.communityid;
             }
+            const passtoStore= formData.password;
+            const hashedPassword = await bcrypt.hash(formData.password, 10);
+            formData.password = hashedPassword;
+
             const newUser = new User(formData);
+            
             const result = await collection.insertOne(newUser);
             if (result) {
                 // Send email to the newly created user
@@ -67,7 +73,7 @@ const userController = {
                     from: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
                     to: formData.email,
                     subject: 'Welcome to ThaliSystem',
-                    text: `Hello ${formData.name},\n\nYour account has been successfully created.\n\nUsername: ${formData.email}\nPassword: ${formData.password}\n\nThank you for joining ThaliSystem.`
+                    text: `Hello ${formData.name},\n\nYour account has been successfully created.\n\nUsername: ${formData.email}\nPassword: ${passtoStore}\n\nThank you for joining ThaliSystem.`
                 };
 
                 transporter.sendMail(mailOptions, (error, info) => {
@@ -106,7 +112,9 @@ updateUser: async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: "Another user with this email already exists" });
         }
-
+        // const passtoStore= updatedUser.password;
+        // const hashedPassword = await bcrypt.hash(formData.password, 10);
+        // formData.password = hashedPassword;
         // Check if email field is updated
         const user = await collection.findOne({ _id: new ObjectId(userId) });
         if (user.email !== updatedUser.email) {
