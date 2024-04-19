@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/sidebar";
 import Dashboard from "./components/dashboard";
@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import AuthContext from './store/auth-context';
 import Protected from './components/Protected';
 import NotFound from "./components/Auth/404";
+import axios from 'axios';
 // import Menu from "./components/Menu/Menus";
 function App() {
     // const location = useLocation();
@@ -24,21 +25,38 @@ function App() {
 
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
-    // if (!authCtx.token) {
-    //     // console.log("Token:", authCtx.token);
-    //     authCtx.isLoggedIn=false;
-    //     // isLoggedIn = false;
-    // }
     const isAdmin = authCtx.role === 0 || authCtx.role === "0";
     const isManager = authCtx.role === 1 || authCtx.role === "1";
     const isUser = authCtx.role === 2 || authCtx.role === "2";
+
+    // const history = useHistory();
+
+    useEffect(() => {
+       isLoggedIn &&(
+
+        fetchData())
+    }, []);
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/users', {
+            withCredentials: true,
+            headers: {
+                authorization: `Mustafa ${authCtx.token}`,
+            },
+        });
+        } catch (error) {
+            if ( error.response.status === 403 && error.response.data.error === "Bhai Logging kar") {
+                authCtx.logout();
+                window.location.href = "/login";
+            } else {
+                console.error('Error fetching data:', error);
+            }
+        }
+    };
     if (!authCtx.token) {
-        // console.log("Token:", authCtx.token);
         authCtx.isLoggedIn = false;
         authCtx.logout();
-        // isLoggedIn = false;
     }
-
     return (
         <>
             <BrowserRouter>

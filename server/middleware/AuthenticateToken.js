@@ -11,10 +11,15 @@ function authenticateToken(req, res, next) {
     if (!token) {
         return res.status(401).json({ error: "Token is required" });
     }
+    // console.log(authHeader)
+
+
     // console.log(req.userId)
     jwt.verify(token, secretKey, async (err, decoded) => {
         if (err) {
-            return res.status(403).json({ error: "Invalid token" });
+    // console.log(err)
+
+            return res.status(403).json({ error: "Bhai Logging kar" });
         }
         // console.log(decoded)
         req.userId = decoded.id;

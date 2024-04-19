@@ -13,6 +13,7 @@ function Sidebar() {
     // console.log("heellov from sidebar: "+authCtx);
     // console.log(variable)
     const logoutHandler = () => {
+        window.location.href = "/login";
         authCtx.logout();
     };
     const isAdmin = authCtx.role === 0 || authCtx.role === "0";
