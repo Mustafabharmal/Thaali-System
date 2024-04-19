@@ -26,6 +26,7 @@ const AuthContext = React.createContext({
     address
   ) => { },
   logout: () => { },
+  updateUser: (userData) => { },
 });
 
 export const useAuth = () => {
@@ -166,6 +167,30 @@ export const AuthContextProvider = (props) => {
     );
   };
 
+  const updateUserHandler = (userData) => {
+    // Update user data in the context
+    // setToken(userData.token);
+    setEmail(userData.email);
+    setName(userData.name);
+    setRole(userData.role);
+    setCommunityId(userData.communityid);
+    setThaaliUser(userData.thaaliuser);
+    setHeadCount(userData.headcount);
+    setPhoneNo(userData.phoneno);
+    setAddress(userData.address);
+    setUserId(userData.userid);
+    // localStorage.setItem("token", userData.token);
+    localStorage.setItem("userid", userData.userid);
+    localStorage.setItem("email", userData.email);
+    localStorage.setItem("name", userData.name);
+    localStorage.setItem("role", userData.role);
+    localStorage.setItem("communityid", userData.communityid);
+    localStorage.setItem("thaaliuser", userData.thaaliuser);
+    localStorage.setItem("headcount", userData.headcount);
+    localStorage.setItem("phoneno", userData.phoneno);
+    localStorage.setItem("address", userData.address);
+  };
+
   const calculateRemainingTime = (expirationTime) => {
     const currentTime = new Date().getTime();
     const adjustedExpirationTime = new Date(expirationTime).getTime();
@@ -187,6 +212,7 @@ export const AuthContextProvider = (props) => {
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,
+    updateUser: updateUserHandler, 
   };
 
   return (

@@ -251,7 +251,6 @@ function addUser() {
                                         </label>
                                         <div className="input-group input-group-flat">
                                             <span className="input-group-text">
-                                                {/* Email Id */}
                                             </span>
                                             <input
                                                 type="text"
@@ -287,8 +286,6 @@ function addUser() {
                                     </div>
                                 </div>
                             </div>
-                            {/* </div> */}
-                            {/* <div className="modal-body"> */}
                             <div className="row">
                                 <div className="col-lg-4">
                                     <div className="mb-3">
@@ -320,23 +317,6 @@ function addUser() {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            unit
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="unit"
-                                            name='unit'
-                                            value={formData.unit}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div> */}
-                                {/* </div>
-                            <div className="row"> */}
                                 <div className="col-lg-6">
                                     <div className="mb-3">
                                         <label className="form-label">
@@ -352,20 +332,6 @@ function addUser() {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className="col-lg-6">
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Plan Valid till
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            name='planValidTill'
-                                            value={formData.planValidTill}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div> */}
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label">

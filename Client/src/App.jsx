@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import AuthContext from './store/auth-context';
 import Protected from './components/Protected';
 import NotFound from "./components/Auth/404";
+import MyProfile from "./components/profile/MyProfile";
 import axios from 'axios';
 // import Menu from "./components/Menu/Menus";
 function App() {
@@ -76,6 +77,14 @@ function App() {
                             element={
                                 <Protected isLoggedIn={isLoggedIn}>
                                     <Dashboard />
+                                </Protected>
+                            }
+                        />
+                        <Route
+                            path="/myProfile"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <MyProfile />
                                 </Protected>
                             }
                         />

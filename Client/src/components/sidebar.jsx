@@ -19,6 +19,7 @@ function Sidebar() {
     const isAdmin = authCtx.role === 0 || authCtx.role === "0";
     const isManager = authCtx.role === 1 || authCtx.role === "1";
     const isUser = authCtx.role === 2 || authCtx.role === "2";
+    const isThaaliUser = authCtx.thaaliuser === "0" || authCtx.thaaliuser === 0;
     const UserName = authCtx.name;
     return (
         <>
@@ -399,11 +400,26 @@ function Sidebar() {
                                 </div>
                             </a>
                             <div className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                <a href="#" className="dropdown-item">
-                                    Status
-                                </a>
+                                {isThaaliUser ? (
+                                    <a href="#" className="dropdown-item">
+                                        <div className="col-auto">
+                                            <span className="status-dot status-dot-animated bg-green d-block"></span>
+                                        </div>
+                                        <div className="col">
+                                            Thaali User</div>
+                                    </a>
+                                ) : (
+                                    <a href="#" className="dropdown-item">
+                                        <div className="col-auto">
+                                            <span className="status-dot status-dot-animated bg-green d-block"></span>
+                                        </div>
+                                        <div className="col">
+                                            Non Thaali User</div>
+                                    </a>
+                                )}
+
                                 <a
-                                    href="./profile.html"
+                                    href="./myProfile"
                                     className="dropdown-item"
                                 >
                                     Profile
@@ -504,8 +520,8 @@ function Sidebar() {
                                 {isAdmin && (
                                     <li
                                         className={`nav-item ${path.startsWith("/community")
-                                                ? "active"
-                                                : ""
+                                            ? "active"
+                                            : ""
                                             }`}
                                     >
                                         <a className="nav-link" href="/community">
@@ -541,8 +557,8 @@ function Sidebar() {
                                 {(isAdmin || isManager) && (
                                     <li
                                         className={`nav-item ${path.startsWith("/variety")
-                                                ? "active"
-                                                : ""
+                                            ? "active"
+                                            : ""
                                             }`}
                                     >
                                         <a className="nav-link" href="/variety">
@@ -577,8 +593,8 @@ function Sidebar() {
                                     </li>)}
                                 <li
                                     className={`nav-item ${path.startsWith("/menus")
-                                            ? "active"
-                                            : ""
+                                        ? "active"
+                                        : ""
                                         }`}
                                 >
                                     <a className="nav-link" href="/menus">

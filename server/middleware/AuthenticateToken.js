@@ -31,6 +31,7 @@ function authenticateToken(req, res, next) {
         req.isAdmin = false;
         req.isManager = false;
         req.isUser = false;
+        
         // console.log(user)
         req.communityid = user.communityid;
         if (user.role == 0 || user.role == "0") {

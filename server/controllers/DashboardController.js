@@ -56,6 +56,37 @@ const userController = {
             res.status(500).send("Internal Server Error");
         }
     },
+    updateMe: async (req, res) => {
+        if (!req.isAdmin && !req.isManager &&!req.isUser) {
+            return res
+                .status(403)
+                .json({ error: "You are not an admin OR MANAGER" });
+        }
+        const userId = req.userId;
+        const updatedUser = req.body;
+        try {
+            await db.connect();
+            const collection = db.db("ThaliSystem").collection("users");
+            const updatedUserWithoutId = { ...updatedUser };
+            delete updatedUserWithoutId._id;
+            if (req.isManager) {
+                updatedUserWithoutId.communityid = req.communityid;
+            }
+            const result = await collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $set: updatedUserWithoutId }
+            );
+            if (result.modifiedCount === 1) {
+                res.status(200).json({ message: "User updated successfully" ,user: result});
+            } else {
+                res.status(404).json({ message: "User not found" });
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+
+    },
     
     // addUser: async (req, res) => {
     //     if (!req.isAdmin && !req.isManager) {
