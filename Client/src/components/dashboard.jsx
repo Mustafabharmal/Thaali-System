@@ -10,8 +10,211 @@ function Dashboard() {
             date.getMonth() === today.getMonth() &&
             date.getFullYear() === today.getFullYear();
     }
+    useEffect(() => {
+        const options = {
+            chart: {
+                type: "area",
+                fontFamily: 'inherit',
+                height: 40.0,
+                sparkline: {
+                    enabled: true
+                },
+                animations: {
+                    enabled: false
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            fill: {
+                opacity: .16,
+                type: 'solid'
+            },
+            stroke: {
+                width: 2,
+                lineCap: "round",
+                curve: "smooth",
+            },
+            series: [{
+                name: "Profits",
+                data: [37, 35, 44, 28, 36, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 19, 46, 39, 62, 51, 35, 41, 67]
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                axisBorder: {
+                    show: false,
+                },
+                type: 'datetime',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: [
+                '2020-06-20', '2020-06-21', '2020-06-22', '2020-06-23', '2020-06-24', '2020-06-25', '2020-06-26', '2020-06-27', '2020-06-28', '2020-06-29', '2020-06-30', '2020-07-01', '2020-07-02', '2020-07-03', '2020-07-04', '2020-07-05', '2020-07-06', '2020-07-07', '2020-07-08', '2020-07-09', '2020-07-10', '2020-07-11', '2020-07-12', '2020-07-13', '2020-07-14', '2020-07-15', '2020-07-16', '2020-07-17', '2020-07-18', '2020-07-19'
+            ],
+            colors: ["#007bff"], // You can change this color if needed
+            legend: {
+                show: false,
+            },
+        };
 
+        const chart = new ApexCharts(document.getElementById('chart-revenue-bg'), options);
+        chart.render();
+
+        // Cleanup
+        return () => {
+            chart.destroy();
+        };
+    }, []); 
+    useEffect(() => {
+        const options = {
+            chart: {
+                type: "line",
+                fontFamily: 'inherit',
+                height: 40.0,
+                sparkline: {
+                    enabled: true
+                },
+                animations: {
+                    enabled: false
+                },
+            },
+            fill: {
+                opacity: 1,
+            },
+            stroke: {
+                width: [2, 1],
+                dashArray: [0, 3],
+                lineCap: "round",
+                curve: "smooth",
+            },
+            series: [{
+                name: "May",
+                data: [37, 35, 44, 28, 36, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 4, 46, 39, 62, 51, 35, 41, 67]
+            },{
+                name: "April",
+                data: [93, 54, 51, 24, 35, 35, 31, 67, 19, 43, 28, 36, 62, 61, 27, 39, 35, 41, 27, 35, 51, 46, 62, 37, 44, 53, 41, 65, 39, 37]
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                type: 'datetime',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: [
+                '2020-06-20', '2020-06-21', '2020-06-22', '2020-06-23', '2020-06-24', '2020-06-25', '2020-06-26', '2020-06-27', '2020-06-28', '2020-06-29', '2020-06-30', '2020-07-01', '2020-07-02', '2020-07-03', '2020-07-04', '2020-07-05', '2020-07-06', '2020-07-07', '2020-07-08', '2020-07-09', '2020-07-10', '2020-07-11', '2020-07-12', '2020-07-13', '2020-07-14', '2020-07-15', '2020-07-16', '2020-07-17', '2020-07-18', '2020-07-19'
+            ],
+            colors: ["#007bff", "#6c757d"], // You can change these colors if needed
+            legend: {
+                show: false,
+            },
+        };
+
+        const chart = new ApexCharts(document.getElementById('chart-new-clients'), options);
+        chart.render();
+
+        // Cleanup
+        return () => {
+            chart.destroy();
+        };
+    }, []); 
+    useEffect(() => {
+        const options = {
+            chart: {
+                type: "bar",
+                fontFamily: 'inherit',
+                height: 40.0,
+                sparkline: {
+                    enabled: true
+                },
+                animations: {
+                    enabled: false
+                },
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                }
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Profits",
+                data: [37, 35, 44, 28, 36, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 19, 46, 39, 62, 51, 35, 41, 67]
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                axisBorder: {
+                    show: false,
+                },
+                type: 'datetime',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: [
+                '2020-06-20', '2020-06-21', '2020-06-22', '2020-06-23', '2020-06-24', '2020-06-25', '2020-06-26', '2020-06-27', '2020-06-28', '2020-06-29', '2020-06-30', '2020-07-01', '2020-07-02', '2020-07-03', '2020-07-04', '2020-07-05', '2020-07-06', '2020-07-07', '2020-07-08', '2020-07-09', '2020-07-10', '2020-07-11', '2020-07-12', '2020-07-13', '2020-07-14', '2020-07-15', '2020-07-16', '2020-07-17', '2020-07-18', '2020-07-19'
+            ],
+            colors: ["#007bff"],
+            legend: {
+                show: false,
+            },
+        };
+
+        const chart = new ApexCharts(document.getElementById('chart-active-users'), options);
+        chart.render();
+
+        // Cleanup
+        return () => {
+            chart.destroy();
+        };
+    }, []); 
     const [dataTableValues, setDataTableValues] = useState([]);
+    const [baseValue, setbaseValue] = useState([]);
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/menu', {
@@ -32,12 +235,8 @@ function Dashboard() {
                 createdat: item.createdat,
                 updatedat: item.updatedat,
             }));
-            // console.log(transformedData)
-            // Filter menus that are not past
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date >= today);
-            // console.log(notPastMenus)
-            // Display only the first 10 menus
 
             let firstTenMenus;
             if (notPastMenus.length <= 10) {
@@ -45,11 +244,35 @@ function Dashboard() {
             } else {
                 firstTenMenus = notPastMenus.slice(0, 10);
             }
-            // console.log("hello:" + firstTenMenus)
-
             setDataTableValues(firstTenMenus);
-            // console.log(dataTableValues)
-            // console.log('Data fetched:', dataTableValues);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    const DashData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/dashboard', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+                withCredentials: true,
+            });
+            console.log(response.data)
+            // const transformedData = response.data.map(item => ({
+            //     userCount: item.userCount,
+            //     menuCount: item.menuCount,
+            //     varietyCount: item.varietyCount,
+            //     communityCount: item.communityCount
+            // }));
+            setbaseValue({
+                userCount: response.data.userCount,
+                menuCount: response.data.menuCount,
+                varietyCount: response.data.varietyCount,
+                communityCount: response.data.communityCount,
+            });
+            // console.log(transformedData)
+            // setbaseValue(transformedData);
+            console.log(baseValue)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -57,6 +280,7 @@ function Dashboard() {
 
     useEffect(() => {
         fetchData();
+        DashData();
     }, []);
 
     return (
@@ -178,8 +402,9 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="h1 mb-3">{ } user counts for the pertiucular community id.</div>
-                                        {/* <div className="d-flex mb-2">
+                                        <div className="h1 mb-3">{baseValue.userCount }</div>
+                                        <br/>  <br/>
+                                        <div className="d-flex mb-2">
                                             <div>Conversion rate</div>
                                             <div className="ms-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
@@ -206,8 +431,9 @@ function Dashboard() {
                                                     </svg>
                                                 </span>
                                             </div>
-                                        </div> */}
-                                        {/* <div className="progress progress-sm">
+                                        </div>
+                                      
+                                        <div className="progress progress-sm">
                                             <div
                                                 className="progress-bar bg-primary"
                                                 style={{ width: "75%" }}
@@ -221,7 +447,7 @@ function Dashboard() {
                                                     75% Complete
                                                 </span>
                                             </div>
-                                        </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -268,9 +494,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-0 me-2">
-                                                { } community counts for admin
+                                                {baseValue.communityCount }
                                             </div>
-                                            {/* <div className="me-auto">
+                                            <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
                                                     8%
                                                     <svg
@@ -294,7 +520,7 @@ function Dashboard() {
                                                         <path d="M14 7l7 0l0 7" />
                                                     </svg>
                                                 </span>
-                                            </div> */}
+                                            </div>
                                         </div>
                                     </div>
                                     <div
@@ -346,9 +572,10 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                { } number of Variety created
+                                                {baseValue.varietyCount }
                                             </div>
-                                            {/* <div className="me-auto">
+                                           
+                                            <div className="me-auto">
                                                 <span className="text-yellow d-inline-flex align-items-center lh-1">
                                                     0%
                                                     <svg
@@ -371,8 +598,9 @@ function Dashboard() {
                                                         <path d="M5 12l14 0" />
                                                     </svg>
                                                 </span>
-                                            </div> */}
+                                            </div>
                                         </div>
+                                        <br/>  <br/>
                                         <div
                                             id="chart-new-clients"
                                             className="chart-sm"
@@ -423,9 +651,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                { } total count of the menu created
+                                                { baseValue.menuCount} 
                                             </div>
-                                            {/* <div className="me-auto">
+                                            <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
                                                     4%
                                                     <svg
@@ -449,12 +677,13 @@ function Dashboard() {
                                                         <path d="M14 7l7 0l0 7" />
                                                     </svg>
                                                 </span>
-                                            </div> */}
+                                            </div>
                                         </div>
-                                        {/* <div
+                                        <br/>  <br/> 
+                                        <div
                                             id="chart-active-users"
                                             className="chart-sm"
-                                        ></div> */}
+                                        ></div>
                                     </div>
                                 </div>
                             </div>
