@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post("/login", authController.login);
 router.post("/logout", authController.logout);
+router.post("/forgetPassword", authController.forgetPassword);
 // router.put('/update/:id', userController.updateUser);
 // router.put('/delete/:id', userController.updateUserStatus);
 

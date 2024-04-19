@@ -2,6 +2,7 @@
 const User = require("../models/user");
 const db = require("../config/db");
 const { ObjectId } = require("bson");
+const nodemailer = require("nodemailer");
 const userController = {
     getAllUsers: async (req, res) => {
         if (!req.isAdmin && !req.isManager) {
@@ -29,38 +30,65 @@ const userController = {
             res.status(500).send("Internal Server Error");
         }
     },
-  
-addUser: async (req, res) => {
-    if (!req.isAdmin && !req.isManager) {
-        return res.status(403).json({ error: "You are not an admin or manager" });
-    }
-    try {
-        const formData = req.body;
-        await db.connect();
-        const collection = db.db("ThaliSystem").collection("users");
-        
-        // Check if user with the same email already exists
-        const existingUser = await collection.findOne({ email: formData.email });
-        if (existingUser) {
-            return res.status(400).json({ error: "User with this email already exists" });
-        }
 
-        if (req.isManager) {
-            formData.communityid = req.communityid;
+    addUser: async (req, res) => {
+        if (!req.isAdmin && !req.isManager) {
+            return res.status(403).json({ error: "You are not an admin or manager" });
         }
-        const newUser = new User(formData);
-        const result = await collection.insertOne(newUser);
-        if (result) {
-            res.status(201).json({ message: "User created successfully" });
-        } else {
-            res.status(500).json({ error: "Failed to create user" });
-        }
-    } catch (err) {
-        console.error("Error:", err);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-},
+        try {
+            const formData = req.body;
+            await db.connect();
+            const collection = db.db("ThaliSystem").collection("users");
 
+            // Check if user with the same email already exists
+            const existingUser = await collection.findOne({ email: formData.email });
+            if (existingUser) {
+                return res.status(400).json({ error: "User with this email already exists" });
+            }
+
+            if (req.isManager) {
+                formData.communityid = req.communityid;
+            }
+            const newUser = new User(formData);
+            const result = await collection.insertOne(newUser);
+            if (result) {
+                // Send email to the newly created user
+                const transporter = nodemailer.createTransport({
+                    // Configure your email provider here
+                    // Example for Gmail:
+                    service: 'gmail',
+                    auth: {
+                        user: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                        pass: 'rtgi cfde fuat tjpu'
+                    }
+                });
+
+                const mailOptions = {
+                    from: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                    to: formData.email,
+                    subject: 'Welcome to ThaliSystem',
+                    text: `Hello ${formData.name},\n\nYour account has been successfully created.\n\nUsername: ${formData.email}\nPassword: ${formData.password}\n\nThank you for joining ThaliSystem.`
+                };
+
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.error("Error sending email:", error);
+                    } else {
+                        console.log("Email sent:", info.response);
+                    }
+                });
+
+                res.status(201).json({ message: "User created successfully" });
+            } else {
+                res.status(500).json({ error: "Failed to create user" });
+            }
+        } catch (err) {
+            console.error("Error:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
+
+    
 updateUser: async (req, res) => {
     if (!req.isAdmin && !req.isManager) {
         return res.status(403).json({ error: "You are not an admin or manager" });
@@ -72,11 +100,41 @@ updateUser: async (req, res) => {
         const collection = db.db("ThaliSystem").collection("users");
         const updatedUserWithoutId = { ...updatedUser };
         delete updatedUserWithoutId._id;
-        
+
         // Check if user with the same email already exists
         const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne: userId } });
         if (existingUser) {
             return res.status(400).json({ error: "Another user with this email already exists" });
+        }
+
+        // Check if email field is updated
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+        if (user.email !== updatedUser.email) {
+            // Email is updated, send notification to the user
+            const transporter = nodemailer.createTransport({
+                // Configure your email provider here
+                // Example for Gmail:
+                service: 'gmail',
+                auth: {
+                    user: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                    pass: 'rtgi cfde fuat tjpu'
+                }
+            });
+
+            const mailOptions = {
+                from: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                to: user.email,
+                subject: 'Email Address Updated on ThaaliSystem',
+                text: `Hello ${user.name},\n\nYour email address has been updated to ${updatedUser.email}.\n\nIf you did not make this change, please contact support immediately.\n\nThank you,\nThaali System.`
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error("Error sending email:", error);
+                } else {
+                    console.log("Email sent:", info.response);
+                }
+            });
         }
 
         if (req.isManager) {

@@ -16,6 +16,7 @@ import Protected from './components/Protected';
 import NotFound from "./components/Auth/404";
 import MyProfile from "./components/profile/MyProfile";
 import axios from 'axios';
+import ForgetPassword from "./components/Auth/ForgetPassword";
 // import Menu from "./components/Menu/Menus";
 function App() {
     // const location = useLocation();
@@ -71,6 +72,11 @@ function App() {
                             <Protected isLoggedIn={!isLoggedIn}>
                                 <Login />
                             </Protected>
+                        } />
+                        <Route path="/ForgetPassword" element={
+                            // <Protected isLoggedIn={!isLoggedIn}>
+                                <ForgetPassword />
+                            // </Protected>
                         } />
                         <Route
                             path="/"

@@ -108,7 +108,7 @@ function Login() {
                 <div className="text-center mb-4">
                     <a href="." className="navbar-brand navbar-brand-autodark">
                         <img src={logo} width="220"
-                            height="70" alt="Tabler" />
+                            height="70" alt="Thaali System" />
                     </a>
                 </div>
                 <div className="card card-md">
@@ -123,7 +123,7 @@ function Login() {
                                 <label className="form-label">
                                     Password
                                     <span className="form-label-description">
-                                        <a href="./forgot-password.html">I forgot password</a>
+                                        <a href="/ForgetPassword">I forgot password</a>
                                     </span>
                                 </label>
                                 <div className="input-group input-group-flat">
