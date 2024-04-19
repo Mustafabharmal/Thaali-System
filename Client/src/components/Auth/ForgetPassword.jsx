@@ -3,7 +3,7 @@ import logo from "../../assets/static/logo.svg";
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
 
-function ForgetPassword(){
+function ForgetPassword() {
     const [email, setEmail] = useState("");
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -47,37 +47,37 @@ function ForgetPassword(){
     }
     return (
         <>
-         <div className="page page-center">
-      <div className="container container-tight py-4">
-        <div className="text-center mb-4">
-          <a href="." className="navbar-brand navbar-brand-autodark">
-          <img src={logo} width="220"
-                            height="70" alt="Thaali System" />
-          </a>
-        </div>
-        <form className="card card-md" method="post" onSubmit={handleSubmit} >
-          <div className="card-body">
-            <h2 className="card-title text-center mb-4">Forgot password</h2>
-            <p className="text-secondary mb-4">Enter your email address and your password will be reset and emailed to you.</p>
-            <div className="mb-3">
-              <label className="form-label required">Email address</label>
-              <input type="email" name="email" onChange={handleChange} value={email}  className="form-control" placeholder="Enter email" required/>
+            <div className="page page-center">
+                <div className="container container-tight py-4">
+                    <div className="text-center mb-4">
+                        <a href="." className="navbar-brand navbar-brand-autodark">
+                            <img src={logo} width="220"
+                                height="70" alt="Thaali System" />
+                        </a>
+                    </div>
+                    <form className="card card-md" method="post" onSubmit={handleSubmit} >
+                        <div className="card-body">
+                            <h2 className="card-title text-center mb-4">Forgot password</h2>
+                            <p className="text-secondary mb-4">Enter your email address and your password will be reset and emailed to you.</p>
+                            <div className="mb-3">
+                                <label className="form-label required">Email address</label>
+                                <input type="email" name="email" onChange={handleChange} value={email} className="form-control" placeholder="Enter email" required />
+                            </div>
+                            <div className="form-footer">
+                                {/* <a href="#" className="btn btn-primary w-100"> */}
+                                <button type="submit" className="btn btn-primary w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                                    Send me new password
+                                </button>
+                                {/* </a> */}
+                            </div>
+                        </div>
+                    </form>
+                    <div className="text-center text-secondary mt-3">
+                        Forget it, <a href="/login">send me back</a> to the sign in screen.
+                    </div>
+                </div>
             </div>
-            <div className="form-footer">
-              {/* <a href="#" className="btn btn-primary w-100"> */}
-              <button type="submit" className="btn btn-primary w-100">
-                <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
-                Send me new password
-                </button>
-              {/* </a> */}
-            </div>
-          </div>
-        </form>
-        <div className="text-center text-secondary mt-3">
-          Forget it, <a href="/login">send me back</a> to the sign in screen.
-        </div>
-      </div>
-    </div>
         </>
     )
 }
