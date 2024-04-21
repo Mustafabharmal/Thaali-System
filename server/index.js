@@ -146,6 +146,7 @@ const varietyRoutes = require('./routes/VarietyRoutes');
 const MenuRoutes = require('./routes/MenuRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const FeedComReqRoutes = require('./routes/FeedComReqRoutes');
 const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -162,6 +163,8 @@ app.use('/community', communityRoutes);
 app.use('/variety', varietyRoutes);
 app.use('/menu', MenuRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/FeedComReq', FeedComReqRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/sidebar";
 import Dashboard from "./components/dashboard";
@@ -10,13 +10,14 @@ import Menus from "./components/Menu/Menus";
 import CreateMenu from "./components/Menu/CreateMenu";
 import Login from "./components/Auth/Login";
 import Footer from "./components/Footer";
-import { useContext } from 'react';
-import AuthContext from './store/auth-context';
-import Protected from './components/Protected';
+import { useContext } from "react";
+import AuthContext from "./store/auth-context";
+import Protected from "./components/Protected";
 import NotFound from "./components/Auth/404";
 import MyProfile from "./components/profile/MyProfile";
-import axios from 'axios';
+import axios from "axios";
 import ForgetPassword from "./components/Auth/ForgetPassword";
+import Feedback from "./components/Feedback/Feedback";
 // import Menu from "./components/Menu/Menus";
 function App() {
     // const location = useLocation();
@@ -34,24 +35,25 @@ function App() {
     // const history = useHistory();
 
     useEffect(() => {
-       isLoggedIn &&(
-
-        fetchData())
+        isLoggedIn && fetchData();
     }, []);
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/users', {
-            withCredentials: true,
-            headers: {
-                authorization: `Mustafa ${authCtx.token}`,
-            },
-        });
+            const response = await axios.get("http://localhost:3000/users", {
+                withCredentials: true,
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+            });
         } catch (error) {
-            if ( error.response.status === 403 && error.response.data.error === "Bhai Logging kar") {
+            if (
+                error.response.status === 403 &&
+                error.response.data.error === "Bhai Logging kar"
+            ) {
                 authCtx.logout();
                 window.location.href = "/login";
             } else {
-                console.error('Error fetching data:', error);
+                console.error("Error fetching data:", error);
             }
         }
     };
@@ -65,24 +67,35 @@ function App() {
                 <div className="page">
                     {/* <Sidebar /> */}
                     {/* {window.location.pathname.toLowerCase() !== '/login' && <Sidebar />} */}
-                    {isLoggedIn && <Sidebar />}
+                    {/* {isLoggedIn && <Sidebar />} */}
                     {/* {location.pathname !== '/Login' && <Sidebar />} */}
                     <Routes>
-                        <Route path="/Login" element={
-                            <Protected isLoggedIn={!isLoggedIn}>
-                                <Login />
-                            </Protected>
-                        } />
-                        <Route path="/ForgetPassword" element={
-                            // <Protected isLoggedIn={!isLoggedIn}>
+                        <Route
+                            path="/Login"
+                            element={
+                                <Protected isLoggedIn={!isLoggedIn}>
+                                    <Login />
+                                </Protected>
+                            }
+                        />
+                        <Route
+                            path="/ForgetPassword"
+                            element={
+                                // <Protected isLoggedIn={!isLoggedIn}>
+                                // <>
+                                // <Sidebar />
                                 <ForgetPassword />
-                            // </Protected>
-                        } />
+                                // </Protected>
+                            }
+                        />
                         <Route
                             path="/"
                             element={
                                 <Protected isLoggedIn={isLoggedIn}>
-                                    <Dashboard />
+                                    <>
+                                        <Sidebar />
+                                        <Dashboard />
+                                    </>
                                 </Protected>
                             }
                         />
@@ -90,33 +103,77 @@ function App() {
                             path="/myProfile"
                             element={
                                 <Protected isLoggedIn={isLoggedIn}>
-                                    <MyProfile />
+                                    <>
+                                        <Sidebar />
+                                        <MyProfile />
+                                    </>
                                 </Protected>
                             }
                         />
                         {/* <Route exact path="/" element={ /> */}
                         {(isAdmin || isManager) && (
-                            <Route path="/user" element={
-                                <Protected isLoggedIn={isLoggedIn}>
-                                    <User />
-                                </Protected>
-                            } />
+                            <Route
+                                path="/user"
+                                element={
+                                    <Protected isLoggedIn={isLoggedIn}>
+                                        <>
+                                            <Sidebar />
+                                            <User />
+                                        </>
+                                    </Protected>
+                                }
+                            />
                         )}
                         {isAdmin && (
-                            <Route path="/community" element={<Protected isLoggedIn={isLoggedIn}>
-                                <Community />
-                            </Protected>} />
+                            <Route
+                                path="/community"
+                                element={
+                                    <Protected isLoggedIn={isLoggedIn}>
+                                        <>
+                                            <Sidebar />
+                                            <Community />
+                                        </>
+                                    </Protected>
+                                }
+                            />
                         )}
                         {/* <Route path="/unit" element={<Unit />} /> */}
                         {(isAdmin || isManager) && (
-                            <Route path="/variety" element={<Protected isLoggedIn={isLoggedIn}>
-                                <Variety />
-                            </Protected>} />
+                            <Route
+                                path="/variety"
+                                element={
+                                    <Protected isLoggedIn={isLoggedIn}>
+                                        <>
+                                            <Sidebar />
+                                            <Variety />
+                                        </>
+                                    </Protected>
+                                }
+                            />
                         )}
-                        <Route path="/menus" element={<Protected isLoggedIn={isLoggedIn}>
-                            <Menus />
-                        </Protected>} />
-                        <Route path="/*" element={< NotFound />} />
+                        <Route
+                            path="/menus"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <>
+                                        <Sidebar />
+                                        <Menus />
+                                    </>
+                                </Protected>
+                            }
+                        />
+                         <Route
+                            path="/Feedback"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <>
+                                        <Sidebar />
+                                        <Feedback />
+                                    </>
+                                </Protected>
+                            }
+                        />
+                        <Route path="/*" element={<NotFound />} />
                     </Routes>
                     <Footer />
                 </div>
