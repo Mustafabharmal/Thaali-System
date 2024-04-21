@@ -174,22 +174,22 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             {/* </div> */}
                             {/* <div className="modal-body"> */}
                             <div className="row">
-                                <div className="col-lg-4">
-                                    <div className="mb-3">
-                                        <label className="form-label required">
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            className="form-control"
-                                            placeholder="Paasword"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
+                                {/* <div className="col-lg-4">
+                                        <div className="mb-3">
+                                            <label className="form-label required">
+                                                Password
+                                            </label>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="Paasword"
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div> */}
                                 <div className="col-lg-2">
                                     <div className="mb-3">
                                         <label className="form-label required">
@@ -280,7 +280,7 @@ function EditUser({ formData, setFormData, handleChange, handleUpdate, ComValues
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto"
-                                // data-bs-dismiss="modal"
+                            // data-bs-dismiss="modal"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

@@ -6,16 +6,26 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext);
-
+    const [showPassword, setShowPassword] = useState(false);
+    const togglePasswordVisibility = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        password: "",
+        rememberMe: false,
     });
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        const { name, value, type, checked } = e.target;
+        const val = type === 'checkbox' ? checked : value;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: val,
+        }));
+        // setFormData({
+        //     ...formData,
+        //     [e.target.name]: e.target.value
+        // });
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,7 +46,7 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 credentials: 'include',
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, rememberMe: formData.rememberMe }),
             });
 
             if (response.ok) {
@@ -117,7 +127,7 @@ function Login() {
                         <form method="post" onSubmit={handleSubmit} >
                             <div className="mb-3">
                                 <label className="form-label">Email address</label>
-                                <input type="email" name="email" onChange={handleChange} value={formData.email} className="form-control" placeholder="your@email.com" autoComplete="off" required/>
+                                <input type="email" name="email" onChange={handleChange} value={formData.email} className="form-control" placeholder="your@email.com" autoComplete="off" required />
                             </div>
                             <div className="mb-2">
                                 <label className="form-label">
@@ -127,9 +137,9 @@ function Login() {
                                     </span>
                                 </label>
                                 <div className="input-group input-group-flat">
-                                    <input type="password" className="form-control" name="password" onChange={handleChange} value={formData.password} required placeholder="Your password" autoComplete="off" />
+                                    <input type={showPassword ? 'text' : 'password'} className="form-control" name="password" onChange={handleChange} value={formData.password} required placeholder="Your password" autoComplete="off" />
                                     <span className="input-group-text">
-                                        <a href="#" className="link-secondary" title="Show password" data-bs-toggle="tooltip">
+                                        <a href="#" className="link-secondary" title={showPassword ? 'Hide password' : 'Show password'} data-bs-toggle="tooltip" onClick={togglePasswordVisibility}>
                                             <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
                                         </a>
                                     </span>
@@ -137,7 +147,9 @@ function Login() {
                             </div>
                             <div className="mb-2">
                                 <label className="form-check">
-                                    <input type="checkbox" className="form-check-input" />
+                                    <input type="checkbox" name="rememberMe"
+                                        checked={formData.rememberMe}
+                                        onChange={handleChange} className="form-check-input" />
                                     <span className="form-check-label">Remember me on this device</span>
                                 </label>
                             </div>
