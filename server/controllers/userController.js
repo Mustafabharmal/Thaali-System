@@ -64,13 +64,13 @@ const userController = {
                     // Example for Gmail:
                     service: 'gmail',
                     auth: {
-                        user: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
-                        pass: 'rtgi cfde fuat tjpu'
+                        user: 'thaalicenter@gmail.com',
+                        pass: 'inbr aswm ywiy tjfb'
                     }
                 });
 
                 const mailOptions = {
-                    from: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                    from: 'thaalicenter@gmail.com',
                     to: formData.email,
                     subject: 'Welcome to ThaliSystem',
                     text: `Hello ${formData.name},\n\nYour account has been successfully created.\n\nUsername: ${formData.email}\nPassword: ${passtoStore}\n\nThank you for joining ThaliSystem.`
@@ -124,13 +124,13 @@ updateUser: async (req, res) => {
                 // Example for Gmail:
                 service: 'gmail',
                 auth: {
-                    user: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
-                    pass: 'rtgi cfde fuat tjpu'
+                    user: 'thaalicenter@gmail.com',
+                    pass: 'inbr aswm ywiy tjfb'
                 }
             });
 
             const mailOptions = {
-                from: 'mustafa.bharmal114768@marwadiuniversity.ac.in',
+                from: 'thaalicenter@gmail.com',
                 to: user.email,
                 subject: 'Email Address Updated on ThaaliSystem',
                 text: `Hello ${user.name},\n\nYour email address has been updated to ${updatedUser.email}.\n\nIf you did not make this change, please contact support immediately.\n\nThank you,\nThaali System.`

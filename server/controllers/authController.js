@@ -79,13 +79,13 @@ const authController = {
                     // Example for Gmail:
                     service: "gmail",
                     auth: {
-                        user: "mustafa.bharmal114768@marwadiuniversity.ac.in",
-                        pass: "rtgi cfde fuat tjpu",
-                    },
+                        user: 'thaalicenter@gmail.com',
+                        pass: 'inbr aswm ywiy tjfb'
+                    }
                 });
 
                 const mailOptions = {
-                    from: "mustafa.bharmal114768@marwadiuniversity.ac.in",
+                    from: "thaalicenter@gmail.com",
                     to: email,
                     subject: "Password Reset on ThaaliSystem",
                     text: `Hello,\n\nYour password has been reset. \n\nYour new password is: ${newPassword}\n\nPlease login with this password and consider changing it after logging in.\n\nThank you,\nThaali System.`,
