@@ -265,6 +265,7 @@ function EditFeedback({ formData, handleChange, handleUpdate, handleKeyUp,setFor
                                             </div>
                                         </div>
                                     </div>
+                                    {!isUser&&(
                                 <div className="col-lg-6">
                                         <div className="mb-3">
                                             <label className="form-label required">
@@ -294,7 +295,7 @@ function EditFeedback({ formData, handleChange, handleUpdate, handleKeyUp,setFor
                                                 ))} */}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>)}
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label required">

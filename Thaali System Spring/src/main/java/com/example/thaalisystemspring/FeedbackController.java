@@ -1,5 +1,6 @@
 package com.example.thaalisystemspring;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.ClassGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,36 @@ public class FeedbackController {
     private FeedbackService feedbackService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Feedback>> getAllFeedback() {
-        List<Feedback> feedbackList = feedbackService.getAllFeedback();
-        return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+    public ResponseEntity<List<Feedback>> getAllFeedback(@RequestParam(required = false) String communityid,
+                                                         @RequestParam(required = false) boolean isManager,
+                                                         @RequestParam(required = false) boolean isAdmin,
+                             @RequestParam(required = false) boolean isUser,    @RequestParam(required = false) String userid) {
+
+        try {
+            if (isAdmin) {
+                System.out.println("isAdmin");
+                List<Feedback> feedbackList = feedbackService.getAllFeedback();
+                return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+            }
+            if (isManager) {
+                System.out.println("isManager");
+//                String communityId = requestHeaders.get("communityid").toString();
+                List<Feedback> feedbackList = feedbackService.getAllFeedbackComId(communityid);
+                return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+            }
+            if (isUser) {
+                System.out.println("isUser");
+//                String userId = requestHeaders.get("userId").toString();
+                List<Feedback> feedbackList = feedbackService.getAllFeedbackUserId(userid);
+                return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+            }
+            // Default case: no specific role provided, return all feedback
+            List<Feedback> feedbackList = feedbackService.getAllFeedback();
+            return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/add")

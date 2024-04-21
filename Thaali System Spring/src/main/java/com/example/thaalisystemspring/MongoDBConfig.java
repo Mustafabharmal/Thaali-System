@@ -12,11 +12,11 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return "thaalisystem"; // Replace with your actual database name
+        return "ThaliSystem"; // Replace with your actual database name
     }
 
     @Override
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb+srv://trial:trial@trial.kupis9i.mongodb.net/"); // Replace with your MongoDB connection string
+        return MongoClients.create("mongodb+srv://mustafabharmal178:mustafa@thaalisystem.jqmnlib.mongodb.net/?retryWrites=true&w=majority"); // Replace with your MongoDB connection string
     }
 }

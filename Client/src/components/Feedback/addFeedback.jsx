@@ -143,6 +143,7 @@ const [selectedDates, setSelectedDates] = useState("");
             const response = await fetch("http://localhost:3000/FeedComReq/add", {
                 method: "POST",
                 headers: {
+                    type: "Feedback",
                     authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
                 },
@@ -372,6 +373,7 @@ const [selectedDates, setSelectedDates] = useState("");
                                             </div>
                                         </div>
                                     </div>
+                                    {!isUser&&(
                                 <div className="col-lg-6">
                                         <div className="mb-3">
                                             <label className="form-label required">
@@ -401,7 +403,7 @@ const [selectedDates, setSelectedDates] = useState("");
                                                 ))} */}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>)}
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label required">

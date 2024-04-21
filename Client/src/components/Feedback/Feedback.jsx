@@ -77,6 +77,7 @@ function Feedback() {
                 headers: {
                     authorization: `Mustafa ${authCtx.token}`,
                     "Content-Type": "application/json",
+                    type: "Feedback",
                 },
                 body: JSON.stringify({
                     ...formData,
@@ -354,6 +355,7 @@ function Feedback() {
 
                                                     >
                                                         <Column style={{ display: "none" }} hidden field="id" header="#" />
+                                                        {!isUser&&(
                                                         <Column
                                                             field="userid"
                                                             header="User"
@@ -366,7 +368,7 @@ function Feedback() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                             headerStyle={{ textAlign: "center" }} // Center-align the header
-                                                        />
+                                                        />)}
                                                       
                                                         {isAdmin && (
                                                             <Column
@@ -441,10 +443,10 @@ function Feedback() {
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         />
                                                          <Column
-                                                        field="type"
-                                                            header="type"
+                                                        field="completed"
+                                                            header="Status"
                                                             body={(rowData) => (
-                                                                <div className="text-center">{rowData.type
+                                                                <div className="text-center">{rowData.completed
                                                                 }</div>
                                                             )}
                                                             style={{ textAlign: "center", width: "8em" }}
@@ -467,11 +469,12 @@ function Feedback() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         /> */}
+                                                        {!isUser&&(
                                                         <Column
                                                             body={actionTemplate}
                                                             header="Action"
                                                             style={{ textAlign: "center", width: "8em" }}
-                                                        />
+                                                        />)}
                                                     </DataTable>
                                                 )}
 

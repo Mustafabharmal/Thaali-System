@@ -12,7 +12,22 @@ public class FeedbackService {
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findByStatus(1);
     }
+//    public List<Feedback> getAllFeedback() {
+//        return feedbackRepository.findByStatus(1);
+//    }
+//public List<Feedback> getAllFeedback() {
+//    return feedbackRepository.findAll();
+//}
 
+    public List<Feedback> getAllFeedbackComId(String communityId) {
+        return feedbackRepository.findByCommunityid(communityId);
+    }
+
+    public List<Feedback> getAllFeedbackUserId(String userId) {
+        System.out.println("userId: " + userId);
+
+        return feedbackRepository.findByUserid(userId);
+    }
     public Feedback addFeedback(Feedback feedback) {
 
         return feedbackRepository.save(feedback);

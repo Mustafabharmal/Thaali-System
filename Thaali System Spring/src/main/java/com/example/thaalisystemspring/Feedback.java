@@ -2,7 +2,7 @@ package com.example.thaalisystemspring;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 
 @Document(collection = "feedback")
@@ -10,7 +10,9 @@ public class Feedback {
 
     @Id
     private String _id;
+    @Field("userid")
     private String userid;
+    @Field("communityid")
     private String communityid;
     private String type;
     private String title;

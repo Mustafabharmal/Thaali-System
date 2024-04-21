@@ -4,6 +4,7 @@ const db = require("../config/db");
 const { ObjectId } = require("bson");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const e = require("express");
 const userController = {
     getAllUsers: async (req, res) => {
         if (!req.isAdmin && !req.isManager) {
@@ -129,12 +130,14 @@ const userController = {
             const updatedUserWithoutId = { ...updatedUser };
             delete updatedUserWithoutId._id;
             delete updatedUserWithoutId.password;
-
+            console.log(userId)
             // Check if user with the same email already exists
             const existingUser = await collection.findOne({
                 email: updatedUser.email,
-                _id: { $ne: userId },
+                _id: { $ne: new ObjectId(userId) },
+                status: 1,
             });
+            console.log(existingUser)
             if (existingUser) {
                 return res
                     .status(400)

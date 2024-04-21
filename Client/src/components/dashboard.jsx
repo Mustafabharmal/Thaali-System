@@ -719,7 +719,7 @@ function Dashboard() {
                                                     </div>
                                                     <div className="col">
                                                         <div className="font-weight-medium">
-                                                            132 Sales
+                                                            6969 Sales
                                                         </div>
                                                         <div className="text-secondary">
                                                             12 waiting payments
