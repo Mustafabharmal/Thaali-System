@@ -14,8 +14,19 @@ function Dashboard() {
             date.getMonth() === today.getMonth() &&
             date.getFullYear() === today.getFullYear();
     }
-
+    const [FeedComReq, setFeedComReq] = useState(
+        {
+            feebackt: "0",
+            feedbackv: "0",
+            requestt: "0",
+            requestv: "0",
+            complaintv: "0",
+            complaintt: "0"
+        }
+    );
     useEffect(() => {
+        let chart;
+     if(isAdmin){   
         const options = {
             chart: {
                 type: "area",
@@ -76,15 +87,19 @@ function Dashboard() {
             },
         };
 
-        const chart = new ApexCharts(document.getElementById('chart-revenue-bg'), options);
+         chart = new ApexCharts(document.getElementById('chart-revenue-bg'), options);
         chart.render();
-
+    }
         // Cleanup
         return () => {
+            if(chart){   
             chart.destroy();
+            }
         };
-    }, []);
+    }, [isAdmin]);
     useEffect(() => {
+        let chart
+        if(isAdmin || isManager){
         const options = {
             chart: {
                 type: "line",
@@ -142,15 +157,18 @@ function Dashboard() {
             },
         };
 
-        const chart = new ApexCharts(document.getElementById('chart-new-clients'), options);
+         chart = new ApexCharts(document.getElementById('chart-new-clients'), options);
         chart.render();
-
+    }
         // Cleanup
         return () => {
-            chart.destroy();
+         if(chart){
+            chart.destroy();}
         };
-    }, []);
+    }, [isAdmin,isManager]);
     useEffect(() => {
+        let chart;
+        if(isAdmin || isManager){
         const options = {
             chart: {
                 type: "bar",
@@ -210,14 +228,15 @@ function Dashboard() {
             },
         };
 
-        const chart = new ApexCharts(document.getElementById('chart-active-users'), options);
+         chart = new ApexCharts(document.getElementById('chart-active-users'), options);
         chart.render();
-
+    }
         // Cleanup
         return () => {
-            chart.destroy();
+            if(chart){
+            chart.destroy();}
         };
-    }, []);
+    }, [isAdmin, isManager]);
     const [UserValues, setUserValues] = useState([]);
     const fetchUserData = async () => {
         try {
@@ -336,6 +355,14 @@ function Dashboard() {
                 };
             });
             // setLoading(false);
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                requestt: requestCount,
+                requestv: requsetcountv,
+            }));
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date >= today);
 
@@ -357,9 +384,7 @@ function Dashboard() {
         }
         // setLoading(false);
     };
-    useEffect(() => {
-        fetchRequestData();
-    }, []);
+   
 
 
     const DashData = async () => {
@@ -391,10 +416,7 @@ function Dashboard() {
         }
     };
 
-    useEffect(() => {
-        fetchData();
-        DashData();
-    }, []);
+   
     const [dataComValues, setDataComValues] = useState([]);
     const fetchCompData = async () => {
         try {
@@ -427,6 +449,14 @@ function Dashboard() {
                 };
             });
             // setLoading(false);
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                complaintt: requestCount,
+                complaintv: requsetcountv,
+            }));
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date <= today);
 
@@ -454,9 +484,7 @@ function Dashboard() {
         }
         // setLoading(false);
     };
-    useEffect(() => {
-        fetchCompData();
-    }, []);
+    
     const [FeedbackValues, setFeedbackValues] = useState([]);
     const fetchFeedbackData = async () => {
         try {
@@ -488,6 +516,14 @@ function Dashboard() {
                     completed: item.completed,
                 };
             });
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                feebackt: requestCount,
+                feedbackv: requsetcountv,
+            }));
             // Set loading to false
             // setLoading(false);
 
@@ -525,6 +561,10 @@ function Dashboard() {
         // setLoading(false);
     };
     useEffect(() => {
+        fetchRequestData();
+        fetchData();
+        DashData();
+        fetchCompData();
         fetchFeedbackData();
     }, []);
     return (
@@ -605,7 +645,8 @@ function Dashboard() {
                 <div className="page-body">
                     <div className="container-xl">
                         <div className="row row-deck row-cards">
-                            <div className="col-sm-6 col-lg-3">
+                         {(isAdmin || isManager)&&(<> 
+                            <div className={`col-sm-6 ${isManager ? 'col-lg-4' : 'col-lg-3'}`}>
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
@@ -621,27 +662,27 @@ function Dashboard() {
                                                         aria-haspopup="true"
                                                         aria-expanded="false"
                                                     >
-                                                        Last 7 days
+                                                        All Data
                                                     </a>
                                                     <div className="dropdown-menu dropdown-menu-end">
                                                         <a
                                                             className="dropdown-item active"
                                                             href="#"
                                                         >
-                                                            Last 7 days
+                                                            All Data
                                                         </a>
                                                         <a
                                                             className="dropdown-item"
-                                                            href="#"
+                                                            href="/user"
                                                         >
-                                                            Last 30 days
+                                                            See more
                                                         </a>
-                                                        <a
+                                                        {/* <a
                                                             className="dropdown-item"
                                                             href="#"
                                                         >
                                                             Last 3 months
-                                                        </a>
+                                                        </a> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -695,7 +736,8 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-6 col-lg-3">
+                            {!isManager&&(
+                            <div className={`col-sm-6 ${isManager ? 'col-lg-4' : 'col-lg-3'}`}>
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
@@ -711,26 +753,20 @@ function Dashboard() {
                                                         aria-haspopup="true"
                                                         aria-expanded="false"
                                                     >
-                                                        Last 7 days
+                                                        All Data
                                                     </a>
                                                     <div className="dropdown-menu dropdown-menu-end">
-                                                        <a
+                                                    <a
                                                             className="dropdown-item active"
                                                             href="#"
                                                         >
-                                                            Last 7 days
+                                                            All Data
                                                         </a>
                                                         <a
                                                             className="dropdown-item"
-                                                            href="#"
+                                                            href="/community"
                                                         >
-                                                            Last 30 days
-                                                        </a>
-                                                        <a
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                        >
-                                                            Last 3 months
+                                                            See more
                                                         </a>
                                                     </div>
                                                 </div>
@@ -772,8 +808,8 @@ function Dashboard() {
                                         className="chart-sm"
                                     ></div>
                                 </div>
-                            </div>
-                            <div className="col-sm-6 col-lg-3">
+                            </div>)}
+                            <div className={`col-sm-6 ${isManager ? 'col-lg-4' : 'col-lg-3'}`}>
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
@@ -789,26 +825,20 @@ function Dashboard() {
                                                         aria-haspopup="true"
                                                         aria-expanded="false"
                                                     >
-                                                        Last 7 days
+                                                        All Data
                                                     </a>
                                                     <div className="dropdown-menu dropdown-menu-end">
-                                                        <a
+                                                    <a
                                                             className="dropdown-item active"
                                                             href="#"
                                                         >
-                                                            Last 7 days
+                                                            All Data
                                                         </a>
                                                         <a
                                                             className="dropdown-item"
-                                                            href="#"
+                                                            href="/variety"
                                                         >
-                                                            Last 30 days
-                                                        </a>
-                                                        <a
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                        >
-                                                            Last 3 months
+                                                            See more
                                                         </a>
                                                     </div>
                                                 </div>
@@ -852,7 +882,7 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-6 col-lg-3">
+                            <div className={`col-sm-6 ${isManager ? 'col-lg-4' : 'col-lg-3'}`}>
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
@@ -868,27 +898,27 @@ function Dashboard() {
                                                         aria-haspopup="true"
                                                         aria-expanded="false"
                                                     >
-                                                        Last 7 days
+                                                       All Data
                                                     </a>
                                                     <div className="dropdown-menu dropdown-menu-end">
                                                         <a
                                                             className="dropdown-item active"
                                                             href="#"
                                                         >
-                                                            Last 7 days
+                                                            All Data
                                                         </a>
                                                         <a
                                                             className="dropdown-item"
-                                                            href="#"
+                                                            href="/menus"
                                                         >
-                                                            Last 30 days
+                                                            See more
                                                         </a>
-                                                        <a
+                                                        {/* <a
                                                             className="dropdown-item"
                                                             href="#"
                                                         >
                                                             Last 3 months
-                                                        </a>
+                                                        </a> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -931,154 +961,80 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
+                            </>  
+                        )}
                             <div className="col-12">
                                 <div className="row row-cards">
-                                    <div className="col-sm-6 col-lg-3">
-                                        <div className="card card-sm">
+                                    <div className="col-sm-6 col-lg-4">
+                                        <div className="card card-sm" key="requests">
                                             <div className="card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-auto">
                                                         <span className="bg-primary text-white avatar">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="icon"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path
-                                                                    stroke="none"
-                                                                    d="M0 0h24v24H0z"
-                                                                    fill="none"
-                                                                />
-                                                                <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
-                                                                <path d="M12 3v3m0 12v3" />
-                                                            </svg>
+                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-checkup-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14h.01" /><path d="M9 17h.01" /><path d="M12 16l1 1l3 -3" /></svg>
                                                         </span>
                                                     </div>
                                                     <div className="col">
                                                         <div className="font-weight-medium">
-                                                            6969 Sales
+                                                            {FeedComReq.requestt} Requests
                                                         </div>
                                                         <div className="text-secondary">
-                                                            12 waiting payments
+                                                            {FeedComReq.requestv} waiting requests
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-sm-6 col-lg-3">
-                                        <div className="card card-sm">
+                                    <div className="col-sm-6 col-lg-4">
+                                        <div className="card card-sm" key="Feedbacks">
                                             <div className="card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-auto">
                                                         <span className="bg-green text-white avatar">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="icon"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path
-                                                                    stroke="none"
-                                                                    d="M0 0h24v24H0z"
-                                                                    fill="none"
-                                                                />
-                                                                <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                                                <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                                                <path d="M17 17h-11v-14h-2" />
-                                                                <path d="M6 5l14 1l-1 7h-13" />
-                                                            </svg>
+                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-certificate"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5" /><path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73" /><path d="M6 9l12 0" /><path d="M6 12l3 0" /><path d="M6 15l2 0" /></svg>
                                                         </span>
                                                     </div>
                                                     <div className="col">
                                                         <div className="font-weight-medium">
-                                                            78 Orders
+                                                            {FeedComReq.feebackt} Feedbacks
                                                         </div>
                                                         <div className="text-secondary">
-                                                            32 shipped
+                                                            {FeedComReq.feedbackv} waiting feedbacks
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-sm-6 col-lg-3">
-                                        <div className="card card-sm">
+                                    <div className="col-sm-6 col-lg-4">
+                                        <div className="card card-sm" key="complaints">
                                             <div className="card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-auto">
                                                         <span className="bg-twitter text-white avatar">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="icon"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path
-                                                                    stroke="none"
-                                                                    d="M0 0h24v24H0z"
-                                                                    fill="none"
-                                                                />
-                                                                <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c0 -.249 1.51 -2.772 1.818 -4.013z" />
-                                                            </svg>
+                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-alert-octagon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.802 2.165l5.575 2.389c.48 .206 .863 .589 1.07 1.07l2.388 5.574c.22 .512 .22 1.092 0 1.604l-2.389 5.575c-.206 .48 -.589 .863 -1.07 1.07l-5.574 2.388c-.512 .22 -1.092 .22 -1.604 0l-5.575 -2.389a2.036 2.036 0 0 1 -1.07 -1.07l-2.388 -5.574a2.036 2.036 0 0 1 0 -1.604l2.389 -5.575c.206 -.48 .589 -.863 1.07 -1.07l5.574 -2.388a2.036 2.036 0 0 1 1.604 0z" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
                                                         </span>
                                                     </div>
                                                     <div className="col">
                                                         <div className="font-weight-medium">
-                                                            623 Shares
+                                                            {FeedComReq.complaintt} Complaints
                                                         </div>
                                                         <div className="text-secondary">
-                                                            16 today
+                                                            {FeedComReq.complaintv} waiting complaints
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-sm-6 col-lg-3">
-                                        <div className="card card-sm">
+                                    {/* <div className="col-sm-6 col-lg-3">
+                                        <div className="card card-sm" key="Likes">
                                             <div className="card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-auto">
                                                         <span className="bg-facebook text-white avatar">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="icon"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path
-                                                                    stroke="none"
-                                                                    d="M0 0h24v24H0z"
-                                                                    fill="none"
-                                                                />
-                                                                <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
-                                                            </svg>
+
                                                         </span>
                                                     </div>
                                                     <div className="col">
@@ -1092,7 +1048,7 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -1145,7 +1101,7 @@ function Dashboard() {
                             <div className="col-lg-6">
                                 <div className="card">
                                     <div className="card-header border-0">
-                                        <div className="card-title"><h3 class="h2">Requests</h3></div>
+                                        <div className="card-title"><h3 className="h2">Requests</h3></div>
                                     </div>
                                     <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
                                         <div className="card-table table-responsive">
@@ -1201,7 +1157,7 @@ function Dashboard() {
                             <div className="col-lg-6">
                                 <div className="card">
                                     <div className="card-header border-0">
-                                        <div className="card-title"><h3 class="h2">Complain</h3></div>
+                                        <div className="card-title"><h3 className="h2">Complain</h3></div>
                                     </div>
 
                                     <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
@@ -1267,7 +1223,7 @@ function Dashboard() {
                                             <div className="card-body card-body-scrollable card-body-scrollable-shadow">
                                                 <div className="divide-y">
                                                     {FeedbackValues.map(item => (
-                                                        <div>
+                                                        <div key={item._id}>
                                                             <div className="row">
                                                                 <div className="col-auto">
                                                                     <span className="avatar">

@@ -8,7 +8,7 @@ router.get("/", authenticateToken,feedComReqController.getFeedComReqs );
 router.post("/add", authenticateToken,feedComReqController.addFeedComReq );
 router.put("/update/:id", authenticateToken,feedComReqController.editFeedComReq );
 router.put("/delete/:id", authenticateToken, feedComReqController.deleteFeedComReq);
-router.get("/dashboard", authenticateToken, feedComReqController.deleteFeedComReq);
+// router.get("/dashboard", authenticateToken, feedComReqController.deleteFeedComReq);
 
 // router.post("/add", authenticateToken, menuController.addMenu);
 // router.put("/update/:id", authenticateToken, menuController.updateMenu);

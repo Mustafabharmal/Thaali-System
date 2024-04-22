@@ -412,7 +412,7 @@ function Sidebar() {
                                 ) : (
                                     <a href="#" className="dropdown-item">
                                         <div className="col-auto">
-                                            <span className="status-dot status-dot-animated bg-green d-block"></span>
+                                            <span className="status-dot status-dot-animated bg-red d-block"></span>
                                         </div>
                                         <div className="col">
                                             Non Thaali User</div>

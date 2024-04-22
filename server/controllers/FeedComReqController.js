@@ -114,7 +114,27 @@ const feedComReqController = {
             console.error('Error:', err);
             res.status(500).send('Internal Server Error');
         }
-    }
+    },
+    // dashboardFeedComReq: async (req, res) => {
+    //     try {
+    //         const response = await axios.get(`${API_URL}/feedback/dashboard`, {
+    //             headers: {
+    //                 'type': req.headers.type,
+    //                 'isAdmin': req.isAdmin,
+    //                 'isManager': req.isManager,
+    //                 'isUser': req.isUser,
+    //                 'userId': req.userId,
+    //                 'communityid': req.communityid,
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
+    //         res.status(200).json(response.data);
+    //     } catch (err) {
+    //         console.error('Error:', err);
+    //         res.status(500).send('Internal Server Error');
+    //     }
+    // }
+
 
 };
 module.exports = feedComReqController;
