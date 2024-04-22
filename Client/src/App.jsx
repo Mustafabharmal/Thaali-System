@@ -18,6 +18,8 @@ import MyProfile from "./components/profile/MyProfile";
 import axios from "axios";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import Feedback from "./components/Feedback/Feedback";
+import Requests from "./components/requests/Requests"
+import Complain from "./components/Complain/Complain";
 // import Menu from "./components/Menu/Menus";
 function App() {
     // const location = useLocation();
@@ -169,6 +171,28 @@ function App() {
                                     <>
                                         <Sidebar />
                                         <Feedback />
+                                    </>
+                                </Protected>
+                            }
+                        />
+                         <Route
+                            path="/Requests"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <>
+                                        <Sidebar />
+                                        <Requests />
+                                    </>
+                                </Protected>
+                            }
+                        />
+                          <Route
+                            path="/Complain"
+                            element={
+                                <Protected isLoggedIn={isLoggedIn}>
+                                    <>
+                                        <Sidebar />
+                                        <Complain />
                                     </>
                                 </Protected>
                             }

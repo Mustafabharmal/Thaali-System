@@ -8,4 +8,5 @@ public interface FeedbackRepository extends MongoRepository<Feedback, String> {
     List<Feedback> findByStatus(int status);
     List<Feedback> findByCommunityid(String communityId);
     List<Feedback> findByUserid(String userId);
+    List<Feedback> findByType(String type);
 }

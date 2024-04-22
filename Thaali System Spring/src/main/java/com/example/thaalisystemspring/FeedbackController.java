@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 //import java.util.List;
 
 @RestController
@@ -19,28 +20,46 @@ public class FeedbackController {
     public ResponseEntity<List<Feedback>> getAllFeedback(@RequestParam(required = false) String communityid,
                                                          @RequestParam(required = false) boolean isManager,
                                                          @RequestParam(required = false) boolean isAdmin,
-                             @RequestParam(required = false) boolean isUser,    @RequestParam(required = false) String userid) {
+                             @RequestParam(required = false) boolean isUser,    @RequestParam(required = false) String userid, @RequestParam(required=false) String type)  {
 
         try {
             if (isAdmin) {
                 System.out.println("isAdmin");
-                List<Feedback> feedbackList = feedbackService.getAllFeedback();
+                List<Feedback> feedbackList;
+                if (type != null) {
+                    feedbackList = feedbackService.getAllFeedbackByType(type);
+                } else {
+                    feedbackList = feedbackService.getAllFeedback();
+                }
                 return new ResponseEntity<>(feedbackList, HttpStatus.OK);
             }
             if (isManager) {
                 System.out.println("isManager");
-//                String communityId = requestHeaders.get("communityid").toString();
                 List<Feedback> feedbackList = feedbackService.getAllFeedbackComId(communityid);
+                if (type != null) {
+                    feedbackList = feedbackList.stream()
+                            .filter(feedback -> feedback.getType().equals(type))
+                            .collect(Collectors.toList());
+                }
                 return new ResponseEntity<>(feedbackList, HttpStatus.OK);
             }
             if (isUser) {
                 System.out.println("isUser");
-//                String userId = requestHeaders.get("userId").toString();
                 List<Feedback> feedbackList = feedbackService.getAllFeedbackUserId(userid);
+                if (type != null) {
+                    feedbackList = feedbackList.stream()
+                            .filter(feedback -> feedback.getType().equals(type))
+                            .collect(Collectors.toList());
+                }
                 return new ResponseEntity<>(feedbackList, HttpStatus.OK);
             }
             // Default case: no specific role provided, return all feedback
             List<Feedback> feedbackList = feedbackService.getAllFeedback();
+            if (type != null) {
+                feedbackList = feedbackList.stream()
+                        .filter(feedback -> feedback.getType().equals(type))
+                        .collect(Collectors.toList());
+            }
             return new ResponseEntity<>(feedbackList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

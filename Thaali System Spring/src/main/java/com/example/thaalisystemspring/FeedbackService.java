@@ -12,6 +12,10 @@ public class FeedbackService {
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findByStatus(1);
     }
+    public List<Feedback> getAllFeedbackByType(String type)
+    {
+        return feedbackRepository.findByType(type);
+    }
 //    public List<Feedback> getAllFeedback() {
 //        return feedbackRepository.findByStatus(1);
 //    }

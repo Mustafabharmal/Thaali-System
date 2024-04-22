@@ -30,6 +30,7 @@ const authController = {
     login: async (req, res) => {
         try {
             const { email, password, rememberMe } = req.body;
+            console.log(req.body)
             const status = 1;
             await db.connect();
             const collection = db.db("ThaliSystem").collection("users");
