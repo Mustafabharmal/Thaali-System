@@ -18,7 +18,7 @@ function Requests() {
     const isUser = authCtx.role === 2 || authCtx.role === "2";
     const toast = React.createRef();
     const [dataTableValues, setDataTableValues] = useState([]);
-   
+
 
     // Pass the fil
     const [globalFilter, setGlobalFilter] = useState("");
@@ -250,7 +250,7 @@ function Requests() {
         fetchData();
     }, []);
     const header = (
-        <div className="table-header">
+        <div className="table-header d-flex align-items-center justify-content-between">
             <div className="input-group" style={{ maxWidth: "300px" }}>
                 <span className="input-group-text">
                     <i className="pi pi-search" />
@@ -262,8 +262,99 @@ function Requests() {
                     onChange={(e) => setGlobalFilter(e.target.value)}
                 />
             </div>
+            <div className="status-buttons d-flex align-items-center">
+                <div className="status-button">
+                    <button
+                        className="btn mr-1 btn-outline-danger form-selectgroup-item"
+                        onClick={() => setGlobalFilter("Pending")}
+                    >
+                        
+                        {/* <span>Pending</span> */}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icon icon-tabler icons-tabler-outline icon-tabler-alert-square-rounded"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                            <path d="M12 8v4" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                        Pending
+                    </button>
+                </div>
+                <div className="status-button">
+                    <button
+                        className="btn mr-1 btn-outline-warning form-selectgroup-item"
+                        onClick={() => setGlobalFilter("Will be Done")}
+                    >
+                        {/* <span></span> */}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icon icon-tabler icons-tabler-outline icon-tabler-clock-check"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M20.942 13.021a9 9 0 1 0 -9.407 7.967" />
+                            <path d="M12 7v5l3 3" />
+                            <path d="M15 19l2 2l4 -4" />
+                        </svg>
+                        Will be Done
+                    </button>
+                </div>
+                <div className="status-button">
+                    <button
+                        className="btn mr-1 btn-outline-success form-selectgroup-item"
+                        onClick={() => setGlobalFilter("Completed")}
+                    >
+                        {/* <span></span> */}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icon icon-tabler icons-tabler-outline icon-tabler-checks"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 12l5 5l10 -10" />
+                            <path d="M2 12l5 5m5 -5l5 -5" />
+                        </svg>
+                        Completed
+                    </button>
+                </div>
+                <div className="status-button">
+                    <button
+                        className="btn btn-outline-primary btn-icon"
+                        onClick={() => setGlobalFilter("")} // Clear the filter
+                    >
+                        <span>All</span>
+                    </button>
+                </div>
+            </div>
         </div>
     );
+    
+    
+        
     const LoadingPlaceholder = () => (
         <li className="list-group-item">
             <div className="row align-items-center">
@@ -300,90 +391,98 @@ function Requests() {
                 <div className="demo-icons-list"> */}
             <div className="mb-1">
                 <div className="form-selectgroup">
-                    <button
-                        type="button"
-                        className={`form-selectgroup-item btn ${rowData.completed && rowData.completed.toLowerCase() === "pending" ? "btn-danger" : "btn-outline-danger"}`}
-                        onClick={() => handleUpdate({ ...rowData, completed: "Pending" })}
-                        title="Pending"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="left"
-                    >
+                    {/* <label className="form-selectgroup-item "> */}
+                        <button
+                            type="button"
+                            className={`btn-icon mr-1 btn ${rowData.completed && rowData.completed.toLowerCase() === "pending" ? "btn-danger" : "btn-outline-danger" }`}
+                            onClick={() => handleUpdate({ ...rowData, completed: "Pending" })}
+                            title="Pending"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="left"
+                        >
 
-                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="icon icon-tabler icons-tabler-outline icon-tabler-alert-square-rounded"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-                                <path d="M12 8v4" />
-                                <path d="M12 16h.01" />
-                            </svg>
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={`form-selectgroup-item btn ${rowData.completed === "Will be Done" ? "btn-warning" : "btn-outline-warning"}`}
-                        onClick={() => handleUpdate({ ...rowData, completed: "Will be Done" })}
-                        title="Will Be Done"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                    >
-                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="icon icon-tabler icons-tabler-outline icon-tabler-clock-check"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M20.942 13.021a9 9 0 1 0 -9.407 7.967" />
-                                <path d="M12 7v5l3 3" />
-                                <path d="M15 19l2 2l4 -4" />
-                            </svg>
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={`form-selectgroup-item btn ${rowData.completed === "Completed" ? "btn-success" : "btn-outline-success"}`}
-                        onClick={() => handleUpdate({ ...rowData, completed: "Completed" })}
-                        title="Completed"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                    >
-                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="icon icon-tabler icons-tabler-outline icon-tabler-checks"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M7 12l5 5l10 -10" />
-                                <path d="M2 12l5 5m5 -5l5 -5" />
-                            </svg>
-                        </span>
-                    </button>
+                            <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon icon-tabler icons-tabler-outline icon-tabler-alert-square-rounded"
+                                >
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                    <path d="M12 8v4" />
+                                    <path d="M12 16h.01" />
+                                </svg>
+                            </span>
+                        </button>
+                    {/* </label>
+                    <label className="form-selectgroup-item"> */}
+                        <button
+                            type="button"
+                            name="icons"
+                            className={`btn-icon mr-1 btn ${rowData.completed === "Will be Done" ? "btn-warning" : "btn-outline-warning"}`}
+                            onClick={() => handleUpdate({ ...rowData, completed: "Will be Done" })}
+                            title="Will Be Done"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                        >
+                            <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon icon-tabler icons-tabler-outline icon-tabler-clock-check"
+                                >
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M20.942 13.021a9 9 0 1 0 -9.407 7.967" />
+                                    <path d="M12 7v5l3 3" />
+                                    <path d="M15 19l2 2l4 -4" />
+                                </svg>
+                            </span>
+                        </button>
+                    {/* </label>
+                    <label className="form-selectgroup-item"> */}
+                        <button
+                            type="button"
+                            className={`btn-icon btn ${rowData.completed === "Completed" ? "btn-success" : "btn-outline-success"}`}
+                            onClick={() => handleUpdate({ ...rowData, completed: "Completed" })}
+                            title="Completed"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                        >
+                            <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon icon-tabler icons-tabler-outline icon-tabler-checks"
+                                >
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M7 12l5 5l10 -10" />
+                                    <path d="M2 12l5 5m5 -5l5 -5" />
+                                </svg>
+                            </span>
+                        </button>
+                    {/* </label> */}
+                    {/* <label className="form-selectgroup-item"> */}
                 </div>
 
 
@@ -768,7 +867,7 @@ function Requests() {
                                                                 style={{
                                                                     textAlign:
                                                                         "center",
-                                                                    width: "8em",
+                                                                    width: "11em",
                                                                 }}
                                                             />
                                                         )}
