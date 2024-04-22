@@ -1086,11 +1086,11 @@ function Dashboard() {
                                             <tbody>
                                                 {dataTableValues.map(item => (
                                                     <tr key={item._id} className={isToday(item.date) ? 'table-primary' : ''}>
-                                                        <td className="text-nowrap text-secondary w-1" style={{ paddingRight: '10px' }}>{item.date}</td>
+                                                        <td className="text-nowrap text-secondary w-2" style={{ paddingRight: '10px' }}>{item.date}</td>
                                                         <td className="text-nowrap w-5" style={{ paddingRight: '10px' }}>
                                                             <div className="text">{item.name} ({item.description})</div>
                                                         </td>
-                                                        <td className="text-nowrap w-6">{item.gujaratiName}</td>
+                                                        <td className="text-nowrap w-5">{item.gujaratiName}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
