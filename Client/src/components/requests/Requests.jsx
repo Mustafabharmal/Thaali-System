@@ -265,11 +265,9 @@ function Requests() {
             <div className="status-buttons d-flex align-items-center">
                 <div className="status-button">
                     <button
-                        className="btn mr-1 btn-outline-danger form-selectgroup-item"
+                        className={`btn mr-1 ${globalFilter === "Pending" ? "btn-danger" : "btn-outline-danger"} form-selectgroup-item`}
                         onClick={() => setGlobalFilter("Pending")}
                     >
-                        
-                        {/* <span>Pending</span> */}
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -292,10 +290,9 @@ function Requests() {
                 </div>
                 <div className="status-button">
                     <button
-                        className="btn mr-1 btn-outline-warning form-selectgroup-item"
+                        className={`btn mr-1 ${globalFilter === "Will be Done" ? "btn-warning" : "btn-outline-warning"} form-selectgroup-item`}
                         onClick={() => setGlobalFilter("Will be Done")}
                     >
-                        {/* <span></span> */}
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -318,10 +315,9 @@ function Requests() {
                 </div>
                 <div className="status-button">
                     <button
-                        className="btn mr-1 btn-outline-success form-selectgroup-item"
+                        className={`btn mr-1 ${globalFilter === "Completed" ? "btn-success" : "btn-outline-success"} form-selectgroup-item`}
                         onClick={() => setGlobalFilter("Completed")}
                     >
-                        {/* <span></span> */}
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -352,9 +348,6 @@ function Requests() {
             </div>
         </div>
     );
-    
-    
-        
     const LoadingPlaceholder = () => (
         <li className="list-group-item">
             <div className="row align-items-center">
