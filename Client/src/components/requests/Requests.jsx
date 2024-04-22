@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import AuthContext from '../../store/auth-context';
+import AuthContext from "../../store/auth-context";
 import AddRequests from "./AddRequests";
 import EditRequests from "./EditRequests";
 // import AddFeedback from "./addFeedback";
@@ -18,13 +18,16 @@ function Requests() {
     const isUser = authCtx.role === 2 || authCtx.role === "2";
     const toast = React.createRef();
     const [dataTableValues, setDataTableValues] = useState([]);
+   
+
+    // Pass the fil
     const [globalFilter, setGlobalFilter] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
         _id: "",
-        userid: isUser?authCtx.userid:"0",
-        communityid: isAdmin ?  "0":authCtx.communityid,
+        userid: isUser ? authCtx.userid : "0",
+        communityid: isAdmin ? "0" : authCtx.communityid,
         type: "Requests",
         title: "",
         description: "",
@@ -36,22 +39,70 @@ function Requests() {
     });
 
     const [ComValues, setComValues] = useState([]);
-
+    const [UserValues, setUserValues] = useState([]);
     useEffect(() => {
-        isAdmin && (
-            fetchComData())
+        isAdmin && fetchComData();
+    }, []);
+
+
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/users', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    name: item.name,
+                    email: item.email,
+                    phoneno: item.phoneno,
+                    address: `${item.address}`,
+                    role: item.role,
+                    status: item.status,
+                    communityid: item.communityid,
+                    password: item.password,
+                    headcount: item.headcount,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    thaaliuser: item.thaaliuser,
+                };
+            });
+            setLoading(false);
+            setUserValues(transformedData); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            setLoading(false); // Set loading to false regardless of success or failure
+        }
+        setLoading(false);
+    };
+    useEffect(() => {
+        !isUser && fetchUserData();
     }, []);
 
     const fetchComData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/community', {
-                withCredentials: true,
-                headers: {
-                    authorization: `Mustafa ${authCtx.token}`,
-                },
-            });
+            const response = await axios.get(
+                "http://localhost:3000/community",
+                {
+                    withCredentials: true,
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                    },
+                }
+            );
 
-            const transformedData = response.data.map(item => ({
+            const transformedData = response.data.map((item) => ({
                 _id: item._id,
                 name: item.name,
                 address: `${item.address}`,
@@ -62,62 +113,65 @@ function Requests() {
 
             setComValues(transformedData);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error("Error fetching data:", error);
         }
     };
     const deleteRow = async (rowData) => {
-        console.log('Delete row:', rowData);
+        console.log("Delete row:", rowData);
         setFormData(rowData);
-        $('#modal-small').modal('show');
-
+        $("#modal-small").modal("show");
     };
-    const handleUpdate = async (e) => {
-        e.preventDefault();
+    const handleUpdate = async (updatedFormData) => {
         try {
-            const response = await fetch(`http://localhost:3000/FeedComReq/update/${formData._id}`, {
-                method: "PUT",
-                headers: {
-                    authorization: `Mustafa ${authCtx.token}`,
-                    "Content-Type": "application/json",
-                    type: "Requests",
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    updatedat: Date.now(),
-                }),
-            });
-            if (response.ok) {
-                console.log("User updated successfully");
-                window.location.reload();
-            } else {
-                const responseData = await response.json(); // Extract error message from response
-                if (response.status === 400 && responseData.error === "Another user with this email already exists") {
-                    // Show error message for duplicate email
-                    alert("Another user with this email already exists");
-                } else {
-                    console.error("Failed to create user");
+            console.log(updatedFormData);
+            const response = await fetch(
+                `http://localhost:3000/FeedComReq/update/${updatedFormData._id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                        // headers: {
+                        //     authorization: `Mustafa ${authCtx.token}`,
+                        type: "Requests",
+                        // },
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...updatedFormData,
+                        updatedat: Date.now(),
+                    }),
                 }
+            );
+            if (response.ok) {
+                console.log("Request updated successfully");
+                window.location.reload(); // Reload the page to reflect the changes
+            } else {
+                console.error("Failed to update request");
+                const responseData = await response.json();
+                // Handle error response as needed
             }
         } catch (error) {
             console.error("Error:", error);
         }
     };
     const handleConfirmDelete = async () => {
-        $('#modal-small').modal('hide');
+        $("#modal-small").modal("hide");
 
         try {
-
-            const response = await fetch(`http://localhost:3000/FeedComReq/delete/${formData._id}`, {
-                method: "PUT",
-                headers: {
-                    authorization: `Mustafa ${authCtx.token}`,
-                    type: "Requests",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    status: 0,
-                }),
-            });
+            const response = await fetch(
+                `http://localhost:3000/FeedComReq/delete/${formData._id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                        type: "Requests",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        status: 0,
+                    }),
+                }
+            );
             if (response.ok) {
                 console.log("FeedComReq deleted successfully");
                 window.location.reload();
@@ -135,7 +189,6 @@ function Requests() {
                 // "communityid",
                 // "thaaliuser",
                 // "role",
-
             ].includes(name)
                 ? parseInt(value, 10)
                 : value;
@@ -152,14 +205,17 @@ function Requests() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/FeedComReq', {
-                headers: {
-                    authorization: `Mustafa ${authCtx.token}`,
-                    type: "Requests",
-                },
-                withCredentials: true,
-            });
-            const transformedData = response.data.map(item => {
+            const response = await axios.get(
+                "http://localhost:3000/FeedComReq",
+                {
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                        type: "Requests",
+                    },
+                    withCredentials: true,
+                }
+            );
+            const transformedData = response.data.map((item) => {
                 // const unitsInfo = item.user && item.user.units
                 // ? item.user.units.map(unit => (
                 //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
@@ -173,7 +229,7 @@ function Requests() {
                     updatedat: item.updatedat,
                     description: item.description,
                     communityid: item.communityid,
-                    userid: authCtx.userid,
+                    userid: item.userid,
                     type: item.type,
                     title: item.title,
                     date: item.date,
@@ -182,10 +238,10 @@ function Requests() {
             });
             setLoading(false);
             setDataTableValues(transformedData); // Set the state directly without using prevData
+            console.log(transformedData)
         } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-        finally {
+            console.error("Error fetching data:", error);
+        } finally {
             setLoading(false); // Set loading to false regardless of success or failure
         }
         setLoading(false);
@@ -211,8 +267,7 @@ function Requests() {
     const LoadingPlaceholder = () => (
         <li className="list-group-item">
             <div className="row align-items-center">
-                <div className="col-auto">
-                </div>
+                <div className="col-auto"></div>
                 <div className="col-7">
                     <div className="placeholder placeholder-xs col-9"></div>
                     <div className="placeholder placeholder-xs col-7"></div>
@@ -226,7 +281,7 @@ function Requests() {
     );
     const actionTemplate = (rowData) => (
         <div className="text-center">
-            <Button
+            {/* <Button
                 icon="pi pi-trash"
                 className="p-button-rounded btn btn-danger"
                 onClick={() => deleteRow(rowData)}
@@ -240,100 +295,195 @@ function Requests() {
                 }}
                 data-bs-toggle="modal"
                 data-bs-target="#modal-edit"
-            />
+            /> */}
+            {/* <div className="demo-icons-list-wrap">
+                <div className="demo-icons-list"> */}
+            <div className="mb-1">
+                <div className="form-selectgroup">
+                    <button
+                        type="button"
+                        className={`form-selectgroup-item btn ${rowData.completed && rowData.completed.toLowerCase() === "pending" ? "btn-danger" : "btn-outline-danger"}`}
+                        onClick={() => handleUpdate({ ...rowData, completed: "Pending" })}
+                        title="Pending"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="left"
+                    >
+
+                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="icon icon-tabler icons-tabler-outline icon-tabler-alert-square-rounded"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                <path d="M12 8v4" />
+                                <path d="M12 16h.01" />
+                            </svg>
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        className={`form-selectgroup-item btn ${rowData.completed === "Will be Done" ? "btn-warning" : "btn-outline-warning"}`}
+                        onClick={() => handleUpdate({ ...rowData, completed: "Will be Done" })}
+                        title="Will Be Done"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                    >
+                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="icon icon-tabler icons-tabler-outline icon-tabler-clock-check"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20.942 13.021a9 9 0 1 0 -9.407 7.967" />
+                                <path d="M12 7v5l3 3" />
+                                <path d="M15 19l2 2l4 -4" />
+                            </svg>
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        className={`form-selectgroup-item btn ${rowData.completed === "Completed" ? "btn-success" : "btn-outline-success"}`}
+                        onClick={() => handleUpdate({ ...rowData, completed: "Completed" })}
+                        title="Completed"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                    >
+                        <span className="icon-wrapper d-flex justify-content-center align-items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="icon icon-tabler icons-tabler-outline icon-tabler-checks"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M7 12l5 5l10 -10" />
+                                <path d="M2 12l5 5m5 -5l5 -5" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+
+
+            </div>
         </div>
-        
-    ); const customFilter = (value, filter) => {
-        console.log('Filtering:', value, filter);
-        return String(value).toLowerCase().includes(String(filter).toLowerCase());
+        // </div></div>
+    );
+    const customFilter = (value, filter) => {
+        console.log("Filtering:", value, filter);
+        return String(value)
+            .toLowerCase()
+            .includes(String(filter).toLowerCase());
     };
 
     return (
         <>
-        <div className="page-wrapper">
-            <div className="page-header d-print-none">
-                <div className="container-xl">
-                    <div className="row g-2 align-items-center">
-                        <div className="col">
-                            <div className="page-pretitle">Overview</div>
-                            <h2 className="page-title">Requests</h2>
-                        </div>
+            <div className="page-wrapper">
+                <div className="page-header d-print-none">
+                    <div className="container-xl">
+                        <div className="row g-2 align-items-center">
+                            <div className="col">
+                                <div className="page-pretitle">Overview</div>
+                                <h2 className="page-title">Requests</h2>
+                            </div>
 
-                        <div className="col-auto ms-auto d-print-none">
-                            <div className="btn-list">
-                                <a
-                                    href="#"
-                                    className="btn btn-primary d-none d-sm-inline-block"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal-Requestsadd"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="icon"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                            <div className="col-auto ms-auto d-print-none">
+                                <div className="btn-list">
+                                    <a
+                                        href="#"
+                                        className="btn btn-primary d-none d-sm-inline-block"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-Requestsadd"
                                     >
-                                        <path
-                                            stroke="none"
-                                            d="M0 0h24v24H0z"
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="icon"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
                                             fill="none"
-                                        />
-                                        <path d="M12 5l0 14" />
-                                        <path d="M5 12l14 0" />
-                                    </svg>
-                                    Create new Requests
-                                </a>
-                                <a
-                                    href="#"
-                                    className="btn btn-primary d-sm-none btn-icon"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal-Requestsadd"
-                                    aria-label="Create new report"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="icon"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path
+                                                stroke="none"
+                                                d="M0 0h24v24H0z"
+                                                fill="none"
+                                            />
+                                            <path d="M12 5l0 14" />
+                                            <path d="M5 12l14 0" />
+                                        </svg>
+                                        Create new Requests
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className="btn btn-primary d-sm-none btn-icon"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-Requestsadd"
+                                        aria-label="Create new report"
                                     >
-                                        <path
-                                            stroke="none"
-                                            d="M0 0h24v24H0z"
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="icon"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
                                             fill="none"
-                                        />
-                                        <path d="M12 5l0 14" />
-                                        <path d="M5 12l14 0" />
-                                    </svg>
-                                </a>
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path
+                                                stroke="none"
+                                                d="M0 0h24v24H0z"
+                                                fill="none"
+                                            />
+                                            <path d="M12 5l0 14" />
+                                            <path d="M5 12l14 0" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="col-12">
-                <Toast ref={toast} />
-                <div className="page-body">
-                    <div className="container-xl">
-                        <div className="row row-deck row-cards">
-                            <div className="container-fluid">
-                                <div className="row">
-                                    <div className="card">
-                                        <div className="card-body">
-
-                                        {loading ? ( // Display loading spinner when loading is true
+                <div className="col-12">
+                    <Toast ref={toast} />
+                    <div className="page-body">
+                        <div className="container-xl">
+                            <div className="row row-deck row-cards">
+                                <div className="container-fluid">
+                                    <div className="row">
+                                        <div className="card">
+                                            <div className="card-body">
+                                                {loading ? ( // Display loading spinner when loading is true
                                                     <ul className="list-group list-group-flush placeholder-glow">
                                                         <LoadingPlaceholder />
                                                         <LoadingPlaceholder />
@@ -346,63 +496,146 @@ function Requests() {
                                                         className="p-datatable-striped"
                                                         paginator
                                                         rows={5}
-                                                        rowsPerPageOptions={[5, 10, 20]}
+                                                        rowsPerPageOptions={[
+                                                            5, 10, 20,
+                                                        ]}
                                                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                                                        globalFilter={globalFilter}
+                                                        globalFilter={
+                                                            globalFilter
+                                                        }
                                                         header={header}
-                                                        selectionMode="multiple"
-                                                        selection={selectedRows}
-                                                        onSelectionChange={(e) => setSelectedRows(e.value)}
-                                                        style={{ fontSize: "1em" }}
-
+                                                        // selectionMode="multiple"
+                                                        // selection={selectedRows}
+                                                        // onSelectionChange={(e) => setSelectedRows(e.value)}
+                                                        style={{
+                                                            fontSize: "1em",
+                                                        }}
                                                     >
-                                                        <Column style={{ display: "none" }} hidden field="id" header="#" />
-                                                        {!isUser&&(
                                                         <Column
-                                                            field="userid"
-                                                            header="User"
-                                                            body={(rowData) => (
-                                                                <div className="text-center">{rowData.userid}</div>
-                                                            )}
-                                                            style={{ textAlign: "center", width: "8em" }}
-                                                            sortable
-                                                            filter
-                                                            filterMatchMode="custom"
-                                                            filterFunction={(value, filter) => customFilter(value, filter)}
-                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
-                                                        />)}
-                                                      
-                                                        {isAdmin && (
+                                                            style={{
+                                                                display: "none",
+                                                            }}
+                                                            hidden
+                                                            field="id"
+                                                            header="#"
+                                                        />
+                                                        {!isUser && (
                                                             <Column
-                                                                field="communityid"
-                                                                header={<div className="text-center">Community</div>}
-                                                                body={(rowData) => (
+                                                                field="userid"
+                                                                header="User"
+                                                                body={rowData => (
                                                                     <div className="text-center">
-                                                                        {ComValues.find(community => community._id === rowData.communityid)?.name || 'N/A'}
+                                                                        {/* Log rowData to check its content */}
+                                                                        {console.log('rowData:', rowData)}
+                                                                        {/* Log UserValues to check its content */}
+                                                                        {console.log('UserValues:', UserValues)}
+                                                                        {/* Log the result of UserValues.find() to check if it's finding the correct user */}
+                                                                        {UserValues.find(users => users._id === rowData.userid)?.name || 'N/A'}
                                                                     </div>
                                                                 )}
-                                                                style={{ textAlign: "center", width: "8em" }}
+                                                                style={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                    width: "8em",
+                                                                }}
                                                                 sortable
                                                                 filter
                                                                 filterMatchMode="custom"
                                                                 filterFunction={(value, filter) =>
-                                                                    customFilter(ComValues.find(community => community._id === value)?.name || '', filter
+                                                                    customFilter(
+                                                                        UserValues.find(users => users._id === value)?.name || '',
+                                                                        filter
                                                                     )
                                                                 }
-                                                            />)}
-                                                              <Column
+                                                                headerStyle={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                }} // Center-align the header
+                                                            />
+                                                        )}
+
+                                                        {isAdmin && (
+                                                            <Column
+                                                                field="communityid"
+                                                                header={
+                                                                    <div className="text-center">
+                                                                        Community
+                                                                    </div>
+                                                                }
+                                                                body={(
+                                                                    rowData
+                                                                ) => (
+                                                                    <div className="text-center">
+                                                                        {ComValues.find(
+                                                                            (
+                                                                                community
+                                                                            ) =>
+                                                                                community._id ===
+                                                                                rowData.communityid
+                                                                        )
+                                                                            ?.name ||
+                                                                            "N/A"}
+                                                                    </div>
+                                                                )}
+                                                                style={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                    width: "8em",
+                                                                }}
+                                                                sortable
+                                                                filter
+                                                                filterMatchMode="custom"
+                                                                filterFunction={(
+                                                                    value,
+                                                                    filter
+                                                                ) =>
+                                                                    customFilter(
+                                                                        ComValues.find(
+                                                                            (
+                                                                                community
+                                                                            ) =>
+                                                                                community._id ===
+                                                                                value
+                                                                        )
+                                                                            ?.name ||
+                                                                        "",
+                                                                        filter
+                                                                    )
+                                                                }
+                                                            />
+                                                        )}
+                                                        <Column
                                                             field="title"
                                                             header="Title"
                                                             body={(rowData) => (
-                                                                <div className="text-center">{rowData.title}</div>
+                                                                <div className="text-center">
+                                                                    {
+                                                                        rowData.title
+                                                                    }
+                                                                </div>
                                                             )}
-                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            style={{
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "8em",
+                                                            }}
                                                             sortable
                                                             filter
                                                             filterMatchMode="custom"
-                                                            filterFunction={(value, filter) => customFilter(value, filter)}
-                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                            filterFunction={(
+                                                                value,
+                                                                filter
+                                                            ) =>
+                                                                customFilter(
+                                                                    value,
+                                                                    filter
+                                                                )
+                                                            }
+                                                            headerStyle={{
+                                                                textAlign:
+                                                                    "center",
+                                                            }} // Center-align the header
                                                         />
                                                         {/* <Column
                                                             field="location"
@@ -421,43 +654,97 @@ function Requests() {
                                                             field="Description"
                                                             header="Description"
                                                             body={(rowData) => (
-                                                                <div className="text-center">{rowData.description
-                                                                }</div>
+                                                                <div className="text-center">
+                                                                    {
+                                                                        rowData.description
+                                                                    }
+                                                                </div>
                                                             )}
-                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            style={{
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "8em",
+                                                            }}
                                                             sortable
                                                             filter
-                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                            headerStyle={{
+                                                                textAlign:
+                                                                    "center",
+                                                            }} // Center-align the header
                                                             filterMatchMode="custom"
-                                                            filterFunction={(value, filter) => customFilter(value, filter)}
+                                                            filterFunction={(
+                                                                value,
+                                                                filter
+                                                            ) =>
+                                                                customFilter(
+                                                                    value,
+                                                                    filter
+                                                                )
+                                                            }
                                                         />
-                                                         <Column
+                                                        <Column
                                                             field="date"
                                                             header="Date"
                                                             body={(rowData) => (
-                                                                <div className="text-center">{rowData.date
-                                                                }</div>
+                                                                <div className="text-center">
+                                                                    {
+                                                                        rowData.date
+                                                                    }
+                                                                </div>
                                                             )}
-                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            style={{
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "8em",
+                                                            }}
                                                             sortable
                                                             filter
-                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                            headerStyle={{
+                                                                textAlign:
+                                                                    "center",
+                                                            }} // Center-align the header
                                                             filterMatchMode="custom"
-                                                            filterFunction={(value, filter) => customFilter(value, filter)}
+                                                            filterFunction={(
+                                                                value,
+                                                                filter
+                                                            ) =>
+                                                                customFilter(
+                                                                    value,
+                                                                    filter
+                                                                )
+                                                            }
                                                         />
-                                                         <Column
-                                                        field="completed"
+                                                        <Column
+                                                            field="completed"
                                                             header="Status"
                                                             body={(rowData) => (
-                                                                <div className="text-center">{rowData.completed
-                                                                }</div>
+                                                                <div className="text-center">
+                                                                    {
+                                                                        rowData.completed
+                                                                    }
+                                                                </div>
                                                             )}
-                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            style={{
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "8em",
+                                                            }}
                                                             sortable
                                                             filter
-                                                            headerStyle={{ textAlign: "center" }} // Center-align the header
+                                                            headerStyle={{
+                                                                textAlign:
+                                                                    "center",
+                                                            }} // Center-align the header
                                                             filterMatchMode="custom"
-                                                            filterFunction={(value, filter) => customFilter(value, filter)}
+                                                            filterFunction={(
+                                                                value,
+                                                                filter
+                                                            ) =>
+                                                                customFilter(
+                                                                    value,
+                                                                    filter
+                                                                )
+                                                            }
                                                         />
                                                         {/* <Column
                                                             field="Calories"
@@ -472,18 +759,22 @@ function Requests() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         /> */}
-                                                        {!isUser&&(
-                                                        <Column
-                                                            body={actionTemplate}
-                                                            header="Action"
-                                                            style={{ textAlign: "center", width: "8em" }}
-                                                        />)}
+                                                        {!isUser && (
+                                                            <Column
+                                                                body={
+                                                                    actionTemplate
+                                                                }
+                                                                header="Action"
+                                                                style={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                    width: "8em",
+                                                                }}
+                                                            />
+                                                        )}
                                                     </DataTable>
                                                 )}
-
-
-
-
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -492,30 +783,54 @@ function Requests() {
                     </div>
                 </div>
             </div>
-        </div>
-         <div className="modal modal-blur fade" id="modal-small" tabIndex="-2" role="dialog" aria-hidden="true">
-         <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
-             <div className="modal-content">
-                 <div className="modal-body">
-                     <div className="modal-title">Are you sure?</div>
-                     <div>If you proceed, the Requests will be deleted.</div>
-                 </div>
-                 <div className="modal-footer">
-                     <button type="button" className="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">
-                         Cancel
-                     </button>
-                     <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>
-                         Yes, delete Requests
-                     </button>
-                 </div>
-             </div>
-         </div>
-     </div>
-     <AddRequests />
-     
-     {/* <AddFeedback/>*/}
-     <EditRequests formData={formData} handleChange={handleChange} setFormData={setFormData} handleUpdate={handleUpdate} ComValues={ComValues}/> 
-     </>
-    )
+            <div
+                className="modal modal-blur fade"
+                id="modal-small"
+                tabIndex="-2"
+                role="dialog"
+                aria-hidden="true"
+            >
+                <div
+                    className="modal-dialog modal-sm modal-dialog-centered"
+                    role="document"
+                >
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <div className="modal-title">Are you sure?</div>
+                            <div>
+                                If you proceed, the Requests will be deleted.
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-link link-secondary me-auto"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleConfirmDelete}
+                            >
+                                Yes, delete Requests
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <AddRequests />
+
+            {/* <AddFeedback/>*/}
+            <EditRequests
+                formData={formData}
+                handleChange={handleChange}
+                setFormData={setFormData}
+                handleUpdate={handleUpdate}
+                ComValues={ComValues}
+            />
+        </>
+    );
 }
-export default Requests
+export default Requests;

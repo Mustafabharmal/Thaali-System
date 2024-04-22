@@ -25,7 +25,8 @@ const feedComReqController = {
                 // role:req.headers.role
             };
             const response = await axios.get(`${API_URL}/feedback/`,{params
-            });
+            }); 
+            console.log(response.data)
             console.log(req.headers.type);
             console.log(req.isAdmin);
             console.log(req.isManager);
@@ -61,6 +62,7 @@ const feedComReqController = {
                     'Content-Type': 'application/json',
                 },
             });
+           
             res.status(201).json(response.data);
         } catch (err) {
             console.error('Error:', err);
