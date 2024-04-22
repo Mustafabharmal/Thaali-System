@@ -811,10 +811,11 @@ function Requests() {
                                                             header="Status"
                                                             body={(rowData) => (
                                                                 <div className="text-center">
-                                                                    {
-                                                                        rowData.completed
-                                                                    }
+                                                                     <div className={`badge ${rowData.completed === "Pending" || rowData.completed === "pending" ? "bg-red text-red-fg" : rowData.completed === "Will be Done"|| rowData.completed === "Will be done" ? "bg-orange text-orange-fg" : rowData.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
+                                                                        {rowData.completed}
+                                                                    </div>
                                                                 </div>
+                                                                
                                                             )}
                                                             style={{
                                                                 textAlign:

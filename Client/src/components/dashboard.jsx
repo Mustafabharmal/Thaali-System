@@ -288,7 +288,7 @@ function Dashboard() {
             }));
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date >= today);
-
+            notPastMenus.sort((a, b) => new Date(a.date) - new Date(b.date));
             let firstTenMenus;
             if (notPastMenus.length <= 10) {
                 firstTenMenus = notPastMenus;
@@ -338,7 +338,17 @@ function Dashboard() {
             // setLoading(false);
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date >= today);
-            setDataRequestValues(notPastMenus); // Set the state directly without using prevData
+
+            // Custom sorting function to sort by date
+            notPastMenus.sort((a, b) => {
+                if (a.date === today && b.date === today) return 0; // Both are today
+                if (a.date === today) return -1; // a is today, should be placed before b
+                if (b.date === today) return 1; // b is today, should be placed before a
+                // Neither is today, sort them normally
+                return new Date(a.date) - new Date(b.date);
+            });
+
+            setDataRequestValues(notPastMenus);
             console.log(transformedData)
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -420,14 +430,22 @@ function Dashboard() {
             const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
             const notPastMenus = transformedData.filter(item => item.date <= today);
 
-            let firstTenMenus;
-            if (notPastMenus.length <= 10) {
-                firstTenMenus = notPastMenus;
-            } else {
-                firstTenMenus = notPastMenus.slice(0, 10);
-            }
-            // setDataTableValues(firstTenMenus);
-            setDataComValues(firstTenMenus); // Set the state directly without using prevData
+            // Custom sorting function to sort by date in descending order
+            notPastMenus.sort((a, b) => {
+                if (a.date === today && b.date === today) return 0; // Both are today
+                if (a.date === today) return -1; // a is today, should be placed before b
+                if (b.date === today) return 1; // b is today, should be placed before a
+                // Neither is today, sort them based on date
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            // let firstTenMenus;
+            // if (notPastMenus.length <= 10) {
+            //     firstTenMenus = notPastMenus;
+            // } else {
+            //     firstTenMenus = notPastMenus.slice(0, 10);
+            // }
+            setDataComValues(notPastMenus); // Set the state directly without using prevData
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -470,8 +488,34 @@ function Dashboard() {
                     completed: item.completed,
                 };
             });
+            // Set loading to false
             // setLoading(false);
-            setFeedbackValues(transformedData); // Set the state directly without using prevData
+
+            // Sort the transformedData array
+            transformedData.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                const today = new Date(); // Get today's date
+
+                // Compare dates
+                if (dateA > today && dateB > today) {
+                    // Both dates are in the future, compare them normally
+                    return dateA - dateB;
+                } else if (dateA > today) {
+                    // Only dateA is in the future, so it comes first
+                    return -1;
+                } else if (dateB > today) {
+                    // Only dateB is in the future, so it comes first
+                    return 1;
+                } else {
+                    // Both dates are either today or in the past
+                    return dateB - dateA; // Sort in descending order for past dates
+                }
+            });
+
+            // Set the sorted data
+            setFeedbackValues(transformedData);
+            // Set the state directly without using prevData
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -1155,62 +1199,62 @@ function Dashboard() {
                                 </div>
                             </div>
                             <div className="col-lg-6">
-    <div className="card">
-        <div className="card-header border-0">
-            <div className="card-title"><h3 class="h2">Complain</h3></div>
-        </div>
+                                <div className="card">
+                                    <div className="card-header border-0">
+                                        <div className="card-title"><h3 class="h2">Complain</h3></div>
+                                    </div>
 
-        <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
-            <div className="card-table table-responsive">
-                <table className="table table-vcenter">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>{!isUser ? "User" : "Status"}</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataComValues.map(item => (
-                            <tr key={item._id}>
-                                <td className={`td text-nowrap text-secondary ${isToday(item.date) ? 'table-primary' : ''}`}>
-                                    {item.date}
-                                </td>
-                                <td className="td">
-                                    {!isUser ? (
-                                        <div className={`badge ${item.completed === "Pending" || item.completed === "pending" ? "bg-red text-red-fg" : item.completed === "Will be Done" ? "bg-orange text-orange-fg" : item.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
-                                            {UserValues.find(user => user._id === item.userid)?.name || 'N/A'}
+                                    <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
+                                        <div className="card-table table-responsive">
+                                            <table className="table table-vcenter">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>{!isUser ? "User" : "Status"}</th>
+                                                        <th>Title</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {dataComValues.map(item => (
+                                                        <tr key={item._id}>
+                                                            <td className={`td text-nowrap text-secondary ${isToday(item.date) ? 'table-primary' : ''}`}>
+                                                                {item.date}
+                                                            </td>
+                                                            <td className="td">
+                                                                {!isUser ? (
+                                                                    <div className={`badge ${item.completed === "Pending" || item.completed === "pending" ? "bg-red text-red-fg" : item.completed === "Will be Done" ? "bg-orange text-orange-fg" : item.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
+                                                                        {UserValues.find(user => user._id === item.userid)?.name || 'N/A'}
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        {(item.completed === "Pending" || item.completed === "pending") && (
+                                                                            <div className="badge bg-danger"></div>
+                                                                        )}
+                                                                        {item.completed === "Will be Done" && (
+                                                                            <div className="badge bg-warning"></div>
+                                                                        )}
+                                                                        {item.completed === "Completed" && (
+                                                                            <div className="badge bg-success"></div>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                            <td className="td">
+                                                                <div className="text">{item.title}</div>
+                                                            </td>
+                                                            <td className="td">
+                                                                <div className="text">{item.description}</div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    ) : (
-                                        <>
-                                            {(item.completed === "Pending" || item.completed === "pending") && (
-                                                <div className="badge bg-danger"></div>
-                                            )}
-                                            {item.completed === "Will be Done" && (
-                                                <div className="badge bg-warning"></div>
-                                            )}
-                                            {item.completed === "Completed" && (
-                                                <div className="badge bg-success"></div>
-                                            )}
-                                        </>
-                                    )}
-                                </td>
-                                <td className="td">
-                                    <div className="text">{item.title}</div>
-                                </td>
-                                <td className="td">
-                                    <div className="text">{item.description}</div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                    </div>
 
-    </div>
-</div>
+                                </div>
+                            </div>
 
                             <div className="col-lg-12">
                                 <div className="row row-cards">
