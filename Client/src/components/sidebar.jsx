@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import axios from 'axios';
 import logo from "../assets/static/logo.svg";
 import { NavLink, useLocation } from "react-router-dom";
-import { useContext } from 'react';
 import AuthContext from '../store/auth-context';
 function Sidebar() {
     const location = useLocation();
@@ -21,6 +21,234 @@ function Sidebar() {
     const isUser = authCtx.role === 2 || authCtx.role === "2";
     const isThaaliUser = authCtx.thaaliuser === "0" || authCtx.thaaliuser === 0;
     const UserName = authCtx.name;
+
+    const [FeedComReq, setFeedComReq] = useState(
+        {
+            feebackt: "0",
+            feedbackv: "0",
+            requestt: "0",
+            requestv: "0",
+            complaintv: "0",
+            complaintt: "0"
+        }
+    );
+    const [dataRequestValues, setDataRequestValues] = useState([]);
+
+    const fetchRequestData = async () => {
+        try {
+            const response = await axios.get(
+                "http://localhost:3000/FeedComReq",
+                {
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                        type: "Requests",
+                    },
+                    withCredentials: true,
+                }
+            );
+            const transformedData = response.data.map((item) => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: item.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            // setLoading(false);
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                requestt: requestCount,
+                requestv: requsetcountv,
+            }));
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+            const notPastMenus = transformedData.filter(item => item.date >= today);
+
+            // Custom sorting function to sort by date
+            notPastMenus.sort((a, b) => {
+                if (a.date === today && b.date === today) return 0; // Both are today
+                if (a.date === today) return -1; // a is today, should be placed before b
+                if (b.date === today) return 1; // b is today, should be placed before a
+                // Neither is today, sort them normally
+                return new Date(a.date) - new Date(b.date);
+            });
+
+            setDataRequestValues(notPastMenus);
+            console.log(transformedData)
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+
+
+    const [dataComValues, setDataComValues] = useState([]);
+    const fetchCompData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/FeedComReq', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    type: "Complain",
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: authCtx.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            // setLoading(false);
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                complaintt: requestCount,
+                complaintv: requsetcountv,
+            }));
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+            const notPastMenus = transformedData.filter(item => item.date <= today);
+
+            // Custom sorting function to sort by date in descending order
+            notPastMenus.sort((a, b) => {
+                if (a.date === today && b.date === today) return 0; // Both are today
+                if (a.date === today) return -1; // a is today, should be placed before b
+                if (b.date === today) return 1; // b is today, should be placed before a
+                // Neither is today, sort them based on date
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            // let firstTenMenus;
+            // if (notPastMenus.length <= 10) {
+            //     firstTenMenus = notPastMenus;
+            // } else {
+            //     firstTenMenus = notPastMenus.slice(0, 10);
+            // }
+            setDataComValues(notPastMenus); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+
+    const [FeedbackValues, setFeedbackValues] = useState([]);
+    const fetchFeedbackData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/FeedComReq', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    type: "Feedback",
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: authCtx.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            const requestCount = transformedData.filter(item => item.status === 1).length;
+            const requsetcountv = transformedData.filter(item => item.completed === "Pending" || item.completed === "pending" || item.completed === "Will be Done" || item.completed === "Will be done").length;
+
+            setFeedComReq(prevState => ({
+                ...prevState,
+                feebackt: requestCount,
+                feedbackv: requsetcountv,
+            }));
+            // Set loading to false
+            // setLoading(false);
+
+            // Sort the transformedData array
+            transformedData.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                const today = new Date(); // Get today's date
+
+                // Compare dates
+                if (dateA > today && dateB > today) {
+                    // Both dates are in the future, compare them normally
+                    return dateA - dateB;
+                } else if (dateA > today) {
+                    // Only dateA is in the future, so it comes first
+                    return -1;
+                } else if (dateB > today) {
+                    // Only dateB is in the future, so it comes first
+                    return 1;
+                } else {
+                    // Both dates are either today or in the past
+                    return dateB - dateA; // Sort in descending order for past dates
+                }
+            });
+
+            // Set the sorted data
+            setFeedbackValues(transformedData);
+            // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+    useEffect(() => {
+        fetchRequestData();
+        // fetchData();
+        // DashData();
+        fetchCompData();
+        fetchFeedbackData();
+    }, []);
     return (
         <>
             <header className="navbar navbar-expand-md d-print-none">
@@ -386,11 +614,11 @@ function Sidebar() {
                             >
                                 {/* <span className="avatar avatar-sm" style="BackgroundImage: url(./src/assets/static/avatars/000m.jpg)"></span> */}
                                 <span
-                                     className="avatar avatar-sm"
-                                     style={{
-                                         backgroundColor: "primary", // Assuming "primary" is the primary color variable
-                                     }}
-                                 >
+                                    className="avatar avatar-sm"
+                                    style={{
+                                        backgroundColor: "primary", // Assuming "primary" is the primary color variable
+                                    }}
+                                >
                                     {UserName.substring(0, 2)}
                                 </span>
                                 <div className="d-none d-xl-block ps-2">
@@ -600,7 +828,7 @@ function Sidebar() {
                                 >
                                     <a className="nav-link" href="/menus">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3l0 4" /><path d="M8 3l0 4" /><path d="M4 11l16 0" /><path d="M8 15h2v2h-2z" /></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3l0 4" /><path d="M8 3l0 4" /><path d="M4 11l16 0" /><path d="M8 15h2v2h-2z" /></svg>
                                         </span>
                                         <span className="nav-link-title">
                                             Menus
@@ -614,11 +842,17 @@ function Sidebar() {
                                         }`}
                                 >
                                     <a className="nav-link" href="/Requests">
+                                        
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-pencil-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 11l1.5 -1.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4h4l2 -2" /><path d="M13.5 6.5l4 4" /><path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296z" /></svg>
+                                            
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-pencil-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M17 11l1.5 -1.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4h4l2 -2" /><path d="M13.5 6.5l4 4" /><path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296z" /></svg>
+                                            
                                         </span>
+                                        {(FeedComReq.requestv>=1&& isManager)&&(
+                                        <span class="badge bg-blue badge-notification badge-blink"></span>
+)}
                                         <span className="nav-link-title">
-                                        Requests
+                                            Requests
                                         </span>
                                     </a>
                                 </li>
@@ -630,14 +864,16 @@ function Sidebar() {
                                 >
                                     <a className="nav-link" href="/Feedback">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-message-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h3.5" /><path d="M10.48 19.512l-2.48 1.488v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4" /><path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296z" /></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-message-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 9h8" /><path d="M8 13h3.5" /><path d="M10.48 19.512l-2.48 1.488v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4" /><path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296z" /></svg>
                                         </span>
+                                        {(FeedComReq.feedbackv>0&& isManager)&&(<span class="badge bg-blue badge-notification badge-blink"></span>
+)}
                                         <span className="nav-link-title">
-                                            Feedback
+                                           Feedback
                                         </span>
                                     </a>
                                 </li>
-                             
+
                                 <li
                                     className={`nav-item ${path.startsWith("/Complain")
                                         ? "active"
@@ -646,9 +882,12 @@ function Sidebar() {
                                 >
                                     <a className="nav-link" href="/Complain">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-heart-handshake"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25" /><path d="M12.5 15.5l2 2" /><path d="M15 13l2 2" /></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-heart-handshake"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25" /><path d="M12.5 15.5l2 2" /><path d="M15 13l2 2" /></svg>
                                         </span>
+                                    {(FeedComReq.complaintv>0 && isManager)&&(<span class="badge bg-blue badge-notification badge-blink"></span>
+)}
                                         <span className="nav-link-title">
+
                                             Complain
                                         </span>
                                     </a>
