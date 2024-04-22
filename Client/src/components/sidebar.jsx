@@ -425,12 +425,12 @@ function Sidebar() {
                                 >
                                     Profile
                                 </a>
-                                <a href="#" className="dropdown-item">
+                                <a href="/Feedback" className="dropdown-item">
                                     Feedback
                                 </a>
                                 <div className="dropdown-divider"></div>
                                 <a
-                                    href="./settings.html"
+                                    href="./myProfile"
                                     className="dropdown-item"
                                 >
                                     Settings

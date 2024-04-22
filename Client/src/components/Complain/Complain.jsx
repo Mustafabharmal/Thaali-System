@@ -731,7 +731,7 @@ function Complain() {
                                                         <Column
                                                             body={actionTemplate}
                                                             header="Action"
-                                                            style={{ textAlign: "center", width: "8em" }}
+                                                            style={{ textAlign: "center",   width: "11em", }}
                                                         />)}
                                                     </DataTable>
                                                 )}

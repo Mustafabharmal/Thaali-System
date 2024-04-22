@@ -394,7 +394,7 @@ const [selectedDates, setSelectedDates] = useState("");
                                                     select One
                                                 </option>
                                                 <option value="Pending">Pending</option>
-                                            <option value="Will be done">Will be Done</option>
+                                            <option value="Will be Done">Will be Done</option>
                                             <option value="Completed">Completed</option>
                                                 {/* {ComValues.map(community => (
                                                     <option key={community._id} value={community._id}>

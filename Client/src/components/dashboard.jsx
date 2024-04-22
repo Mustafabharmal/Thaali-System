@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from 'axios';
 import AuthContext from '../store/auth-context';
 function Dashboard() {
+    // const authCtx = useContext(AuthContext);
     const authCtx = useContext(AuthContext);
+    const isAdmin = authCtx.role === 0 || authCtx.role === "0";
+    const isManager = authCtx.role === 1 || authCtx.role === "1";
+    const isUser = authCtx.role === 2 || authCtx.role === "2";
     function isToday(dateString) {
         const today = new Date();
         const date = new Date(dateString);
@@ -10,6 +14,7 @@ function Dashboard() {
             date.getMonth() === today.getMonth() &&
             date.getFullYear() === today.getFullYear();
     }
+
     useEffect(() => {
         const options = {
             chart: {
@@ -78,7 +83,7 @@ function Dashboard() {
         return () => {
             chart.destroy();
         };
-    }, []); 
+    }, []);
     useEffect(() => {
         const options = {
             chart: {
@@ -104,7 +109,7 @@ function Dashboard() {
             series: [{
                 name: "May",
                 data: [37, 35, 44, 28, 36, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 4, 46, 39, 62, 51, 35, 41, 67]
-            },{
+            }, {
                 name: "April",
                 data: [93, 54, 51, 24, 35, 35, 31, 67, 19, 43, 28, 36, 62, 61, 27, 39, 35, 41, 27, 35, 51, 46, 62, 37, 44, 53, 41, 65, 39, 37]
             }],
@@ -144,7 +149,7 @@ function Dashboard() {
         return () => {
             chart.destroy();
         };
-    }, []); 
+    }, []);
     useEffect(() => {
         const options = {
             chart: {
@@ -212,7 +217,53 @@ function Dashboard() {
         return () => {
             chart.destroy();
         };
-    }, []); 
+    }, []);
+    const [UserValues, setUserValues] = useState([]);
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/users', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    name: item.name,
+                    email: item.email,
+                    phoneno: item.phoneno,
+                    address: `${item.address}`,
+                    role: item.role,
+                    status: item.status,
+                    communityid: item.communityid,
+                    password: item.password,
+                    headcount: item.headcount,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    thaaliuser: item.thaaliuser,
+                };
+            });
+            // setLoading(false);
+            setUserValues(transformedData); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+    useEffect(() => {
+        !isUser && fetchUserData();
+    }, []);
+
     const [dataTableValues, setDataTableValues] = useState([]);
     const [baseValue, setbaseValue] = useState([]);
     const fetchData = async () => {
@@ -249,6 +300,58 @@ function Dashboard() {
             console.error('Error fetching data:', error);
         }
     };
+    const [dataRequestValues, setDataRequestValues] = useState([]);
+
+    const fetchRequestData = async () => {
+        try {
+            const response = await axios.get(
+                "http://localhost:3000/FeedComReq",
+                {
+                    headers: {
+                        authorization: `Mustafa ${authCtx.token}`,
+                        type: "Requests",
+                    },
+                    withCredentials: true,
+                }
+            );
+            const transformedData = response.data.map((item) => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: item.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            // setLoading(false);
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+            const notPastMenus = transformedData.filter(item => item.date >= today);
+            setDataRequestValues(notPastMenus); // Set the state directly without using prevData
+            console.log(transformedData)
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+    useEffect(() => {
+        fetchRequestData();
+    }, []);
+
+
     const DashData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/dashboard', {
@@ -282,7 +385,104 @@ function Dashboard() {
         fetchData();
         DashData();
     }, []);
+    const [dataComValues, setDataComValues] = useState([]);
+    const fetchCompData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/FeedComReq', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    type: "Complain",
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: authCtx.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            // setLoading(false);
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+            const notPastMenus = transformedData.filter(item => item.date <= today);
 
+            let firstTenMenus;
+            if (notPastMenus.length <= 10) {
+                firstTenMenus = notPastMenus;
+            } else {
+                firstTenMenus = notPastMenus.slice(0, 10);
+            }
+            // setDataTableValues(firstTenMenus);
+            setDataComValues(firstTenMenus); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+    useEffect(() => {
+        fetchCompData();
+    }, []);
+    const [FeedbackValues, setFeedbackValues] = useState([]);
+    const fetchFeedbackData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/FeedComReq', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                    type: "Feedback",
+                },
+                withCredentials: true,
+            });
+            const transformedData = response.data.map(item => {
+                // const unitsInfo = item.user && item.user.units
+                // ? item.user.units.map(unit => (
+                //     `Unit: ${unit.unit}, Validity: ${unit.validity}`
+                //     // ""
+                // ))
+                // : [];
+                return {
+                    _id: item._id,
+                    status: item.status,
+                    createdat: item.createdat,
+                    updatedat: item.updatedat,
+                    description: item.description,
+                    communityid: item.communityid,
+                    userid: authCtx.userid,
+                    type: item.type,
+                    title: item.title,
+                    date: item.date,
+                    completed: item.completed,
+                };
+            });
+            // setLoading(false);
+            setFeedbackValues(transformedData); // Set the state directly without using prevData
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        finally {
+            // setLoading(false); // Set loading to false regardless of success or failure
+        }
+        // setLoading(false);
+    };
+    useEffect(() => {
+        fetchFeedbackData();
+    }, []);
     return (
         <>
             <div className="page-wrapper">
@@ -402,8 +602,8 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="h1 mb-3">{baseValue.userCount }</div>
-                                        <br/>  <br/>
+                                        <div className="h1 mb-3">{baseValue.userCount}</div>
+                                        <br />  <br />
                                         <div className="d-flex mb-2">
                                             <div>Conversion rate</div>
                                             <div className="ms-auto">
@@ -432,7 +632,7 @@ function Dashboard() {
                                                 </span>
                                             </div>
                                         </div>
-                                      
+
                                         <div className="progress progress-sm">
                                             <div
                                                 className="progress-bar bg-primary"
@@ -494,7 +694,7 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-0 me-2">
-                                                {baseValue.communityCount }
+                                                {baseValue.communityCount}
                                             </div>
                                             <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
@@ -572,9 +772,9 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                {baseValue.varietyCount }
+                                                {baseValue.varietyCount}
                                             </div>
-                                           
+
                                             <div className="me-auto">
                                                 <span className="text-yellow d-inline-flex align-items-center lh-1">
                                                     0%
@@ -600,7 +800,7 @@ function Dashboard() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <br/>  <br/>
+                                        <br />  <br />
                                         <div
                                             id="chart-new-clients"
                                             className="chart-sm"
@@ -613,7 +813,7 @@ function Dashboard() {
                                     <div className="card-body">
                                         <div className="d-flex align-items-center">
                                             <div className="subheader">
-                                                Total Menu Created
+                                                Menus
                                             </div>
                                             <div className="ms-auto lh-1">
                                                 <div className="dropdown">
@@ -651,7 +851,7 @@ function Dashboard() {
                                         </div>
                                         <div className="d-flex align-items-baseline">
                                             <div className="h1 mb-3 me-2">
-                                                { baseValue.menuCount} 
+                                                {baseValue.menuCount}
                                             </div>
                                             <div className="me-auto">
                                                 <span className="text-green d-inline-flex align-items-center lh-1">
@@ -679,7 +879,7 @@ function Dashboard() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <br/>  <br/> 
+                                        <br />  <br />
                                         <div
                                             id="chart-active-users"
                                             className="chart-sm"
@@ -884,21 +1084,135 @@ function Dashboard() {
                                             <tbody>
                                                 {dataTableValues.map(item => (
                                                     <tr key={item._id} className={isToday(item.date) ? 'table-primary' : ''}>
-                                                        <td className="text-nowrap text-secondary w-3">{item.date}</td>
-                                                        <td className="td-truncate w-5">
-                                                            <div className="text-truncate">{item.name} ({item.description})</div>
+                                                        <td className="text-nowrap text-secondary w-1" style={{ paddingRight: '10px' }}>{item.date}</td>
+                                                        <td className="text-nowrap w-5" style={{ paddingRight: '10px' }}>
+                                                            <div className="text">{item.name} ({item.description})</div>
                                                         </td>
-                                                        <td className="text-nowrap w-4">{item.gujaratiName}</td>
+                                                        <td className="text-nowrap w-6">{item.gujaratiName}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
+
                                         </table>
                                     </div>
 
                                 </div>
                             </div>
-
                             <div className="col-lg-6">
+                                <div className="card">
+                                    <div className="card-header border-0">
+                                        <div className="card-title"><h3 class="h2">Requests</h3></div>
+                                    </div>
+                                    <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
+                                        <div className="card-table table-responsive">
+                                            <table className="table table-vcenter">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>{!isUser ? "User" : "Status"}</th>
+                                                        <th>Title</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {dataRequestValues.map(item => (
+                                                        <tr key={item._id}>
+                                                            <td className={`td text-nowrap text-secondary ${isToday(item.date) ? 'table-primary' : ''}`}>
+                                                                {item.date}
+                                                            </td>
+                                                            <td className="td">
+                                                                {!isUser ? (
+                                                                    <div className={`badge ${item.completed === "Pending" || item.completed === "pending" ? "bg-red text-red-fg" : item.completed === "Will be Done" ? "bg-orange text-orange-fg" : item.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
+                                                                        {UserValues.find(user => user._id === item.userid)?.name || 'N/A'}
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        {(item.completed === "Pending" || item.completed === "pending") && (
+                                                                            <div className="badge bg-danger"></div>
+                                                                        )}
+                                                                        {item.completed === "Will be Done" && (
+                                                                            <div className="badge bg-warning"></div>
+                                                                        )}
+                                                                        {item.completed === "Completed" && (
+                                                                            <div className="badge bg-success"></div>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                            <td className="td">
+                                                                <div className="text">{item.title}</div>
+                                                            </td>
+                                                            <td className="td">
+                                                                <div className="text">{item.description}</div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="col-lg-6">
+    <div className="card">
+        <div className="card-header border-0">
+            <div className="card-title"><h3 class="h2">Complain</h3></div>
+        </div>
+
+        <div className="card-body card-body-scrollable card-body-scrollable-shadow" style={{ maxHeight: "400px", overflowY: "auto" }}>
+            <div className="card-table table-responsive">
+                <table className="table table-vcenter">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>{!isUser ? "User" : "Status"}</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dataComValues.map(item => (
+                            <tr key={item._id}>
+                                <td className={`td text-nowrap text-secondary ${isToday(item.date) ? 'table-primary' : ''}`}>
+                                    {item.date}
+                                </td>
+                                <td className="td">
+                                    {!isUser ? (
+                                        <div className={`badge ${item.completed === "Pending" || item.completed === "pending" ? "bg-red text-red-fg" : item.completed === "Will be Done" ? "bg-orange text-orange-fg" : item.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
+                                            {UserValues.find(user => user._id === item.userid)?.name || 'N/A'}
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {(item.completed === "Pending" || item.completed === "pending") && (
+                                                <div className="badge bg-danger"></div>
+                                            )}
+                                            {item.completed === "Will be Done" && (
+                                                <div className="badge bg-warning"></div>
+                                            )}
+                                            {item.completed === "Completed" && (
+                                                <div className="badge bg-success"></div>
+                                            )}
+                                        </>
+                                    )}
+                                </td>
+                                <td className="td">
+                                    <div className="text">{item.title}</div>
+                                </td>
+                                <td className="td">
+                                    <div className="text">{item.description}</div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+                            <div className="col-lg-12">
                                 <div className="row row-cards">
 
                                     <div className="col-12">
@@ -908,560 +1222,38 @@ function Dashboard() {
                                         >
                                             <div className="card-body card-body-scrollable card-body-scrollable-shadow">
                                                 <div className="divide-y">
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                <span className="avatar">
-                                                                    JL
-                                                                </span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Jeffie
-                                                                        Lewzey
-                                                                    </strong>{" "}
-                                                                    commented on
-                                                                    your{" "}
-                                                                    <strong>
-                                                                        "I'm not
-                                                                        a
-                                                                        witch."
-                                                                    </strong>{" "}
-                                                                    post.
+                                                    {FeedbackValues.map(item => (
+                                                        <div>
+                                                            <div className="row">
+                                                                <div className="col-auto">
+                                                                    <span className="avatar">
+                                                                        {UserValues.find(user => user._id === item.userid)?.name.substring(0, 2) || 'N/A'}
+                                                                    </span>
                                                                 </div>
-                                                                <div className="text-secondary">
-                                                                    yesterday
+                                                                <div className="col">
+                                                                    <div className="text-truncate">
+                                                                        <strong>
+                                                                            {UserValues.find(user => user._id === item.userid)?.name || 'N/A'}
+                                                                        </strong>{" "}
+                                                                        has shared Feedback on
+                                                                        {" "}
+                                                                        <strong>
+                                                                            "{item.title}"
+                                                                        </strong>{" "}
+                                                                        which is: "{item.description}"
+                                                                    </div>
+                                                                    <div className="text-secondary">
+                                                                        {item.date}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-auto align-self-center">
-                                                                <div className="badge bg-primary"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/002m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/002m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    It's{" "}
-                                                                    <strong>
-                                                                        Mallory
-                                                                        Hulme
-                                                                    </strong>
-                                                                    's birthday.
-                                                                    Wish him
-                                                                    well!
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-auto align-self-center">
-                                                                <div className="badge bg-primary"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/003m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/003m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Dunn
-                                                                        Slane
-                                                                    </strong>{" "}
-                                                                    posted{" "}
-                                                                    <strong>
-                                                                        "Well,
-                                                                        what do
-                                                                        you
-                                                                        want?"
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    today
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-auto align-self-center">
-                                                                <div className="badge bg-primary"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/000f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/000f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Emmy
-                                                                        Levet
-                                                                    </strong>{" "}
-                                                                    created a
-                                                                    new project{" "}
-                                                                    <strong>
-                                                                        Morning
-                                                                        alarm
-                                                                        clock
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    4 days ago
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-auto align-self-center">
-                                                                <div className="badge bg-primary"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/001f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/001f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Maryjo
-                                                                        Lebarree
-                                                                    </strong>{" "}
-                                                                    liked your
-                                                                    photo.
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
+                                                                <div className="col-auto align-self-center">
+                                                                    <div className={`badge ${item.completed === "Pending" || item.completed === "pending" ? "bg-red text-red-fg" : item.completed === "Will be Done" ? "bg-orange text-orange-fg" : item.completed === "Completed" ? "bg-green text-green-fg" : ""}`}>
+                                                                        {/* {UserValues.find(user => user._id === item.userid)?.name || 'N/A'} */}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                <span className="avatar">
-                                                                    EP
-                                                                </span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Egan
-                                                                        Poetz
-                                                                    </strong>{" "}
-                                                                    registered
-                                                                    new client
-                                                                    as{" "}
-                                                                    <strong>
-                                                                        Trilia
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    yesterday
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/002f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/002f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Kellie
-                                                                        Skingley
-                                                                    </strong>{" "}
-                                                                    closed a new
-                                                                    deal on
-                                                                    project{" "}
-                                                                    <strong>
-                                                                        Pen
-                                                                        Pineapple
-                                                                        Apple
-                                                                        Pen
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/003f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/003f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Christabel
-                                                                        Charlwood
-                                                                    </strong>{" "}
-                                                                    created a
-                                                                    new project
-                                                                    for{" "}
-                                                                    <strong>
-                                                                        Wikibox
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    4 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                <span className="avatar">
-                                                                    HS
-                                                                </span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Haskel
-                                                                        Shelper
-                                                                    </strong>{" "}
-                                                                    change
-                                                                    status of{" "}
-                                                                    <strong>
-                                                                        Tabler
-                                                                        Icons
-                                                                    </strong>{" "}
-                                                                    from{" "}
-                                                                    <strong>
-                                                                        open
-                                                                    </strong>{" "}
-                                                                    to{" "}
-                                                                    <strong>
-                                                                        closed
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    today
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/006m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/006m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Lorry
-                                                                        Mion
-                                                                    </strong>{" "}
-                                                                    liked{" "}
-                                                                    <strong>
-                                                                        Tabler
-                                                                        UI Kit
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    yesterday
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/004f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/004f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Leesa
-                                                                        Beaty
-                                                                    </strong>{" "}
-                                                                    posted new
-                                                                    video.
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/007m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/007m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Perren
-                                                                        Keemar
-                                                                    </strong>{" "}
-                                                                    and 3 others
-                                                                    followed
-                                                                    you.
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                <span className="avatar">
-                                                                    SA
-                                                                </span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Sunny
-                                                                        Airey
-                                                                    </strong>{" "}
-                                                                    upload 3 new
-                                                                    photos to
-                                                                    category{" "}
-                                                                    <strong>
-                                                                        Inspirations
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/009m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/009m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Geoffry
-                                                                        Flaunders
-                                                                    </strong>{" "}
-                                                                    made a{" "}
-                                                                    <strong>
-                                                                        $10
-                                                                    </strong>{" "}
-                                                                    donation.
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/010m.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/010m.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Thatcher
-                                                                        Keel
-                                                                    </strong>{" "}
-                                                                    created a
-                                                                    profile.
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    3 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/005f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/005f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Dyann
-                                                                        Escala
-                                                                    </strong>{" "}
-                                                                    hosted the
-                                                                    event{" "}
-                                                                    <strong>
-                                                                        Tabler
-                                                                        UI
-                                                                        Birthday
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    4 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                {/* <span className="avatar" style="background-image: url(../assets/static/avatars/006f.jpg)"></span> */}
-                                                                <span
-                                                                    className="avatar"
-                                                                    style={{
-                                                                        backgroundImage:
-                                                                            "url(../assets/static/avatars/006f.jpg)",
-                                                                    }}
-                                                                ></span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Avivah
-                                                                        Mugleston
-                                                                    </strong>{" "}
-                                                                    mentioned
-                                                                    you on{" "}
-                                                                    <strong>
-                                                                        Best of
-                                                                        2020
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-auto">
-                                                                <span className="avatar">
-                                                                    AA
-                                                                </span>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="text-truncate">
-                                                                    <strong>
-                                                                        Arlie
-                                                                        Armstead
-                                                                    </strong>{" "}
-                                                                    sent a
-                                                                    Review
-                                                                    Request to{" "}
-                                                                    <strong>
-                                                                        Amanda
-                                                                        Blake
-                                                                    </strong>
-                                                                    .
-                                                                </div>
-                                                                <div className="text-secondary">
-                                                                    2 days ago
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
