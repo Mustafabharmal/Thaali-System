@@ -19,12 +19,13 @@ const userController = {
             let menuCount = 0;
             const varietyCollection = db.db("ThaliSystem").collection("variety");
             const menuCollection = db.db("ThaliSystem").collection("menu");
+            const communitiesCollection = db.db("ThaliSystem").collection("community");
             if (req.isAdmin) {
                 // Get user count
                 userCount = await collection.countDocuments({ status: 1 });
     
                 // Get community count
-                const communitiesCollection = db.db("ThaliSystem").collection("community");
+               
                 communityCount = await communitiesCollection.countDocuments({ status: 1 });
                 menuCount = await menuCollection.countDocuments({ status: 1 });
                 varietyCount = await varietyCollection.countDocuments({ status: 1 });
@@ -34,7 +35,9 @@ const userController = {
                 menuCount = await menuCollection.countDocuments({ status: 1, communityid: req.communityid });
                 varietyCount = await varietyCollection.countDocuments({ status: 1, communityid: req.communityid });
             }
-    
+            let communityName = await communitiesCollection.findOne({ _id: new ObjectId(req.communityid), status:1 });
+            // console.log(communityName.name);
+            communityName = communityName.name;
             // Get variety count
             
             // varietyCount = await varietyCollection.countDocuments();
@@ -48,7 +51,8 @@ const userController = {
                     userCount,
                     communityCount,
                     varietyCount,
-                    menuCount
+                    menuCount,
+                    communityName
                 }
             );
         } catch (err) {
@@ -69,7 +73,7 @@ const userController = {
             delete updatedUserWithoutId._id;
             
             // Check if user with the same email already exists
-            const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne: userId } });
+            const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne:  new ObjectId(userId) } });
             if (existingUser) {
                 return res.status(400).json({ error: "Another user with this email already exists" });
             }

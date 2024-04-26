@@ -8,11 +8,11 @@ const API_URL = 'http://localhost:8080'; // Replace with your Java API URL
 const feedComReqController = {
     getFeedComReqs: async (req, res) => {
         try {
-            console.log(req.headers.type);
-            console.log(req.isAdmin);
-            console.log(req.isManager);
-            console.log(req.isUser);
-            console.log(req.userId);
+            // console.log(req.headers.type);
+            // console.log(req.isAdmin);
+            // console.log(req.isManager);
+            // console.log(req.isUser);
+            // console.log(req.userId);
             let params = {
                 communityid: req.communityid,
                 // role: user.role
@@ -26,12 +26,12 @@ const feedComReqController = {
             };
             const response = await axios.get(`${API_URL}/feedback/`,{params
             }); 
-            console.log(response.data)
-            console.log(req.headers.type);
-            console.log(req.isAdmin);
-            console.log(req.isManager);
-            console.log(req.isUser);
-            console.log(req.userId);
+            // console.log(response.data)
+            // console.log(req.headers.type);
+            // console.log(req.isAdmin);
+            // console.log(req.isManager);
+            // console.log(req.isUser);
+            // console.log(req.userId);
             res.status(200).json(response.data);
         } catch (err) {
             console.error('Error:', err);
@@ -48,7 +48,7 @@ const feedComReqController = {
             formData.updatedat = Date.now();
             formData.userid = req.userId;
             formData.type=req.headers.type;
-            console.log(formData.type);
+            // console.log(formData.type);
             formData.role=req.headers.role;
             // const newUser = new User(formData);
             const response = await axios.post(`${API_URL}/feedback/add`, formData, {

@@ -130,7 +130,7 @@ const userController = {
             const updatedUserWithoutId = { ...updatedUser };
             delete updatedUserWithoutId._id;
             delete updatedUserWithoutId.password;
-            console.log(userId)
+            // console.log(userId)
             // Check if user with the same email already exists
             const existingUser = await collection.findOne({
                 email: updatedUser.email,

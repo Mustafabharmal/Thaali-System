@@ -14,7 +14,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Allow credentials
-        config.addAllowedOrigin("https://localhost:3000"); // Replace with your frontend URL https://deploythaalisystem.onrender.com
+        config.addAllowedOrigin("https://deploythaalisystem.onrender.com"); // Replace with your frontend URL https://localhost:3000
         config.addAllowedMethod("*"); // Allow all HTTP methods
         config.addAllowedHeader("*"); // Allow all headers
         source.registerCorsConfiguration("/**", config);

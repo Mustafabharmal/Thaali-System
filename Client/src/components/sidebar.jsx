@@ -22,6 +22,40 @@ function Sidebar() {
     const isThaaliUser = authCtx.thaaliuser === "0" || authCtx.thaaliuser === 0;
     const UserName = authCtx.name;
 
+    const [baseValue, setbaseValue] = useState([]);
+    const DashData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/dashboard', {
+                headers: {
+                    authorization: `Mustafa ${authCtx.token}`,
+                },
+                withCredentials: true,
+            });
+            console.log(response.data)
+            // const transformedData = response.data.map(item => ({
+            //     userCount: item.userCount,
+            //     menuCount: item.menuCount,
+            //     varietyCount: item.varietyCount,
+            //     communityCount: item.communityCount
+            // }));
+            setbaseValue({
+                userCount: response.data.userCount,
+                menuCount: response.data.menuCount,
+                varietyCount: response.data.varietyCount,
+                communityCount: response.data.communityCount,
+                communityName: response.data.communityName
+            });
+            // console.log(baseValue)
+            // console.log(transformedData)
+            // setbaseValue(transformedData);
+            // console.log(baseValue)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+
+
     const [FeedComReq, setFeedComReq] = useState(
         {
             feebackt: "0",
@@ -89,7 +123,7 @@ function Sidebar() {
             });
 
             setDataRequestValues(notPastMenus);
-            console.log(transformedData)
+            // console.log(transformedData)
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -245,7 +279,7 @@ function Sidebar() {
     useEffect(() => {
         fetchRequestData();
         // fetchData();
-        // DashData();
+        DashData();
         fetchCompData();
         fetchFeedbackData();
     }, []);
@@ -273,8 +307,21 @@ function Sidebar() {
                             alt="LOGO"
                         // className="navbar-brand-image"
                         />
+                      
                     </a>
-                    {/* </h1> */}
+                        
+                    <div className="navbar-user">
+                            <span>Welcome, {UserName}!</span><br/>
+                            {/* on behalf of {baseValue.communityName.name} */}
+                            {isAdmin && (
+                                <span>From Thaali Center</span>
+                            )}
+                            {!isAdmin && (
+                                <span>From Thaali Center on behalf of {baseValue.communityName}</span>
+                            )}
+
+
+                        </div>
                     <div className="navbar-nav flex-row order-md-last">
                         <div className="nav-item d-none d-md-flex me-3">
                             <div className="btn-list">
@@ -900,7 +947,7 @@ function Sidebar() {
                                 >
                                     <a className="nav-link" href="/myProfile">
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>    </span>
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>    </span>
                                         <span className="nav-link-title">
                                             Settings
                                         </span>
@@ -911,7 +958,7 @@ function Sidebar() {
                                 >
                                     <a className="nav-link" onClick={logoutHandler}>
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-logout"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg>     </span>
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-logout"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg>     </span>
                                         <span className="nav-link-title">
                                             Logout
                                         </span>
