@@ -7,6 +7,27 @@ function Dashboard() {
     const isAdmin = authCtx.role === 0 || authCtx.role === "0";
     const isManager = authCtx.role === 1 || authCtx.role === "1";
     const isUser = authCtx.role === 2 || authCtx.role === "2";
+    const UserName = authCtx.name;
+    const modalRef = useRef(null);
+
+    // Function to show the modal
+    const showModal = () => {
+        if (modalRef.current) {
+            const modalElement = new bootstrap.Modal(modalRef.current);
+            modalElement.show();
+        }
+    };
+
+    // Show the modal on component mount
+    useEffect(() => {
+        const isModalShown = localStorage.getItem('modalShown');
+        if (!isModalShown) {
+            showModal(); // Show the modal
+            localStorage.setItem('modalShown', true); // Set flag in localStorage
+        }
+    }, []); // Run once on component mount
+
+
     function isToday(dateString) {
         const today = new Date();
         const date = new Date(dateString);
@@ -21,7 +42,8 @@ function Dashboard() {
             requestt: "0",
             requestv: "0",
             complaintv: "0",
-            complaintt: "0"
+            complaintt: "0",
+
         }
     );
     useEffect(() => {
@@ -378,7 +400,7 @@ function Dashboard() {
             });
 
             setDataRequestValues(notPastMenus);
-            console.log(transformedData)
+            // console.log(transformedData)
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -397,7 +419,7 @@ function Dashboard() {
                 },
                 withCredentials: true,
             });
-            console.log(response.data)
+            // console.log(response.data)
             // const transformedData = response.data.map(item => ({
             //     userCount: item.userCount,
             //     menuCount: item.menuCount,
@@ -409,10 +431,12 @@ function Dashboard() {
                 menuCount: response.data.menuCount,
                 varietyCount: response.data.varietyCount,
                 communityCount: response.data.communityCount,
+                communityName: response.data.communityName,
+                headcount: response.data.headcount
             });
             // console.log(transformedData)
             // setbaseValue(transformedData);
-            console.log(baseValue)
+            // console.log(baseValue)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -1030,27 +1054,29 @@ function Dashboard() {
                                             </div>
                                         </div>
                                     </div>
-                                     <div className="col-sm-6 col-lg-3">
+                                    <div className="col-sm-6 col-lg-3">
                                         <div className="card card-sm" key="Likes">
                                             <div className="card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-auto">
                                                         <span className="bg-warning text-white avatar">
-
+                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-user-hexagon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z" /><path d="M6.201 18.744a4 4 0 0 1 3.799 -2.744h4a4 4 0 0 1 3.798 2.741" /><path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" /></svg>
                                                         </span>
                                                     </div>
                                                     <div className="col">
                                                         <div className="font-weight-medium">
-                                                            132 Head Count
+                                                            {baseValue.headcount} Head Count
                                                         </div>
                                                         <div className="text-secondary">
-                                                          in your region
+                                                        {isAdmin&&("in Thaali Center")}
+                                                        {isManager&&("in your Area")}
+                                                        {isUser&&("in your Thaali Center")}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
 
@@ -1267,7 +1293,62 @@ function Dashboard() {
                 </div>
             </div>
 
+            {/* <div className="col ms-auto">
+                <div className="d-flex flex-column align-items-center">
+                    <h4 className="mb-0">
+                        <span className="text-primary">Hello,{" "+UserName}!</span>
+                    </h4>
+                    {isAdmin ? (
+                        <span className="mt-1 text-secondary">Welcome from Thaali Center.</span>
+                    ) : (
+                        <span className="mt-1 text-secondary">
+                            Welcome from Thaali Center on behalf of {baseValue.communityName}
+                        </span>
+                    )}
+                </div>
+            </div> */}
+            
+            <div className="modal modal-blur fade" id="modal-success" tabIndex="-1" role="dialog" aria-hidden="true" ref={modalRef}>
+                <div className="modal-dialog modal-sm modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div className="modal-status bg-success"></div>
+                        <div className="modal-body text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>
+                            <h3>Hello, {UserName}!</h3>
+                            <div className="text-secondary">     
+                             {/* <div className="col ms-auto"> */}
+                                {/* <div className="d-flex flex-column align-items-center"> */}
+                                    {/* <h4 className="mb-0">
+                                        <span className="text-primary">Hello,</span>
+                                    </h4> */}
+                                    {isAdmin ? (
+                                        <span className="mt-1 text-secondary">Welcome from Thaali Center</span>
+                                    ) : (
+                                        <span className="mt-1 text-secondary">
+                                            Welcome from Thaali Center on behalf of {baseValue.communityName}
+                                        </span>
+                                    )}
+                                {/* </div> */}
+                            {/* </div> */}
 
+</div>
+                        </div>
+                        <div className="modal-footer">
+                            <div className="w-100">
+                                <div className="row">
+                                    <div className="col"><a href="/menus" className="btn w-100">
+                                       Go to Menu
+                                    </a></div>
+                                    <div className="col"><a href="#" className="btn btn-success w-100" data-bs-dismiss="modal">
+                                    Go to dashboard
+                                    </a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

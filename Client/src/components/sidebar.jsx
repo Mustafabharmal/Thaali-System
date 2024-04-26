@@ -31,7 +31,7 @@ function Sidebar() {
                 },
                 withCredentials: true,
             });
-            console.log(response.data)
+            // console.log(response.data)
             // const transformedData = response.data.map(item => ({
             //     userCount: item.userCount,
             //     menuCount: item.menuCount,
@@ -310,18 +310,7 @@ function Sidebar() {
                       
                     </a>
                         
-                    <div className="navbar-user">
-                            <span>Welcome, {UserName}!</span><br/>
-                            {/* on behalf of {baseValue.communityName.name} */}
-                            {isAdmin && (
-                                <span>From Thaali Center</span>
-                            )}
-                            {!isAdmin && (
-                                <span>From Thaali Center on behalf of {baseValue.communityName}</span>
-                            )}
-
-
-                        </div>
+          
                     <div className="navbar-nav flex-row order-md-last">
                         <div className="nav-item d-none d-md-flex me-3">
                             <div className="btn-list">
@@ -896,7 +885,7 @@ function Sidebar() {
                                             
                                         </span>
                                         {(FeedComReq.requestv>=1&& isManager)&&(
-                                        <span class="badge bg-blue badge-notification badge-blink"></span>
+                                        <span className="badge bg-blue badge-notification badge-blink"></span>
 )}
                                         <span className="nav-link-title">
                                             Requests
@@ -913,7 +902,7 @@ function Sidebar() {
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-message-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 9h8" /><path d="M8 13h3.5" /><path d="M10.48 19.512l-2.48 1.488v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4" /><path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296z" /></svg>
                                         </span>
-                                        {(FeedComReq.feedbackv>0&& isManager)&&(<span class="badge bg-blue badge-notification badge-blink"></span>
+                                        {(FeedComReq.feedbackv>0&& isManager)&&(<span className="badge bg-blue badge-notification badge-blink"></span>
 )}
                                         <span className="nav-link-title">
                                            Feedback
@@ -931,7 +920,7 @@ function Sidebar() {
                                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-heart-handshake"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25" /><path d="M12.5 15.5l2 2" /><path d="M15 13l2 2" /></svg>
                                         </span>
-                                    {(FeedComReq.complaintv>0 && isManager)&&(<span class="badge bg-blue badge-notification badge-blink"></span>
+                                    {(FeedComReq.complaintv>0 && isManager)&&(<span className="badge bg-blue badge-notification badge-blink"></span>
 )}
                                         <span className="nav-link-title">
 

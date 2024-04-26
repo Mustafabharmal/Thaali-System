@@ -2,59 +2,141 @@
 const User = require("../models/user");
 const db = require("../config/db");
 const { ObjectId } = require("bson");
+const cookieParser = require("cookie-parser");
 const userController = {
     getData: async (req, res) => {
         try {
             await db.connect();
             const collection = db.db("ThaliSystem").collection("users");
             let documents;
-    
+
             if (!req.isAdmin && !req.isManager && !req.isUser) {
-                return res.status(403).json({ error: "You are not an admin or manager" });
+                return res
+                    .status(403)
+                    .json({ error: "You are not an admin or manager" });
             }
-    
+
             let userCount = 0;
             let communityCount = 0;
             let varietyCount = 0;
             let menuCount = 0;
-            const varietyCollection = db.db("ThaliSystem").collection("variety");
+            let headcount = 0;
+            const varietyCollection = db
+                .db("ThaliSystem")
+                .collection("variety");
             const menuCollection = db.db("ThaliSystem").collection("menu");
-            const communitiesCollection = db.db("ThaliSystem").collection("community");
+            const communitiesCollection = db
+                .db("ThaliSystem")
+                .collection("community");
             if (req.isAdmin) {
                 // Get user count
                 userCount = await collection.countDocuments({ status: 1 });
-    
+
                 // Get community count
-               
-                communityCount = await communitiesCollection.countDocuments({ status: 1 });
+                const pipeline = [
+                    { $match: { status: 1 } }, // Match documents with status 1
+                    {
+                        $group: {
+                            _id: null,
+                            totalHeadcount: {
+                                $sum: { $toInt: '$headcount' } // Convert headcount to integer and sum
+                            }
+                        }
+                    }
+                ];
+        
+                // Execute aggregation pipeline
+                const result = await collection.aggregate(pipeline).toArray();
+        
+                // Extract total headcount from aggregation result
+                const totalHeadcount = result.length > 0 ? result[0].totalHeadcount : 0;
+                headcount=totalHeadcount;
+                // console.log(`Total headcount (converted to integer) where status is 1: ${totalHeadcount}`);
+                communityCount = await communitiesCollection.countDocuments({
+                    status: 1,
+                });
                 menuCount = await menuCollection.countDocuments({ status: 1 });
-                varietyCount = await varietyCollection.countDocuments({ status: 1 });
+                varietyCount = await varietyCollection.countDocuments({
+                    status: 1,
+                });
             } else if (req.isManager) {
                 // Get user count for particular community id
-                userCount = await collection.countDocuments({ status: 1, communityid: req.communityid });
-                menuCount = await menuCollection.countDocuments({ status: 1, communityid: req.communityid });
-                varietyCount = await varietyCollection.countDocuments({ status: 1, communityid: req.communityid });
+
+                const pipeline = [
+                    { $match: { status: 1, communityid:req.communityid } }, // Match documents with status 1
+                    {
+                        $group: {
+                            _id: null,
+                            totalHeadcount: {
+                                $sum: { $toInt: '$headcount' } // Convert headcount to integer and sum
+                            }
+                        }
+                    }
+                ];
+        
+                // Execute aggregation pipeline
+                const result = await collection.aggregate(pipeline).toArray();
+        
+                // Extract total headcount from aggregation result
+                 totalHeadcount = result.length > 0 ? result[0].totalHeadcount : 0;
+                 headcount=totalHeadcount;
+                // console.log(`Total headcount (converted to integer) where status is 1: ${totalHeadcount}`);
+                userCount = await collection.countDocuments({
+                    status: 1,
+                    communityid: req.communityid,
+                });
+                menuCount = await menuCollection.countDocuments({
+                    status: 1,
+                    communityid: req.communityid,
+                });
+                varietyCount = await varietyCollection.countDocuments({
+                    status: 1,
+                    communityid: req.communityid,
+                });
             }
-            let communityName = await communitiesCollection.findOne({ _id: new ObjectId(req.communityid), status:1 });
+            else if (req.isUser) {
+
+                // Get user count for particular community id
+                const pipeline = [
+                    { $match: { status: 1, communityid:req.communityid ,_id:new ObjectId(req.userId)} }, // Match documents with status 1
+                    {
+                        $group: {
+                            _id: null,
+                            totalHeadcount: {
+                                $sum: { $toInt: '$headcount' } // Convert headcount to integer and sum
+                            }
+                        }
+                    }
+                ];
+                const result = await collection.aggregate(pipeline).toArray();
+        
+                // Extract total headcount from aggregation result
+                 totalHeadcount = result.length > 0 ? result[0].totalHeadcount : 0;
+                 headcount=totalHeadcount;
+                //  console.log(headcount)
+            }
+            let communityName = await communitiesCollection.findOne({
+                _id: new ObjectId(req.communityid),
+                status: 1,
+            });
             // console.log(communityName.name);
-            communityName = communityName.name;
+            communityName = communityName.name; 
             // Get variety count
-            
+
             // varietyCount = await varietyCollection.countDocuments();
-    
+
             // Get menu count
             // const menuCollection = db.db("ThaliSystem").collection("menu");
             // menuCount = await menuCollection.countDocuments();
-    
-            res.status(200).json(
-                {
-                    userCount,
-                    communityCount,
-                    varietyCount,
-                    menuCount,
-                    communityName
-                }
-            );
+
+            res.status(200).json({
+                userCount,
+                communityCount,
+                varietyCount,
+                menuCount,
+                communityName,
+                headcount
+            });
         } catch (err) {
             console.error("Error:", err);
             res.status(500).send("Internal Server Error");
@@ -62,7 +144,9 @@ const userController = {
     },
     updateMe: async (req, res) => {
         if (!req.isAdmin && !req.isManager && !req.isUser) {
-            return res.status(403).json({ error: "You are not an admin, manager, or user" });
+            return res
+                .status(403)
+                .json({ error: "You are not an admin, manager, or user" });
         }
         const userId = req.userId;
         const updatedUser = req.body;
@@ -71,13 +155,20 @@ const userController = {
             const collection = db.db("ThaliSystem").collection("users");
             const updatedUserWithoutId = { ...updatedUser };
             delete updatedUserWithoutId._id;
-            
+
             // Check if user with the same email already exists
-            const existingUser = await collection.findOne({ email: updatedUser.email, _id: { $ne:  new ObjectId(userId) } });
+            const existingUser = await collection.findOne({
+                email: updatedUser.email,
+                _id: { $ne: new ObjectId(userId) },
+            });
             if (existingUser) {
-                return res.status(400).json({ error: "Another user with this email already exists" });
+                return res
+                    .status(400)
+                    .json({
+                        error: "Another user with this email already exists",
+                    });
             }
-    
+
             if (req.isManager) {
                 updatedUserWithoutId.communityid = req.communityid;
             }
@@ -86,7 +177,10 @@ const userController = {
                 { $set: updatedUserWithoutId }
             );
             if (result.modifiedCount === 1) {
-                res.status(200).json({ message: "User updated successfully", user: result });
+                res.status(200).json({
+                    message: "User updated successfully",
+                    user: result,
+                });
             } else {
                 res.status(404).json({ message: "User not found" });
             }
@@ -95,8 +189,7 @@ const userController = {
             res.status(500).json({ message: "Internal server error" });
         }
     },
-    
-    
+
     // addUser: async (req, res) => {
     //     if (!req.isAdmin && !req.isManager) {
     //         return res
