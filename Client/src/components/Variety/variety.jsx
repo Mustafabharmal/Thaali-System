@@ -158,7 +158,29 @@ function Variety() {
     );
     const handleUpdate = async (e) => {
         e.preventDefault();
+        if (
+            formData.name === "" ||
+            // formData.calories <= 0 || // Assuming calories should be a positive number
+            document.getElementById('data').value === "" ||
+            formData.gujaratiName === "" ||
+            formData.communityid === "" ||
+            formData.status === ""
+            
+        ) {
+            alert("Please fill out all required fields");
+            return; // Exit early if validation fails
+        }
+        if(formData.communityid === "0")
+        {
+            alert("Please select community");
+            return;
+        }
 
+        const headcountValue = parseInt(formData.calories);
+        if (isNaN(headcountValue) || headcountValue <= 0) {
+            alert("Please enter a valid positive number for headcount");
+            return; // Exit early if headcount is not a valid positive number
+        }
         try {
             const response = await fetch(`http://localhost:3000/variety/update/${formData._id}`, {
                 method: "PUT",

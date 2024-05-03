@@ -88,6 +88,36 @@ function addUser() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (
+            formData.name === "" ||
+            formData.email === "" ||
+            formData.password === "" ||
+            formData.phoneno === "" ||
+            formData.address === "" ||
+            formData.role === "" ||
+            formData.headcount === ""
+            
+        ) {
+            alert("Please fill out all required fields");
+            return; // Exit early if validation fails
+        }
+        if(formData.communityid === "0")
+        {
+            alert("Please select community");
+            return;
+        }
+          // Validate phone number format using regex
+    const phoneRegex = /^\d{10}$/; // Regex to match a 10-digit phone number
+    if (!phoneRegex.test(formData.phoneno)) {
+        alert("Please enter a valid 10-digit phone number");
+        return; // Exit early if phone number format is invalid
+    }
+
+        const headcountValue = parseInt(formData.headcount);
+        if (isNaN(headcountValue) || headcountValue <= 0) {
+            alert("Please enter a valid positive number for headcount");
+            return; // Exit early if headcount is not a valid positive number
+        }
         // console.log(formData);
         try {
             setFormData((prevData) => ({

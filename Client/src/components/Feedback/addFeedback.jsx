@@ -329,7 +329,7 @@ const [selectedDates, setSelectedDates] = useState("");
                                     </div>)}
                             </div>
                             <div className="row">
-                            <div className="col-lg-6">
+                            <div className="col-lg-6" hidden >
                                         <div className="mb-3">
                                             <label className="form-label required">
                                                 Feedback For
@@ -373,7 +373,7 @@ const [selectedDates, setSelectedDates] = useState("");
                                             </div>
                                         </div>
                                     </div>
-                                    {!isUser&&(
+                                    {/*{!isUser&&(
                                 <div className="col-lg-6">
                                         <div className="mb-3">
                                             <label className="form-label required">
@@ -396,14 +396,11 @@ const [selectedDates, setSelectedDates] = useState("");
                                                 <option value="Pending">Pending</option>
                                             <option value="Will be Done">Will be Done</option>
                                             <option value="Completed">Completed</option>
-                                                {/* {ComValues.map(community => (
-                                                    <option key={community._id} value={community._id}>
-                                                        {community.name}
-                                                    </option>
-                                                ))} */}
+                                             
                                             </select>
                                         </div>
                                     </div>)}
+                                    */}
                                 <div className="col-lg-12">
                                     <div>
                                         <label className="form-label required">

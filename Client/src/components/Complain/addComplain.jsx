@@ -15,6 +15,8 @@ const [selectedDates, setSelectedDates] = useState("");
         if (window.Litepicker) {
             const today = new Date();
             const formattedSelectedDate = selectedDates ? new Date(selectedDates).toISOString().split('T')[0] : today.toISOString().split('T')[0];
+            const formattedToday = today.toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+
             setFormData({
                 ...formData,
                 date: formattedSelectedDate,
@@ -29,6 +31,8 @@ const [selectedDates, setSelectedDates] = useState("");
                 autoApply: true,
                 startDate: formattedSelectedDate,
                 format: "YYYY-MM-DD",
+                
+                maxDate: formattedToday, 
                 onSelect: handleDateSelect
             });
             calendarRef.current = calendar;
@@ -369,6 +373,9 @@ const [selectedDates, setSelectedDates] = useState("");
                                                     value={formData.date ? formData.date : new Date().toISOString().split('T')[0]}
                                                     onChange={handleChange}
                                                     required
+                                                    readOnly // Set input field as read-only
+                // aria-readonly // Specify accessibility attribute for read-only state
+             
                                                 />
                                             </div>
                                         </div>

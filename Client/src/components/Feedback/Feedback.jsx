@@ -255,7 +255,7 @@ function Feedback() {
                     onChange={(e) => setGlobalFilter(e.target.value)}
                 />
             </div>
-            <div className="status-buttons d-flex align-items-center">
+            {/* <div className="status-buttons d-flex align-items-center">
                 <div className="status-button">
                     <button
                         className={`btn mr-1 ${globalFilter === "Pending" ? "btn-danger" : "btn-outline-danger"} form-selectgroup-item`}
@@ -338,7 +338,7 @@ function Feedback() {
                         <span>All</span>
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
     const LoadingPlaceholder = () => (
@@ -697,6 +697,7 @@ function Feedback() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         />
+                                                        {/*
                                                         <Column
                                                             field="completed"
                                                             header="Status"
@@ -715,6 +716,7 @@ function Feedback() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         />
+                                                        */}
                                                         {/* <Column
                                                             field="Calories"
                                                             header="Calories"
@@ -728,12 +730,12 @@ function Feedback() {
                                                             filterMatchMode="custom"
                                                             filterFunction={(value, filter) => customFilter(value, filter)}
                                                         /> */}
-                                                        {!isUser && (
+                                                       { /*{!isUser && (
                                                             <Column
                                                                 body={actionTemplate}
                                                                 header="Action"
                                                                 style={{ textAlign: "center",  width: "11em", }}
-                                                            />)}
+                                                            />)}*/}
                                                     </DataTable>
                                                 )}
 
