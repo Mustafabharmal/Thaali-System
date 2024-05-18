@@ -51,8 +51,8 @@ Welcome to the Thaali Center, your comprehensive platform for managing users, co
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/thaali-center.git
-   cd thaali-center
+   https://github.com/Mustafabharmal/Thaali-System.git
+   cd Thaali-System
    ```
 
 2. **Backend Setup**
