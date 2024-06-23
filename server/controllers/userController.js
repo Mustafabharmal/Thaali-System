@@ -222,6 +222,13 @@ const userController = {
                 { $set: { status: newStatus } }
             );
             if (result.matchedCount > 0) {
+                if (newStatus === 0) {
+                    const feedbackCollection = db.db("ThaliSystem").collection("feedback");
+                    await feedbackCollection.updateMany(
+                        { userid: userId },
+                        { $set: { status: newStatus } }
+                    );
+                }
                 res.status(200).json({
                     message: "User status updated successfully",
                 });

@@ -83,6 +83,32 @@ const communityController = {
                 { $set: { status: newStatus } }
             );
             if (result.matchedCount > 0) {
+                if (newStatus === 0) {
+                    const userCollection = db.db("ThaliSystem").collection("users");
+                    const feedbackCollection = db.db("ThaliSystem").collection("feedback");
+                    const varietyCollection = db.db("ThaliSystem").collection("variety");
+                    const menuCollection = db.db("ThaliSystem").collection("menus");
+
+                    await userCollection.updateMany(
+                        { communityid: communityId },
+                        { $set: { status: newStatus } }
+                    );
+
+                    await feedbackCollection.updateMany(
+                        { communityid: communityId },
+                        { $set: { status: newStatus } }
+                    );
+
+                    await varietyCollection.updateMany(
+                        { communityid: communityId },
+                        { $set: { status: newStatus } }
+                    );
+
+                    await menuCollection.updateMany(
+                        { communityid: communityId },
+                        { $set: { status: newStatus } }
+                    );
+                }
                 res.status(200).json({
                     message: "Community status updated successfully",
                 });

@@ -48,9 +48,9 @@ function Variety() {
             //   input.transliterator.disable();
             // disableTransliteration(input); 
             const input = document.getElementById('data1');
-            // if (input) {
+            if (input) {
             disableTransliteration1(input);
-            // }
+            }
         };
     }, []);
     const handleKeyUp = (e) => {

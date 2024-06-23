@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from 'axios';
 import AuthContext from '../store/auth-context';
+import { Link } from "react-router-dom";
+
 function Dashboard() {
     // const authCtx = useContext(AuthContext);
     const authCtx = useContext(AuthContext);
@@ -606,8 +608,8 @@ function Dashboard() {
 
                             <div className="col-auto ms-auto d-print-none">
                                 <div className="btn-list">
-                                    <a
-                                        href="/menus"
+                                    <Link
+                                        to="/menus"
                                         className="btn btn-primary d-none d-sm-inline-block"
                                     // data-bs-toggle="modal"
                                     // data-bs-target="#modal-report"
@@ -633,7 +635,7 @@ function Dashboard() {
                                             <path d="M5 12l14 0" />
                                         </svg>
                                         Create Menus
-                                    </a>
+                                    </Link>
                                     <a
                                         href="#"
                                         className="btn btn-primary d-sm-none btn-icon"
@@ -1337,12 +1339,12 @@ function Dashboard() {
                         <div className="modal-footer">
                             <div className="w-100">
                                 <div className="row">
-                                    <div className="col"><a href="/menus" className="btn w-100">
+                                    <div className="col"><Link to="/menus" className="btn w-100">
                                        Go to Menu
-                                    </a></div>
-                                    <div className="col"><a href="#" className="btn btn-success w-100" data-bs-dismiss="modal">
+                                    </Link></div>
+                                    <div className="col"><Link to="/" className="btn btn-success w-100" data-bs-dismiss="modal">
                                     Go to dashboard
-                                    </a></div>
+                                    </Link></div>
                                 </div>
                             </div>
                         </div>

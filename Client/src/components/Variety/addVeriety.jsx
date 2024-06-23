@@ -32,7 +32,9 @@ function addVeriety() {
         return () => {
             // Clean up the transliteration when the component unmounts
             //   input.transliterator.disable();
+            if (input) {
             disableTransliteration(input);
+            }
         };
     }, []);
 
